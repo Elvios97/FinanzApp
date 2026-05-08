@@ -1,4 +1,4 @@
-const CACHE = "meingeld-v1";
+const CACHE = "meingeld-v2";
 const ASSETS = ["./index.html", "./manifest.json"];
 
 self.addEventListener("install", e => {
@@ -14,11 +14,6 @@ self.addEventListener("activate", e => {
 });
 
 self.addEventListener("fetch", e => {
-  // Network first for API calls, cache first for assets
-  if (e.request.url.includes("anthropic.com")) {
-    e.respondWith(fetch(e.request));
-    return;
-  }
   e.respondWith(
     caches.match(e.request).then(cached => cached || fetch(e.request).then(resp => {
       const clone = resp.clone();
