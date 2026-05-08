@@ -12,7 +12,6 @@
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@300;400;500&display=swap" rel="stylesheet" />
 <style>
-/* ── reset & base ── */
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 :root {
   --bg: #0c0b0a; --bg2: #111009; --bg3: #1a1917;
@@ -24,71 +23,67 @@
 }
 html, body { height: 100%; background: var(--bg); color: var(--text); font-family: 'IBM Plex Sans', sans-serif; overscroll-behavior: none; }
 button { font-family: inherit; cursor: pointer; border: none; background: none; color: inherit; }
-input, select { font-family: inherit; }
+input, select, textarea { font-family: inherit; }
 input[type=range] { -webkit-appearance: none; appearance: none; width: 100%; height: 4px; background: var(--border2); border-radius: 2px; outline: none; }
 input[type=range]::-webkit-slider-thumb { -webkit-appearance: none; width: 22px; height: 22px; border-radius: 50%; background: var(--green); box-shadow: 0 0 8px #69f0ae55; cursor: pointer; }
 input[type=number] { -moz-appearance: textfield; }
 input[type=number]::-webkit-inner-spin-button, input[type=number]::-webkit-outer-spin-button { -webkit-appearance: none; }
 
-/* ── layout ── */
+/* layout */
 #app { display: flex; flex-direction: column; height: 100vh; height: 100dvh; }
 .screen { display: none; flex: 1; overflow-y: auto; padding-bottom: calc(70px + var(--safe)); }
 .screen.active { display: block; }
 
-/* ── nav bar ── */
+/* nav */
 nav {
   position: fixed; bottom: 0; left: 0; right: 0;
-  height: calc(60px + var(--safe));
-  padding-bottom: var(--safe);
+  height: calc(60px + var(--safe)); padding-bottom: var(--safe);
   background: #0f0e0d; border-top: 1px solid var(--border);
   display: flex; z-index: 100;
-  backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
 }
 .nav-btn { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 3px; color: var(--muted); transition: color .2s; font-size: 10px; font-family: 'IBM Plex Mono', monospace; letter-spacing: .5px; text-transform: uppercase; }
 .nav-btn.active { color: var(--green); }
 .nav-icon { font-size: 20px; }
 
-/* ── topbar ── */
+/* topbar */
 .topbar { padding: 52px 20px 0; }
 .topbar-eyebrow { font-family: 'IBM Plex Mono', monospace; font-size: 10px; letter-spacing: 3px; color: var(--muted); text-transform: uppercase; margin-bottom: 4px; }
 .topbar-title { font-family: 'Syne', sans-serif; font-size: 28px; font-weight: 800; line-height: 1.05; }
 .topbar-title em { color: var(--green); font-style: normal; }
 
-/* ── cards ── */
+/* cards */
 .card { background: var(--bg2); border: 1px solid var(--border); border-radius: 18px; }
-.section { padding: 16px; }
-.section + .section { padding-top: 0; }
 
-/* ── income bar ── */
+/* income bar */
 .income-bar { margin: 20px 16px 0; padding: 18px 20px; display: flex; align-items: center; justify-content: space-between; background: var(--bg2); border: 1px solid var(--border); border-radius: 18px; }
 .income-label { font-family: 'IBM Plex Mono', monospace; font-size: 10px; letter-spacing: 2px; color: var(--muted); text-transform: uppercase; margin-bottom: 4px; }
 .income-val { font-family: 'Syne', sans-serif; font-size: 30px; font-weight: 800; }
 .income-edit-btn { background: var(--bg3); border: 1px solid var(--border2); border-radius: 10px; padding: 8px 14px; font-family: 'IBM Plex Mono', monospace; font-size: 11px; color: var(--muted); transition: all .2s; }
-.income-edit-btn:hover, .income-edit-btn:active { border-color: var(--green); color: var(--green); }
+.income-edit-btn:active { border-color: var(--green); color: var(--green); }
 
-/* ── donut ring ── */
+/* ring */
 .ring-wrap { display: flex; justify-content: center; padding: 20px 0 0; position: relative; }
 .ring-center { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); text-align: center; }
 .ring-remain { font-family: 'Syne', sans-serif; font-size: 22px; font-weight: 800; }
 .ring-lbl { font-family: 'IBM Plex Mono', monospace; font-size: 9px; letter-spacing: 2px; color: var(--muted); text-transform: uppercase; margin-top: 2px; }
 
-/* ── stat row ── */
+/* stat row */
 .stat-row { display: flex; gap: 8px; padding: 14px 16px 0; }
 .stat { flex: 1; background: var(--bg2); border: 1px solid var(--border); border-radius: 14px; padding: 12px 10px; text-align: center; }
 .stat-icon { font-size: 18px; margin-bottom: 4px; }
 .stat-val { font-family: 'IBM Plex Mono', monospace; font-size: 13px; font-weight: 500; }
 .stat-lbl { font-size: 10px; color: var(--muted); margin-top: 2px; }
 
-/* ── highlight card ── */
+/* highlight */
 .hl-card { margin: 14px 16px 0; border-radius: 18px; padding: 20px; position: relative; overflow: hidden; }
 .hl-card::after { content: ''; position: absolute; bottom: -30px; right: -30px; width: 100px; height: 100px; border-radius: 50%; background: rgba(255,255,255,.03); }
 .hl-eyebrow { font-family: 'IBM Plex Mono', monospace; font-size: 10px; letter-spacing: 2px; text-transform: uppercase; opacity: .7; margin-bottom: 6px; }
 .hl-val { font-family: 'Syne', sans-serif; font-size: 36px; font-weight: 800; }
 .hl-sub { font-size: 12px; opacity: .7; margin-top: 6px; line-height: 1.4; }
 
-/* ── category list ── */
+/* cat list */
 .cat-list { padding: 14px 16px 0; display: flex; flex-direction: column; gap: 6px; }
-.cat-row { background: var(--bg2); border: 1px solid var(--border); border-radius: 14px; padding: 12px 14px; display: flex; align-items: center; gap: 10px; transition: border-color .2s; }
+.cat-row { background: var(--bg2); border: 1px solid var(--border); border-radius: 14px; padding: 12px 14px; display: flex; align-items: center; gap: 10px; }
 .cat-dot { width: 9px; height: 9px; border-radius: 50%; flex-shrink: 0; }
 .cat-ico { font-size: 18px; width: 26px; text-align: center; flex-shrink: 0; }
 .cat-info { flex: 1; min-width: 0; }
@@ -98,13 +93,42 @@ nav {
 .cat-bar-fill { height: 100%; border-radius: 2px; }
 .cat-amt { font-family: 'IBM Plex Mono', monospace; font-size: 13px; font-weight: 500; flex-shrink: 0; }
 
-/* ── SPARPLAN SCREEN ── */
-.sp-header { padding: 52px 20px 0; }
+/* ── IMPORT SCREEN ── */
+.import-step { margin: 20px 16px 0; background: var(--bg2); border: 1px solid var(--border); border-radius: 18px; padding: 20px; }
+.step-badge { display: inline-flex; align-items: center; justify-content: center; width: 26px; height: 26px; border-radius: 50%; background: var(--green-dim); border: 1px solid var(--green-border); font-family: 'IBM Plex Mono', monospace; font-size: 12px; font-weight: 500; color: var(--green); margin-bottom: 10px; }
+.step-title { font-family: 'Syne', sans-serif; font-size: 15px; font-weight: 700; margin-bottom: 6px; }
+.step-sub { font-size: 12px; color: var(--muted); line-height: 1.6; }
+
+/* prompt box */
+.prompt-box { margin: 12px 0 0; background: var(--bg3); border: 1px solid var(--border2); border-radius: 12px; padding: 14px; position: relative; }
+.prompt-text { font-family: 'IBM Plex Mono', monospace; font-size: 11px; color: #c8c0b0; line-height: 1.7; white-space: pre-wrap; word-break: break-word; max-height: 180px; overflow-y: auto; }
+.copy-btn { margin-top: 10px; width: 100%; background: var(--green-dim); border: 1px solid var(--green-border); border-radius: 10px; padding: 10px; font-family: 'IBM Plex Mono', monospace; font-size: 12px; color: var(--green); transition: all .2s; }
+.copy-btn:active { background: #1a3a28; }
+.copy-success { color: var(--green); font-family: 'IBM Plex Mono', monospace; font-size: 11px; text-align: center; margin-top: 6px; opacity: 0; transition: opacity .3s; }
+.copy-success.show { opacity: 1; }
+
+/* paste area */
+.paste-area { margin: 12px 0 0; width: 100%; min-height: 120px; background: var(--bg3); border: 1px solid var(--border2); border-radius: 12px; padding: 14px; font-family: 'IBM Plex Mono', monospace; font-size: 12px; color: var(--text); outline: none; resize: vertical; transition: border-color .2s; line-height: 1.6; }
+.paste-area:focus { border-color: var(--green); }
+.paste-area::placeholder { color: var(--muted); }
+
+.import-btn { margin: 10px 16px 0; width: calc(100% - 32px); background: linear-gradient(135deg, var(--green-dim), #080f0c); border: 1px solid var(--green-border); border-radius: 16px; padding: 18px; font-family: 'Syne', sans-serif; font-size: 15px; font-weight: 800; color: var(--green); transition: all .25s; display: flex; align-items: center; justify-content: center; gap: 10px; }
+.import-btn:disabled { opacity: .35; }
+.import-btn:not(:disabled):active { background: #1a3a28; }
+
+.error-box { margin: 10px 16px 0; background: #1a0808; border: 1px solid #5a1f1f; border-radius: 14px; padding: 14px 16px; font-size: 12px; color: #ff8a80; display: flex; gap: 10px; line-height: 1.5; }
+.success-box { margin: 10px 16px 0; background: var(--green-dim); border: 1px solid var(--green-border); border-radius: 14px; padding: 14px 16px; font-size: 13px; color: var(--green); display: flex; gap: 10px; align-items: center; }
+
+/* ai links */
+.ai-links { display: flex; gap: 8px; margin-top: 12px; flex-wrap: wrap; }
+.ai-link { flex: 1; min-width: 100px; background: var(--bg3); border: 1px solid var(--border2); border-radius: 10px; padding: 10px 12px; text-align: center; text-decoration: none; color: var(--text); font-size: 12px; font-weight: 500; transition: all .2s; display: flex; align-items: center; justify-content: center; gap: 6px; }
+.ai-link:active { border-color: var(--green); color: var(--green); }
+
+/* SPARPLAN */
 .sp-total-card { margin: 16px 16px 0; border-radius: 18px; background: linear-gradient(135deg, var(--green-dim), #080f0c); border: 1px solid var(--green-border); padding: 22px; }
 .sp-total-lbl { font-family: 'IBM Plex Mono', monospace; font-size: 10px; letter-spacing: 3px; color: var(--green); text-transform: uppercase; margin-bottom: 6px; }
 .sp-total-val { font-family: 'Syne', sans-serif; font-size: 40px; font-weight: 800; color: var(--green); }
 .sp-total-sub { font-size: 12px; color: #4caf82; margin-top: 6px; }
-
 .sp-goals { padding: 16px 16px 0; display: flex; flex-direction: column; gap: 10px; }
 .sp-goal { background: var(--bg2); border: 1px solid var(--border); border-radius: 16px; padding: 16px; }
 .sp-goal-top { display: flex; align-items: center; gap: 10px; margin-bottom: 14px; }
@@ -113,17 +137,14 @@ nav {
 .sp-goal-name { font-family: 'Syne', sans-serif; font-size: 14px; font-weight: 700; }
 .sp-goal-target { font-family: 'IBM Plex Mono', monospace; font-size: 11px; color: var(--muted); margin-top: 2px; }
 .sp-goal-monthly { font-family: 'IBM Plex Mono', monospace; font-size: 14px; font-weight: 500; color: var(--green); flex-shrink: 0; }
-.sp-slider-row { display: flex; align-items: center; gap: 10px; }
-.sp-slider-lbl { font-family: 'IBM Plex Mono', monospace; font-size: 10px; color: var(--muted); width: 28px; text-align: right; flex-shrink: 0; }
 .sp-progress-bar { height: 6px; background: var(--border2); border-radius: 3px; margin-top: 12px; overflow: hidden; }
 .sp-progress-fill { height: 100%; background: linear-gradient(90deg, var(--green), #4caf82); border-radius: 3px; transition: width .4s; }
 .sp-progress-lbl { display: flex; justify-content: space-between; margin-top: 5px; font-family: 'IBM Plex Mono', monospace; font-size: 10px; color: var(--muted); }
-
 .add-goal-btn { margin: 10px 16px 0; border: 1px dashed var(--border2); border-radius: 14px; padding: 14px; text-align: center; color: var(--muted); font-size: 13px; transition: all .2s; width: calc(100% - 32px); }
-.add-goal-btn:hover, .add-goal-btn:active { border-color: var(--green); color: var(--green); }
+.add-goal-btn:active { border-color: var(--green); color: var(--green); }
 
 /* modal */
-.modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,.8); z-index: 200; display: flex; align-items: flex-end; backdrop-filter: blur(4px); -webkit-backdrop-filter: blur(4px); opacity: 0; pointer-events: none; transition: opacity .25s; }
+.modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,.8); z-index: 200; display: flex; align-items: flex-end; backdrop-filter: blur(4px); opacity: 0; pointer-events: none; transition: opacity .25s; }
 .modal-overlay.open { opacity: 1; pointer-events: all; }
 .modal { background: #141310; border: 1px solid var(--border2); border-radius: 24px 24px 0 0; padding: 24px 20px calc(20px + var(--safe)); width: 100%; transform: translateY(100%); transition: transform .3s cubic-bezier(.4,0,.2,1); }
 .modal-overlay.open .modal { transform: translateY(0); }
@@ -135,51 +156,15 @@ nav {
 .field-row { display: flex; gap: 10px; }
 .field-row .field { flex: 1; }
 .modal-actions { display: flex; gap: 10px; margin-top: 20px; }
-.btn-primary { flex: 1; background: var(--green-dim); border: 1px solid var(--green-border); border-radius: 12px; padding: 14px; font-family: 'Syne', sans-serif; font-size: 14px; font-weight: 700; color: var(--green); transition: all .2s; }
-.btn-primary:active { background: #1a3a28; }
-.btn-secondary { background: var(--bg3); border: 1px solid var(--border2); border-radius: 12px; padding: 14px 18px; font-family: 'IBM Plex Mono', monospace; font-size: 12px; color: var(--muted); transition: all .2s; }
+.btn-primary { flex: 1; background: var(--green-dim); border: 1px solid var(--green-border); border-radius: 12px; padding: 14px; font-family: 'Syne', sans-serif; font-size: 14px; font-weight: 700; color: var(--green); }
+.btn-secondary { background: var(--bg3); border: 1px solid var(--border2); border-radius: 12px; padding: 14px 18px; font-family: 'IBM Plex Mono', monospace; font-size: 12px; color: var(--muted); }
 
-/* ── UPLOAD SCREEN ── */
-.upload-zone { margin: 20px 16px 0; border: 1.5px dashed var(--border2); border-radius: 20px; padding: 40px 20px; text-align: center; position: relative; background: var(--bg2); transition: all .25s; }
-.upload-zone.drag { border-color: var(--green); background: var(--green-dim); }
-.upload-zone input[type=file] { position: absolute; inset: 0; opacity: 0; cursor: pointer; }
-.upload-icon { font-size: 40px; margin-bottom: 12px; }
-.upload-title { font-family: 'Syne', sans-serif; font-size: 16px; font-weight: 700; margin-bottom: 6px; }
-.upload-sub { font-size: 12px; color: var(--muted); line-height: 1.5; }
-.upload-fname { margin-top: 14px; display: inline-block; background: var(--green-dim); border: 1px solid var(--green-border); border-radius: 8px; padding: 6px 14px; font-family: 'IBM Plex Mono', monospace; font-size: 11px; color: var(--green); }
-
-.api-key-section { margin: 14px 16px 0; }
-.api-key-toggle { display: flex; align-items: center; gap: 8px; padding: 12px 14px; background: var(--bg2); border: 1px solid var(--border); border-radius: 12px; font-size: 12px; color: var(--muted); cursor: pointer; transition: all .2s; }
-.api-key-toggle:hover { border-color: var(--border2); }
-.api-key-input-wrap { margin-top: 8px; display: none; }
-.api-key-input-wrap.open { display: block; }
-
-.analyze-btn { margin: 14px 16px 0; width: calc(100% - 32px); background: linear-gradient(135deg, var(--green-dim), #080f0c); border: 1px solid var(--green-border); border-radius: 16px; padding: 18px; font-family: 'Syne', sans-serif; font-size: 15px; font-weight: 800; color: var(--green); transition: all .25s; display: flex; align-items: center; justify-content: center; gap: 10px; }
-.analyze-btn:disabled { opacity: .35; }
-.analyze-btn:not(:disabled):active { background: linear-gradient(135deg, #1a3a28, #0c1a10); }
-
-.loader-wrap { text-align: center; padding: 40px 20px; }
-.spinner { width: 44px; height: 44px; border: 3px solid var(--border); border-top-color: var(--green); border-radius: 50%; animation: spin .8s linear infinite; margin: 0 auto 16px; }
-@keyframes spin { to { transform: rotate(360deg); } }
-.loader-text { font-family: 'IBM Plex Mono', monospace; font-size: 12px; color: var(--muted); }
-.loader-step { font-size: 11px; color: var(--muted2); margin-top: 6px; }
-
-.error-box { margin: 14px 16px 0; background: #1a0808; border: 1px solid #5a1f1f; border-radius: 14px; padding: 14px 16px; font-size: 12px; color: #ff8a80; display: flex; gap: 10px; line-height: 1.5; }
-
-.result-actions { display: flex; gap: 8px; padding: 14px 16px 0; }
-.result-action-btn { flex: 1; background: var(--bg2); border: 1px solid var(--border); border-radius: 12px; padding: 12px; font-family: 'IBM Plex Mono', monospace; font-size: 11px; color: var(--muted); transition: all .2s; }
-.result-action-btn:active { border-color: var(--green); color: var(--green); }
-
-/* ── SETTINGS SCREEN ── */
+/* settings */
 .settings-list { padding: 14px 16px 0; display: flex; flex-direction: column; gap: 6px; }
-.setting-row { background: var(--bg2); border: 1px solid var(--border); border-radius: 14px; padding: 14px 16px; display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+.setting-row { background: var(--bg2); border: 1px solid var(--border); border-radius: 14px; padding: 14px 16px; display: flex; align-items: center; justify-content: space-between; gap: 12px; cursor: pointer; }
 .setting-lbl { font-size: 13px; font-weight: 500; }
 .setting-sub { font-size: 11px; color: var(--muted); margin-top: 2px; }
 .setting-val { font-family: 'IBM Plex Mono', monospace; font-size: 13px; color: var(--green); }
-.toggle { width: 44px; height: 24px; background: var(--border2); border-radius: 12px; position: relative; transition: background .2s; flex-shrink: 0; cursor: pointer; }
-.toggle.on { background: var(--green); }
-.toggle::after { content: ''; position: absolute; top: 3px; left: 3px; width: 18px; height: 18px; border-radius: 50%; background: #fff; transition: transform .2s; }
-.toggle.on::after { transform: translateX(20px); }
 
 .install-banner { margin: 16px 16px 0; background: linear-gradient(135deg, #1a1500, #0f0e00); border: 1px solid #5a4a00; border-radius: 18px; padding: 20px; }
 .install-title { font-family: 'Syne', sans-serif; font-size: 15px; font-weight: 700; color: var(--yellow); margin-bottom: 8px; }
@@ -190,222 +175,154 @@ nav {
 <body>
 <div id="app">
 
-  <!-- ══════════════════════════════ SCREEN: OVERVIEW ══════════════════════════════ -->
+  <!-- OVERVIEW -->
   <div id="screen-overview" class="screen active">
     <div class="topbar">
       <div class="topbar-eyebrow">Mein Geld</div>
       <div class="topbar-title">Finanz-<em>Übersicht</em></div>
     </div>
-
-    <!-- Income -->
     <div class="income-bar">
       <div>
         <div class="income-label">Einkommen / Monat</div>
-        <div class="income-val" id="overview-income">2.200 €</div>
+        <div class="income-val" id="overview-income">– €</div>
       </div>
       <button class="income-edit-btn" onclick="openIncomeModal()">✏ Ändern</button>
     </div>
-
-    <!-- Donut -->
     <div class="ring-wrap">
-      <svg id="ring-svg" width="180" height="180" viewBox="0 0 140 140">
+      <svg width="180" height="180" viewBox="0 0 140 140">
         <circle cx="70" cy="70" r="52" fill="none" stroke="#1a1917" stroke-width="14"/>
-        <circle id="arc-fixed"   cx="70" cy="70" r="52" fill="none" stroke="#e8d5b7" stroke-width="14" stroke-dasharray="0 326.7" transform="rotate(-90 70 70)"/>
-        <circle id="arc-fun"     cx="70" cy="70" r="52" fill="none" stroke="#ffd180" stroke-width="14" stroke-dasharray="0 326.7" transform="rotate(-90 70 70)"/>
-        <circle id="arc-saving"  cx="70" cy="70" r="52" fill="none" stroke="#a5d6a7" stroke-width="14" stroke-dasharray="0 326.7" transform="rotate(-90 70 70)"/>
-        <circle id="arc-remain"  cx="70" cy="70" r="52" fill="none" stroke="#69f0ae" stroke-width="14" stroke-dasharray="0 326.7" transform="rotate(-90 70 70)"/>
+        <circle id="arc-fixed"  cx="70" cy="70" r="52" fill="none" stroke="#e8d5b7" stroke-width="14" stroke-dasharray="0 326.7" transform="rotate(-90 70 70)"/>
+        <circle id="arc-fun"    cx="70" cy="70" r="52" fill="none" stroke="#ffd180" stroke-width="14" stroke-dasharray="0 326.7" transform="rotate(-90 70 70)"/>
+        <circle id="arc-saving" cx="70" cy="70" r="52" fill="none" stroke="#a5d6a7" stroke-width="14" stroke-dasharray="0 326.7" transform="rotate(-90 70 70)"/>
+        <circle id="arc-remain" cx="70" cy="70" r="52" fill="none" stroke="#69f0ae" stroke-width="14" stroke-dasharray="0 326.7" transform="rotate(-90 70 70)"/>
       </svg>
       <div class="ring-center">
-        <div class="ring-remain" id="ring-remain-val">+0 €</div>
+        <div class="ring-remain" id="ring-remain-val">– €</div>
         <div class="ring-lbl">Verfügbar</div>
       </div>
     </div>
-
-    <!-- Stats -->
     <div class="stat-row">
-      <div class="stat">
-        <div class="stat-icon">🏠</div>
-        <div class="stat-val" id="stat-fixed" style="color:#e8d5b7">0 €</div>
-        <div class="stat-lbl">Fixkosten</div>
-      </div>
-      <div class="stat">
-        <div class="stat-icon">🎉</div>
-        <div class="stat-val" id="stat-fun" style="color:#ffd180">0 €</div>
-        <div class="stat-lbl">Freizeit</div>
-      </div>
-      <div class="stat">
-        <div class="stat-icon">💰</div>
-        <div class="stat-val" id="stat-saving" style="color:#a5d6a7">0 €</div>
-        <div class="stat-lbl">Sparen</div>
-      </div>
+      <div class="stat"><div class="stat-icon">🏠</div><div class="stat-val" id="stat-fixed" style="color:#e8d5b7">– €</div><div class="stat-lbl">Fixkosten</div></div>
+      <div class="stat"><div class="stat-icon">🎉</div><div class="stat-val" id="stat-fun" style="color:#ffd180">– €</div><div class="stat-lbl">Freizeit</div></div>
+      <div class="stat"><div class="stat-icon">💰</div><div class="stat-val" id="stat-saving" style="color:#a5d6a7">– €</div><div class="stat-lbl">Sparen</div></div>
     </div>
-
-    <!-- Highlight -->
     <div class="hl-card" id="hl-card" style="background:linear-gradient(135deg,#0f2018,#0c0b0a);border:1px solid #2a5a3a;">
       <div class="hl-eyebrow" style="color:#69f0ae">✨ Noch verfügbar</div>
-      <div class="hl-val" id="hl-val" style="color:#69f0ae">0 €</div>
-      <div class="hl-sub" id="hl-sub" style="color:#4caf82">Lade deinen Kontoauszug hoch</div>
+      <div class="hl-val" id="hl-val" style="color:#69f0ae">– €</div>
+      <div class="hl-sub" id="hl-sub" style="color:#4caf82">Importiere deinen Kontoauszug um zu starten →</div>
+    </div>
+    <div class="cat-list" id="cat-list"></div>
+    <div style="height:10px"></div>
+  </div>
+
+  <!-- IMPORT -->
+  <div id="screen-import" class="screen">
+    <div class="topbar">
+      <div class="topbar-eyebrow">Schritt für Schritt</div>
+      <div class="topbar-title">Kontoauszug <em>importieren</em></div>
     </div>
 
-    <!-- Category list -->
-    <div class="cat-list" id="cat-list"></div>
+    <!-- Step 1: Copy prompt -->
+    <div class="import-step">
+      <div class="step-badge">1</div>
+      <div class="step-title">Prompt kopieren</div>
+      <div class="step-sub">Kopiere diesen Prompt und öffne ChatGPT, Claude oder Gemini. Füge dort den Prompt ein — zusammen mit deinem Kontoauszug als Foto oder PDF.</div>
+      <div class="prompt-box">
+        <div class="prompt-text" id="prompt-text"></div>
+      </div>
+      <button class="copy-btn" onclick="copyPrompt()">📋 Prompt kopieren</button>
+      <div class="copy-success" id="copy-success">✓ Kopiert!</div>
+      <div class="ai-links">
+        <a class="ai-link" href="https://chat.openai.com" target="_blank">🤖 ChatGPT</a>
+        <a class="ai-link" href="https://claude.ai" target="_blank">✨ Claude</a>
+        <a class="ai-link" href="https://gemini.google.com" target="_blank">💎 Gemini</a>
+      </div>
+    </div>
+
+    <!-- Step 2: Paste JSON -->
+    <div class="import-step">
+      <div class="step-badge">2</div>
+      <div class="step-title">JSON hier einfügen</div>
+      <div class="step-sub">Kopiere die JSON-Antwort der KI und füge sie hier ein.</div>
+      <textarea class="paste-area" id="json-paste" placeholder='Hier JSON einfügen...
+Beispiel:
+{
+  "income": 2500,
+  "categories": [
+    { "name": "Miete", "amount": 850, "type": "fixed" },
+    { "name": "Hobbys", "amount": 150, "type": "fun" }
+  ]
+}'></textarea>
+    </div>
+
+    <button class="import-btn" onclick="runImport()">✅ Importieren & anzeigen</button>
+    <div class="error-box" id="import-error" style="display:none"><span>⚠️</span><div id="import-error-msg"></div></div>
+    <div class="success-box" id="import-success" style="display:none">✓ <span id="import-success-msg"></span></div>
 
     <div style="height:10px"></div>
   </div>
 
-  <!-- ══════════════════════════════ SCREEN: SPARPLAN ══════════════════════════════ -->
+  <!-- SPARPLAN -->
   <div id="screen-sparplan" class="screen">
-    <div class="sp-header">
+    <div class="topbar">
       <div class="topbar-eyebrow">Mein Sparplan</div>
       <div class="topbar-title">Ziele &amp; <em>Rücklagen</em></div>
     </div>
-
     <div class="sp-total-card">
       <div class="sp-total-lbl">💰 Gesamt Sparrate</div>
       <div class="sp-total-val" id="sp-total-val">0 € / Mo</div>
       <div class="sp-total-sub" id="sp-total-sub">Füge Sparziele hinzu</div>
     </div>
-
     <div class="sp-goals" id="sp-goals"></div>
-
     <button class="add-goal-btn" onclick="openGoalModal()">+ Neues Sparziel hinzufügen</button>
-
     <div style="height:10px"></div>
   </div>
 
-  <!-- ══════════════════════════════ SCREEN: UPLOAD ══════════════════════════════ -->
-  <div id="screen-upload" class="screen">
-    <div class="topbar">
-      <div class="topbar-eyebrow">KI-Analyse</div>
-      <div class="topbar-title">Kontoauszug <em>hochladen</em></div>
-    </div>
-
-    <div id="upload-section">
-      <div class="upload-zone" id="upload-zone"
-        ondragover="event.preventDefault();this.classList.add('drag')"
-        ondragleave="this.classList.remove('drag')"
-        ondrop="handleDrop(event)">
-        <input type="file" accept=".pdf,image/*" onchange="handleFileSelect(event)" />
-        <div class="upload-icon" id="upload-icon">☁️</div>
-        <div class="upload-title" id="upload-title">PDF oder Foto hochladen</div>
-        <div class="upload-sub" id="upload-sub">Kontoauszug als PDF, JPG oder PNG<br/>Antippen oder Drag &amp; Drop</div>
-        <div class="upload-fname" id="upload-fname" style="display:none"></div>
-      </div>
-
-      <div class="api-key-section">
-        <div class="api-key-toggle" onclick="toggleApiKeyInput()">
-          🔑 <span>Eigenen API-Key verwenden (optional)</span>
-          <span id="api-key-arrow" style="margin-left:auto">▼</span>
-        </div>
-        <div class="api-key-input-wrap" id="api-key-wrap">
-          <input class="field-input" type="password" id="api-key-input" placeholder="sk-ant-..." oninput="saveApiKey(this.value)" />
-          <div style="font-size:11px;color:var(--muted);margin-top:6px;padding:0 4px">Wird nur lokal auf deinem Gerät gespeichert.</div>
-        </div>
-      </div>
-
-      <button class="analyze-btn" id="analyze-btn" disabled onclick="runAnalysis()">
-        ✨ KI-Analyse starten
-      </button>
-    </div>
-
-    <div class="loader-wrap" id="loader-wrap" style="display:none">
-      <div class="spinner"></div>
-      <div class="loader-text" id="loader-text">Vorbereitung…</div>
-      <div class="loader-step" id="loader-step"></div>
-    </div>
-
-    <div class="error-box" id="error-box" style="display:none">
-      <span>⚠️</span><div id="error-msg"></div>
-    </div>
-
-    <div id="result-section" style="display:none">
-      <div class="result-actions">
-        <button class="result-action-btn" onclick="resetUpload()">↩ Neu hochladen</button>
-        <button class="result-action-btn" onclick="switchScreen('overview')" style="border-color:var(--green-border);color:var(--green)">📊 Übersicht →</button>
-      </div>
-      <div class="cat-list" id="result-cat-list"></div>
-    </div>
-
-    <div style="height:10px"></div>
-  </div>
-
-  <!-- ══════════════════════════════ SCREEN: SETTINGS ══════════════════════════════ -->
+  <!-- SETTINGS -->
   <div id="screen-settings" class="screen">
     <div class="topbar">
       <div class="topbar-eyebrow">Einstellungen</div>
       <div class="topbar-title"><em>App</em> anpassen</div>
     </div>
-
     <div class="install-banner">
-      <div class="install-title">📲 Als App installieren</div>
+      <div class="install-title">📲 Als App installieren (Android)</div>
       <div class="install-steps">
-        <span>1. Öffne diese Seite in Chrome (Android)</span>
-        <span>2. Tippe auf ⋮ → „Zum Startbildschirm hinzufügen"</span>
-        <span>3. Tippe auf „Installieren" → Fertig! 🎉</span>
+        <span>1. Seite in Chrome öffnen</span>
+        <span>2. Menü ⋮ → „Zum Startbildschirm hinzufügen"</span>
+        <span>3. „Installieren" tippen → Fertig! 🎉</span>
       </div>
     </div>
-
     <div class="settings-list">
-      <div class="setting-row">
-        <div>
-          <div class="setting-lbl">Einkommen</div>
-          <div class="setting-sub">Monatliches Nettoeinkommen</div>
-        </div>
-        <div class="setting-val" id="settings-income-val">2.200 €</div>
+      <div class="setting-row" onclick="openIncomeModal()">
+        <div><div class="setting-lbl">✏️ Einkommen bearbeiten</div><div class="setting-sub">Monatliches Nettoeinkommen</div></div>
+        <div class="setting-val" id="settings-income-val">– €</div>
       </div>
-
-      <div class="setting-row" onclick="openIncomeModal()" style="cursor:pointer">
-        <div>
-          <div class="setting-lbl">✏️ Einkommen bearbeiten</div>
-          <div class="setting-sub">Nettoeinkommen anpassen</div>
-        </div>
+      <div class="setting-row" onclick="switchScreen('import')">
+        <div><div class="setting-lbl">📄 Neuer Import</div><div class="setting-sub">Kontoauszug neu importieren</div></div>
         <div style="color:var(--muted)">›</div>
       </div>
-
-      <div class="setting-row" onclick="clearData()" style="cursor:pointer">
-        <div>
-          <div class="setting-lbl">🗑️ Alle Daten löschen</div>
-          <div class="setting-sub">Kategorien &amp; Sparziele zurücksetzen</div>
-        </div>
+      <div class="setting-row" onclick="clearData()">
+        <div><div class="setting-lbl">🗑️ Alle Daten löschen</div><div class="setting-sub">Zurücksetzen auf Werkseinstellungen</div></div>
         <div style="color:var(--muted)">›</div>
       </div>
-
-      <div class="setting-row">
-        <div>
-          <div class="setting-lbl">Version</div>
-          <div class="setting-sub">MeinGeld PWA</div>
-        </div>
+      <div class="setting-row" style="cursor:default">
+        <div><div class="setting-lbl">Version</div><div class="setting-sub">MeinGeld PWA</div></div>
         <div class="setting-val">1.0.0</div>
       </div>
     </div>
-
     <div style="height:10px"></div>
   </div>
 
-  <!-- ══════════════════════════════ NAV ══════════════════════════════ -->
+  <!-- NAV -->
   <nav>
-    <button class="nav-btn active" id="nav-overview" onclick="switchScreen('overview')">
-      <span class="nav-icon">📊</span>
-      <span>Übersicht</span>
-    </button>
-    <button class="nav-btn" id="nav-sparplan" onclick="switchScreen('sparplan')">
-      <span class="nav-icon">💰</span>
-      <span>Sparplan</span>
-    </button>
-    <button class="nav-btn" id="nav-upload" onclick="switchScreen('upload')">
-      <span class="nav-icon">📄</span>
-      <span>Hochladen</span>
-    </button>
-    <button class="nav-btn" id="nav-settings" onclick="switchScreen('settings')">
-      <span class="nav-icon">⚙️</span>
-      <span>Einstellungen</span>
-    </button>
+    <button class="nav-btn active" id="nav-overview" onclick="switchScreen('overview')"><span class="nav-icon">📊</span><span>Übersicht</span></button>
+    <button class="nav-btn" id="nav-import" onclick="switchScreen('import')"><span class="nav-icon">📄</span><span>Import</span></button>
+    <button class="nav-btn" id="nav-sparplan" onclick="switchScreen('sparplan')"><span class="nav-icon">💰</span><span>Sparplan</span></button>
+    <button class="nav-btn" id="nav-settings" onclick="switchScreen('settings')"><span class="nav-icon">⚙️</span><span>Einstellungen</span></button>
   </nav>
 </div>
 
-<!-- ══════════════════════════════ MODALS ══════════════════════════════ -->
-
-<!-- Income Modal -->
+<!-- INCOME MODAL -->
 <div class="modal-overlay" id="modal-income">
   <div class="modal">
     <div class="modal-title">Einkommen anpassen</div>
@@ -420,34 +337,20 @@ nav {
   </div>
 </div>
 
-<!-- Goal Modal -->
+<!-- GOAL MODAL -->
 <div class="modal-overlay" id="modal-goal">
   <div class="modal">
-    <div class="modal-title" id="goal-modal-title">Sparziel hinzufügen</div>
+    <div class="modal-title">Sparziel hinzufügen</div>
     <div class="field-row">
-      <div class="field">
-        <div class="field-lbl">Emoji</div>
-        <input class="field-input" type="text" id="goal-icon" placeholder="🏖️" maxlength="2" />
-      </div>
-      <div class="field" style="flex:3">
-        <div class="field-lbl">Name</div>
-        <input class="field-input" type="text" id="goal-name" placeholder="z.B. Urlaub" />
-      </div>
+      <div class="field"><div class="field-lbl">Emoji</div><input class="field-input" type="text" id="goal-icon" placeholder="🏖️" maxlength="2" /></div>
+      <div class="field" style="flex:3"><div class="field-lbl">Name</div><input class="field-input" type="text" id="goal-name" placeholder="z.B. Urlaub" /></div>
     </div>
+    <div class="field"><div class="field-lbl">Ziel-Betrag (€)</div><input class="field-input" type="number" id="goal-target" placeholder="2000" /></div>
+    <div class="field"><div class="field-lbl">Bereits gespart (€)</div><input class="field-input" type="number" id="goal-saved" placeholder="0" /></div>
     <div class="field">
-      <div class="field-lbl">Ziel-Betrag (€)</div>
-      <input class="field-input" type="number" id="goal-target" placeholder="2000" />
-    </div>
-    <div class="field">
-      <div class="field-lbl">Bereits gespart (€)</div>
-      <input class="field-input" type="number" id="goal-saved" placeholder="0" />
-    </div>
-    <div class="field">
-      <div class="field-lbl">Monatliche Rate: <span id="goal-monthly-lbl" style="color:var(--green)">0 €</span></div>
-      <input type="range" id="goal-monthly-slider" min="10" max="500" step="10" value="50" oninput="updateGoalSlider(this.value)" />
-      <div style="display:flex;justify-content:space-between;font-family:'IBM Plex Mono',monospace;font-size:10px;color:var(--muted);margin-top:4px">
-        <span>10 €</span><span>500 €</span>
-      </div>
+      <div class="field-lbl">Monatliche Rate: <span id="goal-monthly-lbl" style="color:var(--green)">50 €</span></div>
+      <input type="range" id="goal-monthly-slider" min="10" max="500" step="10" value="50" oninput="document.getElementById('goal-monthly-lbl').textContent=this.value+' €'" />
+      <div style="display:flex;justify-content:space-between;font-family:'IBM Plex Mono',monospace;font-size:10px;color:var(--muted);margin-top:4px"><span>10 €</span><span>500 €</span></div>
     </div>
     <div class="modal-actions">
       <button class="btn-secondary" onclick="closeModal('modal-goal')">Abbrechen</button>
@@ -457,27 +360,42 @@ nav {
 </div>
 
 <script>
-// ══════════════════════════════════════════════════════════════════════
-// STATE
-// ══════════════════════════════════════════════════════════════════════
-let state = {
-  income: 2200,
-  categories: [],
-  goals: [],
-};
+// ── PROMPT TEMPLATE ─────────────────────────────────────────────────
+const PROMPT = `Analysiere diesen Kontoauszug und gib mir NUR ein JSON-Objekt zurück.
+Kein erklärender Text, keine Markdown-Backticks, nur reines JSON.
+
+Gewünschtes Format:
+{
+  "income": <Gesamteinnahmen als Zahl>,
+  "categories": [
+    { "name": "<Kategoriename>", "amount": <Betrag als positive Zahl>, "type": "<fixed|fun|saving>" }
+  ]
+}
+
+Regeln:
+- Fasse ähnliche Buchungen zusammen (z.B. alle Supermärkte → "Lebensmittel")
+- "amount" ist immer positiv (Ausgabebetrag)
+- "type" Werte: fixed = wiederkehrende Fixkosten, fun = Freizeit & Shopping, saving = Sparbeiträge
+- Einnahmen (Gehalt, Gutschriften) NUR in "income", nicht in categories
+- Maximal 12 Kategorien, kleine Beträge unter "Sonstiges" zusammenfassen
+- Antworte ausschließlich mit dem JSON-Objekt`;
+
+document.getElementById('prompt-text').textContent = PROMPT;
+
+// ── STATE ────────────────────────────────────────────────────────────
+let state = { income: 0, categories: [], goals: [] };
 
 const ICONS = {
   miete:"🏠",wohnen:"🏠",nebenkosten:"💡",strom:"💡",internet:"📡",
-  lebensmittel:"🛒",supermarkt:"🛒",einkaufen:"🛒",transport:"🚇",
-  öpnv:"🚇",auto:"🚗",tanken:"⛽",versicherung:"🛡️",gesundheit:"💊",
-  hobbys:"🎸",sport:"🏃",freizeit:"🎉",unterhaltung:"🎬",
-  essen:"🍜",restaurant:"🍜",lieferservice:"🛵",kleidung:"👗",
-  shopping:"🛍️",sparen:"💰",rücklagen:"🏦",gehalt:"💼",streaming:"📺",
-  telefon:"📱",sonstiges:"📌",
+  lebensmittel:"🛒",supermarkt:"🛒",transport:"🚇",öpnv:"🚇",auto:"🚗",
+  tanken:"⛽",versicherung:"🛡️",gesundheit:"💊",hobbys:"🎸",sport:"🏃",
+  freizeit:"🎉",unterhaltung:"🎬",essen:"🍜",restaurant:"🍜",lieferservice:"🛵",
+  kleidung:"👗",shopping:"🛍️",sparen:"💰",rücklagen:"🏦",gehalt:"💼",
+  streaming:"📺",telefon:"📱",sonstiges:"📌",
 };
-function iconFor(name) {
-  const n = name.toLowerCase();
-  for (const [k,v] of Object.entries(ICONS)) if (n.includes(k)) return v;
+function iconFor(n) {
+  const low = n.toLowerCase();
+  for (const [k,v] of Object.entries(ICONS)) if (low.includes(k)) return v;
   return "📌";
 }
 const TYPE_CFG = {
@@ -486,38 +404,87 @@ const TYPE_CFG = {
   saving: { color:"#a5d6a7", label:"Sparen"    },
 };
 
-// ══════════════════════════════════════════════════════════════════════
-// PERSISTENCE
-// ══════════════════════════════════════════════════════════════════════
-function save() {
-  try { localStorage.setItem("mg_state", JSON.stringify(state)); } catch(_){}
-}
-function load() {
-  try {
-    const s = localStorage.getItem("mg_state");
-    if (s) state = { ...state, ...JSON.parse(s) };
-  } catch(_){}
-}
+// ── PERSISTENCE ──────────────────────────────────────────────────────
+function save() { try { localStorage.setItem("mg2_state", JSON.stringify(state)); } catch(_){} }
+function load() { try { const s = localStorage.getItem("mg2_state"); if (s) state = {...state,...JSON.parse(s)}; } catch(_){} }
 
-// ══════════════════════════════════════════════════════════════════════
-// NAVIGATION
-// ══════════════════════════════════════════════════════════════════════
+// ── NAV ──────────────────────────────────────────────────────────────
 function switchScreen(id) {
   document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
   document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
-  document.getElementById('screen-' + id).classList.add('active');
-  document.getElementById('nav-' + id).classList.add('active');
-  if (id === 'overview') renderOverview();
-  if (id === 'sparplan') renderSparplan();
-  if (id === 'settings') renderSettings();
+  document.getElementById('screen-'+id).classList.add('active');
+  document.getElementById('nav-'+id).classList.add('active');
+  if (id==='overview') renderOverview();
+  if (id==='sparplan') renderSparplan();
+  if (id==='settings') renderSettings();
 }
 
-// ══════════════════════════════════════════════════════════════════════
-// RENDER OVERVIEW
-// ══════════════════════════════════════════════════════════════════════
+// ── COPY PROMPT ──────────────────────────────────────────────────────
+function copyPrompt() {
+  navigator.clipboard.writeText(PROMPT).then(() => {
+    const el = document.getElementById('copy-success');
+    el.classList.add('show');
+    setTimeout(() => el.classList.remove('show'), 2000);
+  }).catch(() => {
+    // Fallback
+    const ta = document.createElement('textarea');
+    ta.value = PROMPT; document.body.appendChild(ta);
+    ta.select(); document.execCommand('copy');
+    document.body.removeChild(ta);
+    const el = document.getElementById('copy-success');
+    el.classList.add('show');
+    setTimeout(() => el.classList.remove('show'), 2000);
+  });
+}
+
+// ── IMPORT ───────────────────────────────────────────────────────────
+function runImport() {
+  const raw = document.getElementById('json-paste').value.trim();
+  document.getElementById('import-error').style.display = 'none';
+  document.getElementById('import-success').style.display = 'none';
+
+  if (!raw) { showImportError('Bitte zuerst das JSON einfügen.'); return; }
+
+  let parsed;
+  try {
+    const clean = raw.replace(/```json|```/g,'').trim();
+    parsed = JSON.parse(clean);
+  } catch(e) {
+    showImportError('Ungültiges JSON. Stelle sicher dass du die komplette KI-Antwort kopiert hast.');
+    return;
+  }
+
+  if (!parsed.income || !Array.isArray(parsed.categories)) {
+    showImportError('JSON-Format stimmt nicht. Fehlende Felder: income oder categories.');
+    return;
+  }
+
+  // Keep goals/auto-saving, replace imported cats
+  const autoSaving = state.categories.filter(c => c._auto);
+  state.income = parsed.income;
+  state.categories = [
+    ...parsed.categories.map(c => ({...c, _auto: false})),
+    ...autoSaving
+  ];
+  save();
+
+  document.getElementById('import-success-msg').textContent =
+    `${parsed.categories.length} Kategorien importiert · Einkommen: ${parsed.income.toLocaleString('de-DE')} €`;
+  document.getElementById('import-success').style.display = 'flex';
+  document.getElementById('json-paste').value = '';
+
+  setTimeout(() => switchScreen('overview'), 1200);
+}
+
+function showImportError(msg) {
+  document.getElementById('import-error-msg').textContent = msg;
+  document.getElementById('import-error').style.display = 'flex';
+}
+
+// ── RENDER OVERVIEW ──────────────────────────────────────────────────
 function renderOverview() {
   const { income, categories } = state;
-  const fmt = n => n.toLocaleString('de-DE', { minimumFractionDigits: 0, maximumFractionDigits: 0 }) + ' €';
+  const fmt = n => n === 0 && income === 0 ? '– €' : Math.round(n).toLocaleString('de-DE') + ' €';
 
   const fixed  = categories.filter(c=>c.type==='fixed').reduce((s,c)=>s+c.amount,0);
   const fun    = categories.filter(c=>c.type==='fun').reduce((s,c)=>s+c.amount,0);
@@ -525,408 +492,183 @@ function renderOverview() {
   const remain = income - fixed - fun - saving;
   const remCol = remain < 0 ? '#ff6b6b' : remain < income * .08 ? '#ffd180' : '#69f0ae';
 
-  document.getElementById('overview-income').textContent = fmt(income);
+  document.getElementById('overview-income').textContent = income > 0 ? Math.round(income).toLocaleString('de-DE')+' €' : '– €';
   document.getElementById('stat-fixed').textContent  = fmt(fixed);
   document.getElementById('stat-fun').textContent    = fmt(fun);
   document.getElementById('stat-saving').textContent = fmt(saving);
-  document.getElementById('ring-remain-val').textContent = (remain>=0?'+':'')+fmt(remain);
-  document.getElementById('ring-remain-val').style.color = remCol;
 
-  // Donut arcs
+  const remText = income > 0 ? (remain>=0?'+':'')+Math.round(remain).toLocaleString('de-DE')+' €' : '– €';
+  document.getElementById('ring-remain-val').textContent = remText;
+  document.getElementById('ring-remain-val').style.color = income > 0 ? remCol : 'var(--muted)';
+
+  // Arcs
   const CIRC = 326.7;
-  function setArc(id, val, offset, color) {
-    const el = document.getElementById(id);
-    const d  = income > 0 ? (val/income)*CIRC : 0;
-    el.style.strokeDasharray = `${d} ${CIRC}`;
-    el.style.strokeDashoffset = `-${offset}`;
-    el.style.stroke = color;
-  }
-  const fixD  = income>0?(fixed/income)*CIRC:0;
-  const funD  = income>0?(fun/income)*CIRC:0;
-  const savD  = income>0?(saving/income)*CIRC:0;
-  const remD  = income>0?(Math.max(0,remain)/income)*CIRC:0;
-  document.getElementById('arc-fixed').style.strokeDasharray  = `${fixD} ${CIRC}`;
-  document.getElementById('arc-fixed').style.strokeDashoffset = '0';
-  document.getElementById('arc-fun').style.strokeDasharray    = `${funD} ${CIRC}`;
-  document.getElementById('arc-fun').style.strokeDashoffset   = `-${fixD}`;
-  document.getElementById('arc-saving').style.strokeDasharray  = `${savD} ${CIRC}`;
-  document.getElementById('arc-saving').style.strokeDashoffset = `-${fixD+funD}`;
-  document.getElementById('arc-remain').style.strokeDasharray  = `${remD} ${CIRC}`;
-  document.getElementById('arc-remain').style.strokeDashoffset = `-${fixD+funD+savD}`;
-  document.getElementById('arc-remain').style.stroke = remCol;
+  const arc = (val) => income > 0 ? (val/income)*CIRC : 0;
+  const fixD=arc(fixed), funD=arc(fun), savD=arc(saving), remD=arc(Math.max(0,remain));
+  const setArc = (id,d,off,col) => {
+    const el=document.getElementById(id);
+    el.style.strokeDasharray=`${d} ${CIRC}`;
+    el.style.strokeDashoffset=`-${off}`;
+    if(col) el.style.stroke=col;
+  };
+  setArc('arc-fixed',  fixD, 0,                null);
+  setArc('arc-fun',    funD, fixD,              null);
+  setArc('arc-saving', savD, fixD+funD,         null);
+  setArc('arc-remain', remD, fixD+funD+savD,    remCol);
 
-  // Highlight card
-  const hlCard = document.getElementById('hl-card');
-  const hlVal  = document.getElementById('hl-val');
-  const hlSub  = document.getElementById('hl-sub');
-  if (remain < 0) {
-    hlCard.style.background = 'linear-gradient(135deg,#2a0808,#0c0b0a)';
-    hlCard.style.border = '1px solid #5a1f1f';
-    hlVal.style.color = '#ff6b6b';
-    hlVal.textContent = fmt(remain);
-    hlSub.style.color = '#ff6b6b';
-    hlSub.textContent = '⚠️ Ausgaben übersteigen Einnahmen!';
+  // Highlight
+  const hlCard=document.getElementById('hl-card');
+  const hlVal=document.getElementById('hl-val');
+  const hlSub=document.getElementById('hl-sub');
+  if (income === 0) {
+    hlVal.textContent = '– €';
+    hlSub.textContent = 'Importiere deinen Kontoauszug → Tab „Import"';
+    hlVal.style.color = 'var(--muted)';
+  } else if (remain < 0) {
+    hlCard.style.background='linear-gradient(135deg,#2a0808,#0c0b0a)';
+    hlCard.style.border='1px solid #5a1f1f';
+    hlVal.style.color='#ff6b6b';
+    hlVal.textContent=Math.round(remain).toLocaleString('de-DE')+' €';
+    hlSub.style.color='#ff6b6b';
+    hlSub.textContent='⚠️ Ausgaben übersteigen Einnahmen!';
   } else {
-    hlCard.style.background = 'linear-gradient(135deg,#0f2018,#0c0b0a)';
-    hlCard.style.border = '1px solid #2a5a3a';
-    hlVal.style.color = '#69f0ae';
-    hlVal.textContent = fmt(remain);
-    hlSub.style.color = '#4caf82';
-    const pct = income>0?Math.round((remain/income)*100):0;
-    hlSub.textContent = `${pct}% deines Einkommens noch frei – ${fmt(Math.round(remain/4))} / Woche`;
+    hlCard.style.background='linear-gradient(135deg,#0f2018,#0c0b0a)';
+    hlCard.style.border='1px solid #2a5a3a';
+    hlVal.style.color='#69f0ae';
+    hlVal.textContent='+'+Math.round(remain).toLocaleString('de-DE')+' €';
+    hlSub.style.color='#4caf82';
+    const pct=income>0?Math.round((remain/income)*100):0;
+    hlSub.textContent=`${pct}% deines Einkommens frei · ${Math.round(remain/4).toLocaleString('de-DE')} € / Woche`;
   }
 
-  // Category list
-  const list = document.getElementById('cat-list');
-  list.innerHTML = '';
+  // List
+  const list=document.getElementById('cat-list');
+  list.innerHTML='';
   if (!categories.length) {
-    list.innerHTML = '<div style="text-align:center;padding:30px 20px;color:var(--muted);font-size:13px">Lade einen Kontoauszug hoch oder füge Kategorien manuell hinzu.</div>';
+    list.innerHTML='<div style="text-align:center;padding:30px 20px;color:var(--muted);font-size:13px">Noch keine Daten. Gehe zu „Import" um deinen Kontoauszug zu laden.</div>';
     return;
   }
-  [...categories].sort((a,b)=>b.amount-a.amount).forEach(c => {
-    const cfg  = TYPE_CFG[c.type] || TYPE_CFG.fun;
-    const pct  = income>0?Math.min(100,(c.amount/income)*100):0;
-    const icon = iconFor(c.name);
-    const el   = document.createElement('div');
-    el.className = 'cat-row';
-    el.innerHTML = `
+  [...categories].sort((a,b)=>b.amount-a.amount).forEach(c=>{
+    const cfg=TYPE_CFG[c.type]||TYPE_CFG.fun;
+    const pct=income>0?Math.min(100,(c.amount/income)*100):0;
+    const el=document.createElement('div');
+    el.className='cat-row';
+    el.innerHTML=`
       <div class="cat-dot" style="background:${cfg.color}"></div>
-      <div class="cat-ico">${icon}</div>
+      <div class="cat-ico">${iconFor(c.name)}</div>
       <div class="cat-info">
         <div class="cat-name">${c.name}</div>
         <div class="cat-type" style="color:${cfg.color}">${cfg.label}</div>
         <div class="cat-bar"><div class="cat-bar-fill" style="width:${pct}%;background:${cfg.color}"></div></div>
       </div>
-      <div class="cat-amt">${c.amount.toLocaleString('de-DE',{minimumFractionDigits:2})} €</div>
-    `;
+      <div class="cat-amt">${c.amount.toLocaleString('de-DE',{minimumFractionDigits:2})} €</div>`;
     list.appendChild(el);
   });
 }
 
-// ══════════════════════════════════════════════════════════════════════
-// RENDER SPARPLAN
-// ══════════════════════════════════════════════════════════════════════
+// ── SPARPLAN ─────────────────────────────────────────────────────────
 function renderSparplan() {
-  const goals  = state.goals;
-  const total  = goals.reduce((s,g)=>s+g.monthly,0);
-  document.getElementById('sp-total-val').textContent = total.toLocaleString('de-DE') + ' € / Mo';
-  const years  = total > 0 ? '' : '';
-  document.getElementById('sp-total-sub').textContent = total > 0
-    ? `${goals.length} aktive${goals.length===1?'s':''} Ziel${goals.length===1?'':'e'}`
-    : 'Füge dein erstes Sparziel hinzu';
-
-  const container = document.getElementById('sp-goals');
-  container.innerHTML = '';
-  goals.forEach((g, i) => {
-    const target  = g.target || 1;
-    const saved   = g.saved  || 0;
-    const monthly = g.monthly|| 0;
-    const left    = Math.max(0, target - saved);
-    const months  = monthly > 0 ? Math.ceil(left / monthly) : '∞';
-    const pct     = Math.min(100, Math.round((saved/target)*100));
-    const el      = document.createElement('div');
-    el.className  = 'sp-goal';
-    el.innerHTML  = `
+  const goals=state.goals;
+  const total=goals.reduce((s,g)=>s+g.monthly,0);
+  document.getElementById('sp-total-val').textContent=total.toLocaleString('de-DE')+' € / Mo';
+  document.getElementById('sp-total-sub').textContent=total>0?`${goals.length} aktive${goals.length===1?'s':''} Ziel${goals.length===1?'':'e'}`:'Füge dein erstes Sparziel hinzu';
+  const container=document.getElementById('sp-goals');
+  container.innerHTML='';
+  goals.forEach((g,i)=>{
+    const target=g.target||1, saved=g.saved||0, monthly=g.monthly||0;
+    const left=Math.max(0,target-saved);
+    const months=monthly>0?Math.ceil(left/monthly):'∞';
+    const pct=Math.min(100,Math.round((saved/target)*100));
+    const el=document.createElement('div');
+    el.className='sp-goal';
+    el.innerHTML=`
       <div class="sp-goal-top">
         <div class="sp-goal-ico">${g.icon||'💰'}</div>
         <div class="sp-goal-info">
           <div class="sp-goal-name">${g.name}</div>
-          <div class="sp-goal-target">Ziel: ${target.toLocaleString('de-DE')} € · noch ${months} ${typeof months==='number'?'Mo':''}</div>
+          <div class="sp-goal-target">Ziel: ${target.toLocaleString('de-DE')} € · noch ${months}${typeof months==='number'?' Mo':''}</div>
         </div>
         <div class="sp-goal-monthly">${monthly} €/Mo</div>
       </div>
-      <div class="sp-slider-row">
-        <div class="sp-slider-lbl">10€</div>
-        <input type="range" min="10" max="500" step="10" value="${monthly}"
-          oninput="updateGoalMonthly(${i}, this.value)" style="flex:1" />
-        <div class="sp-slider-lbl" style="width:36px;text-align:left">${Math.min(monthly,500)}€</div>
-        <button onclick="deleteGoal(${i})" style="color:var(--muted2);font-size:16px;padding:4px 6px;margin-left:4px">✕</button>
+      <div style="display:flex;align-items:center;gap:10px">
+        <span style="font-family:'IBM Plex Mono',monospace;font-size:10px;color:var(--muted)">10€</span>
+        <input type="range" min="10" max="500" step="10" value="${monthly}" style="flex:1"
+          oninput="updateGoalMonthly(${i},this.value)" />
+        <span style="font-family:'IBM Plex Mono',monospace;font-size:10px;color:var(--muted);width:36px">${monthly}€</span>
+        <button onclick="deleteGoal(${i})" style="color:var(--muted2);font-size:16px;padding:4px">✕</button>
       </div>
       <div class="sp-progress-bar"><div class="sp-progress-fill" style="width:${pct}%"></div></div>
-      <div class="sp-progress-lbl">
-        <span>${saved.toLocaleString('de-DE')} € gespart</span>
-        <span>${pct}%</span>
-      </div>
-    `;
+      <div class="sp-progress-lbl"><span>${saved.toLocaleString('de-DE')} € gespart</span><span>${pct}%</span></div>`;
     container.appendChild(el);
   });
 }
 
-function updateGoalMonthly(i, val) {
-  state.goals[i].monthly = parseInt(val);
-  save();
-  renderSparplan();
-  // also update saving total in categories
-  syncSavingToCategories();
+function updateGoalMonthly(i,val) {
+  state.goals[i].monthly=parseInt(val);
+  save(); syncSaving(); renderSparplan();
 }
-
-function syncSavingToCategories() {
-  // Remove old auto-saving category and re-add
-  state.categories = state.categories.filter(c => c._auto !== true);
-  const total = state.goals.reduce((s,g)=>s+g.monthly,0);
-  if (total > 0) {
-    state.categories.push({ name:"Sparziele gesamt", amount:total, type:"saving", _auto:true });
-  }
-  save();
-}
-
 function deleteGoal(i) {
-  state.goals.splice(i, 1);
+  state.goals.splice(i,1); save(); syncSaving(); renderSparplan();
+}
+function syncSaving() {
+  state.categories=state.categories.filter(c=>!c._auto);
+  const total=state.goals.reduce((s,g)=>s+g.monthly,0);
+  if (total>0) state.categories.push({name:"Sparziele gesamt",amount:total,type:"saving",_auto:true});
   save();
-  syncSavingToCategories();
-  renderSparplan();
 }
 
-// ══════════════════════════════════════════════════════════════════════
-// RENDER SETTINGS
-// ══════════════════════════════════════════════════════════════════════
+// ── SETTINGS ─────────────────────────────────────────────────────────
 function renderSettings() {
-  document.getElementById('settings-income-val').textContent =
-    state.income.toLocaleString('de-DE') + ' €';
+  document.getElementById('settings-income-val').textContent=
+    state.income>0?Math.round(state.income).toLocaleString('de-DE')+' €':'– €';
 }
 
-// ══════════════════════════════════════════════════════════════════════
-// INCOME MODAL
-// ══════════════════════════════════════════════════════════════════════
+// ── MODALS ────────────────────────────────────────────────────────────
 function openIncomeModal() {
-  document.getElementById('income-modal-input').value = state.income;
+  document.getElementById('income-modal-input').value=state.income||'';
   openModal('modal-income');
 }
 function saveIncome() {
-  const v = parseInt(document.getElementById('income-modal-input').value);
-  if (v > 0) { state.income = v; save(); renderOverview(); renderSettings(); }
+  const v=parseInt(document.getElementById('income-modal-input').value);
+  if (v>0){state.income=v;save();renderOverview();renderSettings();}
   closeModal('modal-income');
 }
-
-// ══════════════════════════════════════════════════════════════════════
-// GOAL MODAL
-// ══════════════════════════════════════════════════════════════════════
 function openGoalModal() {
-  document.getElementById('goal-icon').value = '';
-  document.getElementById('goal-name').value = '';
-  document.getElementById('goal-target').value = '';
-  document.getElementById('goal-saved').value = '0';
-  document.getElementById('goal-monthly-slider').value = 50;
-  document.getElementById('goal-monthly-lbl').textContent = '50 €';
+  ['goal-icon','goal-name','goal-target'].forEach(id=>document.getElementById(id).value='');
+  document.getElementById('goal-saved').value='0';
+  document.getElementById('goal-monthly-slider').value=50;
+  document.getElementById('goal-monthly-lbl').textContent='50 €';
   openModal('modal-goal');
 }
-function updateGoalSlider(v) {
-  document.getElementById('goal-monthly-lbl').textContent = v + ' €';
-}
 function saveGoal() {
-  const name    = document.getElementById('goal-name').value.trim();
-  const icon    = document.getElementById('goal-icon').value.trim() || '💰';
-  const target  = parseFloat(document.getElementById('goal-target').value) || 0;
-  const saved   = parseFloat(document.getElementById('goal-saved').value)  || 0;
-  const monthly = parseInt(document.getElementById('goal-monthly-slider').value) || 50;
+  const name=document.getElementById('goal-name').value.trim();
   if (!name) return;
-  state.goals.push({ name, icon, target, saved, monthly });
-  save();
-  syncSavingToCategories();
-  closeModal('modal-goal');
-  renderSparplan();
-}
-
-// ══════════════════════════════════════════════════════════════════════
-// MODALS
-// ══════════════════════════════════════════════════════════════════════
-function openModal(id) {
-  document.getElementById(id).classList.add('open');
-}
-function closeModal(id) {
-  document.getElementById(id).classList.remove('open');
-}
-document.querySelectorAll('.modal-overlay').forEach(o => {
-  o.addEventListener('click', e => { if (e.target === o) o.classList.remove('open'); });
-});
-
-// ══════════════════════════════════════════════════════════════════════
-// UPLOAD / AI
-// ══════════════════════════════════════════════════════════════════════
-let selectedFile = null;
-
-function handleFileSelect(e) {
-  const f = e.target.files[0];
-  if (f) setFile(f);
-}
-function handleDrop(e) {
-  e.preventDefault();
-  document.getElementById('upload-zone').classList.remove('drag');
-  const f = e.dataTransfer.files[0];
-  if (f) setFile(f);
-}
-function setFile(f) {
-  selectedFile = f;
-  document.getElementById('upload-icon').textContent = '📄';
-  document.getElementById('upload-title').textContent = 'Datei bereit';
-  document.getElementById('upload-sub').textContent = '';
-  const fn = document.getElementById('upload-fname');
-  fn.textContent = '📎 ' + f.name;
-  fn.style.display = 'inline-block';
-  document.getElementById('analyze-btn').disabled = false;
-  document.getElementById('error-box').style.display = 'none';
-  document.getElementById('result-section').style.display = 'none';
-}
-
-function toggleApiKeyInput() {
-  const wrap  = document.getElementById('api-key-wrap');
-  const arrow = document.getElementById('api-key-arrow');
-  const open  = wrap.classList.toggle('open');
-  arrow.textContent = open ? '▲' : '▼';
-}
-function saveApiKey(v) {
-  try { if (v) localStorage.setItem('mg_apikey', v); else localStorage.removeItem('mg_apikey'); } catch(_){}
-}
-
-function setLoader(visible, text, step) {
-  document.getElementById('loader-wrap').style.display = visible ? 'block' : 'none';
-  if (text) document.getElementById('loader-text').textContent = text;
-  if (step !== undefined) document.getElementById('loader-step').textContent = step;
-}
-function showError(msg) {
-  const b = document.getElementById('error-box');
-  document.getElementById('error-msg').textContent = msg;
-  b.style.display = 'flex';
-}
-
-async function runAnalysis() {
-  if (!selectedFile) return;
-  document.getElementById('analyze-btn').disabled = true;
-  document.getElementById('error-box').style.display = 'none';
-  document.getElementById('result-section').style.display = 'none';
-  setLoader(true, 'Datei wird gelesen…', '');
-
-  try {
-    const b64 = await new Promise((res,rej) => {
-      const r = new FileReader();
-      r.onload = () => res(r.result.split(',')[1]);
-      r.onerror = () => rej(new Error('Lesen fehlgeschlagen'));
-      r.readAsDataURL(selectedFile);
-    });
-
-    setLoader(true, 'KI analysiert Buchungen…', 'Das kann 10–20 Sekunden dauern');
-
-    const isPdf = selectedFile.type === 'application/pdf';
-    const contentBlock = isPdf
-      ? { type:'document', source:{ type:'base64', media_type: selectedFile.type, data:b64 } }
-      : { type:'image',    source:{ type:'base64', media_type: selectedFile.type, data:b64 } };
-
-    const apiKey = (() => { try { return localStorage.getItem('mg_apikey')||''; } catch(_){ return ''; } })();
-    const headers = { 'Content-Type':'application/json' };
-    if (apiKey) headers['x-api-key'] = apiKey;
-
-    const resp = await fetch('https://api.anthropic.com/v1/messages', {
-      method:'POST',
-      headers,
-      body: JSON.stringify({
-        model:'claude-sonnet-4-20250514',
-        max_tokens:1000,
-        system:`Du bist ein Finanzassistent. Analysiere den Kontoauszug und antworte NUR mit einem JSON-Objekt, kein Markdown, keine Backticks, keine Erklärungen.
-Format: {"income":<Zahl>,"categories":[{"name":<string>,"amount":<positive Zahl>,"type":<"fixed"|"fun"|"saving">}]}
-Regeln: Fasse ähnliche Buchungen zusammen. amount immer positiv. type: fixed=Fixkosten, fun=Freizeit, saving=Sparen. Einnahmen nur in income. Max 12 Kategorien.`,
-        messages:[{ role:'user', content:[
-          contentBlock,
-          { type:'text', text:'Analysiere diesen Kontoauszug.' }
-        ]}]
-      })
-    });
-
-    if (!resp.ok) {
-      const err = await resp.json().catch(()=>({}));
-      throw new Error(err?.error?.message || `API-Fehler ${resp.status}`);
-    }
-
-    setLoader(true, 'Kategorien werden sortiert…', '');
-    const data   = await resp.json();
-    const text   = data.content.map(b=>b.text||'').join('');
-    const clean  = text.replace(/```json|```/g,'').trim();
-    const parsed = JSON.parse(clean);
-
-    // Merge into state (keep goals/saving, replace other cats)
-    const autoSaving = state.categories.filter(c=>c._auto);
-    state.income = parsed.income || state.income;
-    state.categories = [
-      ...parsed.categories.filter(c=>c.type!=='saving'),
-      ...autoSaving,
-      ...(parsed.categories.filter(c=>c.type==='saving').map(c=>({...c, _auto:false})))
-    ];
-    save();
-
-    setLoader(false);
-    renderResultList(parsed.categories, parsed.income);
-    document.getElementById('result-section').style.display = 'block';
-
-  } catch(e) {
-    setLoader(false);
-    showError(e.message || 'Unbekannter Fehler');
-    document.getElementById('analyze-btn').disabled = false;
-  }
-}
-
-function renderResultList(cats, income) {
-  const list = document.getElementById('result-cat-list');
-  list.innerHTML = `
-    <div style="padding:4px 0 8px;font-family:'IBM Plex Mono',monospace;font-size:11px;color:var(--green)">
-      ✓ ${cats.length} Kategorien erkannt · Einkommen: ${income.toLocaleString('de-DE')} €
-    </div>`;
-  cats.forEach(c => {
-    const cfg  = TYPE_CFG[c.type]||TYPE_CFG.fun;
-    const pct  = income>0?Math.min(100,(c.amount/income)*100):0;
-    const icon = iconFor(c.name);
-    const el   = document.createElement('div');
-    el.className = 'cat-row';
-    el.innerHTML = `
-      <div class="cat-dot" style="background:${cfg.color}"></div>
-      <div class="cat-ico">${icon}</div>
-      <div class="cat-info">
-        <div class="cat-name">${c.name}</div>
-        <div class="cat-type" style="color:${cfg.color}">${cfg.label}</div>
-        <div class="cat-bar"><div class="cat-bar-fill" style="width:${pct}%;background:${cfg.color}"></div></div>
-      </div>
-      <div class="cat-amt">${c.amount.toLocaleString('de-DE',{minimumFractionDigits:2})} €</div>
-    `;
-    list.appendChild(el);
+  state.goals.push({
+    name, icon:document.getElementById('goal-icon').value.trim()||'💰',
+    target:parseFloat(document.getElementById('goal-target').value)||0,
+    saved:parseFloat(document.getElementById('goal-saved').value)||0,
+    monthly:parseInt(document.getElementById('goal-monthly-slider').value)||50
   });
+  save(); syncSaving(); closeModal('modal-goal'); renderSparplan();
 }
-
-function resetUpload() {
-  selectedFile = null;
-  document.getElementById('upload-icon').textContent = '☁️';
-  document.getElementById('upload-title').textContent = 'PDF oder Foto hochladen';
-  document.getElementById('upload-sub').textContent = 'Kontoauszug als PDF, JPG oder PNG\nAntippen oder Drag & Drop';
-  document.getElementById('upload-fname').style.display = 'none';
-  document.getElementById('analyze-btn').disabled = true;
-  document.getElementById('result-section').style.display = 'none';
-  document.getElementById('error-box').style.display = 'none';
-}
+function openModal(id){document.getElementById(id).classList.add('open');}
+function closeModal(id){document.getElementById(id).classList.remove('open');}
+document.querySelectorAll('.modal-overlay').forEach(o=>{
+  o.addEventListener('click',e=>{if(e.target===o)o.classList.remove('open');});
+});
 
 function clearData() {
   if (confirm('Alle Daten wirklich löschen?')) {
-    state = { income:2200, categories:[], goals:[] };
-    save();
-    renderOverview();
-    renderSettings();
+    state={income:0,categories:[],goals:[]};
+    save(); renderOverview(); renderSettings();
     alert('Daten gelöscht.');
   }
 }
 
-// ══════════════════════════════════════════════════════════════════════
-// INIT
-// ══════════════════════════════════════════════════════════════════════
+// ── INIT ─────────────────────────────────────────────────────────────
 load();
-
-// Restore API key field
-try {
-  const k = localStorage.getItem('mg_apikey');
-  if (k) document.getElementById('api-key-input').value = k;
-} catch(_){}
-
 renderOverview();
-
-// Service Worker
-if ('serviceWorker' in navigator) {
-  navigator.serviceWorker.register('./sw.js').catch(()=>{});
-}
+if ('serviceWorker' in navigator) navigator.serviceWorker.register('./sw.js').catch(()=>{});
 </script>
 </body>
 </html>
