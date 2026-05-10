@@ -404,8 +404,20 @@ function renderSparplan() {
     const saved   = g.saved   || 0;
     const monthly = g.monthly || 0;
     const left    = Math.max(0, target - saved);
-    const months  = monthly > 0 ? Math.ceil(left / monthly) : "∞";
+    const months  = monthly > 0 ? Math.ceil(left / monthly) : null;
     const pct     = Math.min(100, Math.round((saved / target) * 100));
+
+    // Finish date
+    let finishStr = "–";
+    let durStr    = monthly > 0 ? "∞" : "–";
+    if (months) {
+      const finish = new Date();
+      finish.setMonth(finish.getMonth() + months);
+      finishStr = finish.toLocaleDateString("de-DE", { month: "short", year: "numeric" });
+      const y = Math.floor(months / 12), m = months % 12;
+      durStr = (y > 0 ? y + " J " : "") + (m > 0 ? m + " Mo" : "");
+      if (!durStr.trim()) durStr = "< 1 Mo";
+    }
     const el      = document.createElement("div");
     el.className  = "sp-goal";
     el.innerHTML  = `
@@ -413,7 +425,10 @@ function renderSparplan() {
         <div class="sp-goal-ico">${g.icon || "💰"}</div>
         <div class="sp-goal-info">
           <div class="sp-goal-name">${g.name}</div>
-          <div class="sp-goal-meta">Ziel: ${target.toLocaleString("de-DE")} € · noch ${months}${typeof months === "number" ? " Mo" : ""}</div>
+          <div class="sp-goal-meta">
+            Ziel: ${target.toLocaleString("de-DE")} €
+            ${months ? ` · ${durStr.trim()} · fertig ${finishStr}` : ""}
+          </div>
         </div>
         <div class="sp-goal-monthly">${monthly} €/Mo</div>
       </div>
@@ -447,7 +462,73 @@ function removeGoal(id) {
   renderSparplan();
 }
 
-function openAddGoalModal() {
+// ── Goal Modal Mode ───────────────────────────────────────────────
+let goalMode = "rate"; // "rate" | "duration"
+
+function setGoalMode(mode) {
+  goalMode = mode;
+  document.getElementById("goal-mode-rate").style.display     = mode === "rate"     ? "" : "none";
+  document.getElementById("goal-mode-duration").style.display = mode === "duration" ? "" : "none";
+  document.getElementById("mode-btn-rate").className     = "type-chip" + (mode === "rate"     ? " active-saving" : "");
+  document.getElementById("mode-btn-duration").className = "type-chip" + (mode === "duration" ? " active-saving" : "");
+  recalcGoalPreview();
+}
+
+function setDurationQuick(months) {
+  document.getElementById("goal-duration-months").value = months;
+  recalcGoalPreview();
+}
+
+function onGoalSliderChange(val) {
+  document.getElementById("goal-monthly-lbl").textContent = val + " €";
+  recalcGoalPreview();
+}
+
+function recalcGoalPreview() {
+  const target  = parseFloat(document.getElementById("goal-target").value)  || 0;
+  const saved   = parseFloat(document.getElementById("goal-saved").value)   || 0;
+  const left    = Math.max(0, target - saved);
+  const preview = document.getElementById("goal-preview");
+
+  if (target <= 0) { preview.style.display = "none"; return; }
+
+  let rate, durationMonths;
+
+  if (goalMode === "rate") {
+    rate          = parseInt(document.getElementById("goal-monthly-slider").value) || 50;
+    durationMonths = rate > 0 ? Math.ceil(left / rate) : null;
+  } else {
+    durationMonths = parseInt(document.getElementById("goal-duration-months").value) || null;
+    rate          = durationMonths && durationMonths > 0 ? Math.ceil(left / durationMonths) : null;
+    // update slider to reflect computed rate
+    if (rate) {
+      const clamped = Math.min(500, Math.max(10, rate));
+      document.getElementById("goal-monthly-slider").value = clamped;
+      document.getElementById("goal-monthly-lbl").textContent = rate + " €";
+    }
+  }
+
+  if (!rate || !durationMonths) { preview.style.display = "none"; return; }
+
+  // Compute finish date
+  const finish = new Date();
+  finish.setMonth(finish.getMonth() + durationMonths);
+  const finishStr = finish.toLocaleDateString("de-DE", { month: "short", year: "numeric" });
+
+  const years  = Math.floor(durationMonths / 12);
+  const months = durationMonths % 12;
+  let durStr   = "";
+  if (years > 0)  durStr += years  + " J ";
+  if (months > 0) durStr += months + " Mo";
+  if (!durStr)    durStr = "< 1 Mo";
+
+  document.getElementById("preview-rate").textContent     = rate.toLocaleString("de-DE") + " €";
+  document.getElementById("preview-duration").textContent = durStr.trim();
+  document.getElementById("preview-date").textContent     = finishStr;
+  preview.style.display = "";
+}
+
+
   editGoalId = null;
   document.getElementById("goal-modal-title").textContent = "Sparziel hinzufügen";
   document.getElementById("goal-icon").value    = "";
@@ -456,6 +537,9 @@ function openAddGoalModal() {
   document.getElementById("goal-saved").value   = "0";
   document.getElementById("goal-monthly-slider").value = 50;
   document.getElementById("goal-monthly-lbl").textContent = "50 €";
+  document.getElementById("goal-duration-months").value = "";
+  document.getElementById("goal-preview").style.display = "none";
+  setGoalMode("rate");
   hideEl("goal-delete-btn");
   openModal("modal-goal");
 }
@@ -471,6 +555,9 @@ function openEditGoalModal(id) {
   document.getElementById("goal-saved").value   = g.saved || 0;
   document.getElementById("goal-monthly-slider").value = g.monthly || 50;
   document.getElementById("goal-monthly-lbl").textContent = (g.monthly || 50) + " €";
+  document.getElementById("goal-duration-months").value = g.durationMonths || "";
+  setGoalMode(g.durationMonths ? "duration" : "rate");
+  recalcGoalPreview();
   showEl("goal-delete-btn");
   openModal("modal-goal");
 }
@@ -481,12 +568,15 @@ function saveGoal() {
   const target  = parseFloat(document.getElementById("goal-target").value) || 0;
   const saved   = parseFloat(document.getElementById("goal-saved").value)  || 0;
   const monthly = parseInt(document.getElementById("goal-monthly-slider").value) || 50;
+  const durationMonths = goalMode === "duration"
+    ? parseInt(document.getElementById("goal-duration-months").value) || null
+    : null;
   if (!name) return;
 
   if (editGoalId) {
-    updateGoal(state, editGoalId, { name, icon, target, saved, monthly });
+    updateGoal(state, editGoalId, { name, icon, target, saved, monthly, durationMonths });
   } else {
-    addGoal(state, { name, icon, target, saved, monthly });
+    addGoal(state, { name, icon, target, saved, monthly, durationMonths });
   }
 
   saveState(state);

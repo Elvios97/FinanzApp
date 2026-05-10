@@ -333,6 +333,7 @@ Beispiel:
   <div class="modal">
     <div class="modal-handle"></div>
     <div class="modal-title" id="goal-modal-title">Sparziel hinzufügen</div>
+
     <div class="field-row">
       <div class="field" style="flex:0 0 70px">
         <label class="field-lbl">Emoji</label>
@@ -343,25 +344,79 @@ Beispiel:
         <input class="field-input" type="text" id="goal-name" placeholder="z.B. Urlaub" />
       </div>
     </div>
+
     <div class="field-row">
       <div class="field">
         <label class="field-lbl">Ziel-Betrag (€)</label>
-        <input class="field-input" type="number" id="goal-target" placeholder="2000" />
+        <input class="field-input" type="number" id="goal-target" placeholder="2000"
+          oninput="recalcGoalPreview()" />
       </div>
       <div class="field">
         <label class="field-lbl">Bereits gespart (€)</label>
-        <input class="field-input" type="number" id="goal-saved" placeholder="0" />
+        <input class="field-input" type="number" id="goal-saved" placeholder="0"
+          oninput="recalcGoalPreview()" />
       </div>
     </div>
+
+    <!-- Mode toggle: Zeitraum ODER Rate -->
     <div class="field">
-      <label class="field-lbl">Monatliche Rate: <span id="goal-monthly-lbl" style="color:var(--green)">50 €</span></label>
-      <input type="range" id="goal-monthly-slider" min="10" max="500" step="10" value="50"
-        oninput="document.getElementById('goal-monthly-lbl').textContent = this.value + ' €'" />
-      <div style="display:flex;justify-content:space-between;font-family:'IBM Plex Mono',monospace;font-size:10px;color:var(--muted);margin-top:4px">
-        <span>10 €</span><span>500 €</span>
+      <label class="field-lbl">Berechnung</label>
+      <div style="display:flex;gap:6px;margin-bottom:12px">
+        <button id="mode-btn-rate"     class="type-chip active-saving" onclick="setGoalMode('rate')"    style="flex:1">💶 Rate eingeben</button>
+        <button id="mode-btn-duration" class="type-chip"               onclick="setGoalMode('duration')" style="flex:1">📅 Zeitraum eingeben</button>
+      </div>
+
+      <!-- Rate mode -->
+      <div id="goal-mode-rate">
+        <label class="field-lbl">Monatliche Rate: <span id="goal-monthly-lbl" style="color:var(--green)">50 €</span></label>
+        <input type="range" id="goal-monthly-slider" min="10" max="500" step="10" value="50"
+          oninput="onGoalSliderChange(this.value)" />
+        <div style="display:flex;justify-content:space-between;font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--muted);margin-top:4px">
+          <span>10 €</span><span>500 €</span>
+        </div>
+      </div>
+
+      <!-- Duration mode -->
+      <div id="goal-mode-duration" style="display:none">
+        <label class="field-lbl">Zeitraum (Monate)</label>
+        <div style="display:flex;gap:8px;align-items:center">
+          <input class="field-input" type="number" id="goal-duration-months" placeholder="12" min="1" max="600"
+            style="flex:1" oninput="recalcGoalPreview()" />
+          <span style="font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--muted);flex-shrink:0">Monate</span>
+        </div>
+        <div style="display:flex;gap:6px;margin-top:8px;flex-wrap:wrap">
+          <button class="filter-chip" onclick="setDurationQuick(6)">6 Mo</button>
+          <button class="filter-chip" onclick="setDurationQuick(12)">1 Jahr</button>
+          <button class="filter-chip" onclick="setDurationQuick(24)">2 Jahre</button>
+          <button class="filter-chip" onclick="setDurationQuick(36)">3 Jahre</button>
+          <button class="filter-chip" onclick="setDurationQuick(60)">5 Jahre</button>
+        </div>
       </div>
     </div>
-    <div class="modal-actions">
+
+    <!-- Live preview -->
+    <div id="goal-preview" style="
+      background:var(--green-dim);border:1px solid var(--green-border);
+      border-radius:12px;padding:14px 16px;margin-top:4px;display:none
+    ">
+      <div style="font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:2px;color:var(--green);text-transform:uppercase;margin-bottom:8px">📊 Vorschau</div>
+      <div style="display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap">
+        <div>
+          <div style="font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--muted)">Rate / Monat</div>
+          <div id="preview-rate" style="font-family:'Plus Jakarta Sans',sans-serif;font-size:18px;font-weight:800;color:var(--green)">–</div>
+        </div>
+        <div>
+          <div style="font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--muted)">Dauer</div>
+          <div id="preview-duration" style="font-family:'Plus Jakarta Sans',sans-serif;font-size:18px;font-weight:800;color:var(--green)">–</div>
+        </div>
+        <div>
+          <div style="font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--muted)">Fertig im</div>
+          <div id="preview-date" style="font-family:'Plus Jakarta Sans',sans-serif;font-size:18px;font-weight:800;color:var(--green)">–</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="modal-actions" style="margin-top:16px">
       <button class="btn-danger" id="goal-delete-btn" onclick="deleteCurrentGoal()" style="display:none">🗑 Löschen</button>
       <button class="btn-secondary" onclick="closeModal('modal-goal')">Abbrechen</button>
       <button class="btn-primary" onclick="saveGoal()">Speichern</button>
