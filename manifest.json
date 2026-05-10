@@ -1,7 +1,7 @@
 {
   "name": "MeinGeld – Finanz-App",
   "short_name": "MeinGeld",
-  "description": "Persönliche Finanz-Übersicht ohne API Key",
+  "description": "Persönliche Finanz-Übersicht mit Filter, Sortierung & Monatshistorie",
   "start_url": "./index.html",
   "display": "standalone",
   "background_color": "#0c0b0a",

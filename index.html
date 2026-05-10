@@ -1,250 +1,145 @@
 <!DOCTYPE html>
 <html lang="de">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-<meta name="theme-color" content="#69f0ae" />
-<meta name="apple-mobile-web-app-capable" content="yes" />
-<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
-<meta name="apple-mobile-web-app-title" content="MeinGeld" />
-<title>MeinGeld</title>
-<link rel="manifest" href="manifest.json" />
-<link rel="preconnect" href="https://fonts.googleapis.com" />
-<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@300;400;500&display=swap" rel="stylesheet" />
-<style>
-*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-:root {
-  --bg: #0c0b0a; --bg2: #111009; --bg3: #1a1917;
-  --border: #1e1d1b; --border2: #2a2925;
-  --text: #f0ebe2; --muted: #5a5650; --muted2: #3a3930;
-  --green: #69f0ae; --green-dim: #0f2018; --green-border: #2a5a3a;
-  --yellow: #ffd180; --warm: #e8d5b7; --red: #ff6b6b;
-  --safe: env(safe-area-inset-bottom, 0px);
-}
-html, body { height: 100%; background: var(--bg); color: var(--text); font-family: 'IBM Plex Sans', sans-serif; overscroll-behavior: none; }
-button { font-family: inherit; cursor: pointer; border: none; background: none; color: inherit; }
-input, select, textarea { font-family: inherit; }
-input[type=range] { -webkit-appearance: none; appearance: none; width: 100%; height: 4px; background: var(--border2); border-radius: 2px; outline: none; }
-input[type=range]::-webkit-slider-thumb { -webkit-appearance: none; width: 22px; height: 22px; border-radius: 50%; background: var(--green); box-shadow: 0 0 8px #69f0ae55; cursor: pointer; }
-input[type=number] { -moz-appearance: textfield; }
-input[type=number]::-webkit-inner-spin-button, input[type=number]::-webkit-outer-spin-button { -webkit-appearance: none; }
-
-/* layout */
-#app { display: flex; flex-direction: column; height: 100vh; height: 100dvh; }
-.screen { display: none; flex: 1; overflow-y: auto; padding-bottom: calc(70px + var(--safe)); }
-.screen.active { display: block; }
-
-/* nav */
-nav {
-  position: fixed; bottom: 0; left: 0; right: 0;
-  height: calc(60px + var(--safe)); padding-bottom: var(--safe);
-  background: #0f0e0d; border-top: 1px solid var(--border);
-  display: flex; z-index: 100;
-}
-.nav-btn { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 3px; color: var(--muted); transition: color .2s; font-size: 10px; font-family: 'IBM Plex Mono', monospace; letter-spacing: .5px; text-transform: uppercase; }
-.nav-btn.active { color: var(--green); }
-.nav-icon { font-size: 20px; }
-
-/* topbar */
-.topbar { padding: 52px 20px 0; }
-.topbar-eyebrow { font-family: 'IBM Plex Mono', monospace; font-size: 10px; letter-spacing: 3px; color: var(--muted); text-transform: uppercase; margin-bottom: 4px; }
-.topbar-title { font-family: 'Syne', sans-serif; font-size: 28px; font-weight: 800; line-height: 1.05; }
-.topbar-title em { color: var(--green); font-style: normal; }
-
-/* cards */
-.card { background: var(--bg2); border: 1px solid var(--border); border-radius: 18px; }
-
-/* income bar */
-.income-bar { margin: 20px 16px 0; padding: 18px 20px; display: flex; align-items: center; justify-content: space-between; background: var(--bg2); border: 1px solid var(--border); border-radius: 18px; }
-.income-label { font-family: 'IBM Plex Mono', monospace; font-size: 10px; letter-spacing: 2px; color: var(--muted); text-transform: uppercase; margin-bottom: 4px; }
-.income-val { font-family: 'Syne', sans-serif; font-size: 30px; font-weight: 800; }
-.income-edit-btn { background: var(--bg3); border: 1px solid var(--border2); border-radius: 10px; padding: 8px 14px; font-family: 'IBM Plex Mono', monospace; font-size: 11px; color: var(--muted); transition: all .2s; }
-.income-edit-btn:active { border-color: var(--green); color: var(--green); }
-
-/* ring */
-.ring-wrap { display: flex; justify-content: center; padding: 20px 0 0; position: relative; }
-.ring-center { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); text-align: center; }
-.ring-remain { font-family: 'Syne', sans-serif; font-size: 22px; font-weight: 800; }
-.ring-lbl { font-family: 'IBM Plex Mono', monospace; font-size: 9px; letter-spacing: 2px; color: var(--muted); text-transform: uppercase; margin-top: 2px; }
-
-/* stat row */
-.stat-row { display: flex; gap: 8px; padding: 14px 16px 0; }
-.stat { flex: 1; background: var(--bg2); border: 1px solid var(--border); border-radius: 14px; padding: 12px 10px; text-align: center; }
-.stat-icon { font-size: 18px; margin-bottom: 4px; }
-.stat-val { font-family: 'IBM Plex Mono', monospace; font-size: 13px; font-weight: 500; }
-.stat-lbl { font-size: 10px; color: var(--muted); margin-top: 2px; }
-
-/* highlight */
-.hl-card { margin: 14px 16px 0; border-radius: 18px; padding: 20px; position: relative; overflow: hidden; }
-.hl-card::after { content: ''; position: absolute; bottom: -30px; right: -30px; width: 100px; height: 100px; border-radius: 50%; background: rgba(255,255,255,.03); }
-.hl-eyebrow { font-family: 'IBM Plex Mono', monospace; font-size: 10px; letter-spacing: 2px; text-transform: uppercase; opacity: .7; margin-bottom: 6px; }
-.hl-val { font-family: 'Syne', sans-serif; font-size: 36px; font-weight: 800; }
-.hl-sub { font-size: 12px; opacity: .7; margin-top: 6px; line-height: 1.4; }
-
-/* cat list */
-.cat-list { padding: 14px 16px 0; display: flex; flex-direction: column; gap: 6px; }
-.cat-row { background: var(--bg2); border: 1px solid var(--border); border-radius: 14px; padding: 12px 14px; display: flex; align-items: center; gap: 10px; }
-.cat-dot { width: 9px; height: 9px; border-radius: 50%; flex-shrink: 0; }
-.cat-ico { font-size: 18px; width: 26px; text-align: center; flex-shrink: 0; }
-.cat-info { flex: 1; min-width: 0; }
-.cat-name { font-size: 13px; font-weight: 500; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-.cat-type { font-family: 'IBM Plex Mono', monospace; font-size: 9px; letter-spacing: 1px; text-transform: uppercase; margin-top: 2px; }
-.cat-bar { height: 3px; background: var(--border2); border-radius: 2px; margin-top: 5px; overflow: hidden; }
-.cat-bar-fill { height: 100%; border-radius: 2px; }
-.cat-amt { font-family: 'IBM Plex Mono', monospace; font-size: 13px; font-weight: 500; flex-shrink: 0; }
-
-/* ── IMPORT SCREEN ── */
-.import-step { margin: 20px 16px 0; background: var(--bg2); border: 1px solid var(--border); border-radius: 18px; padding: 20px; }
-.step-badge { display: inline-flex; align-items: center; justify-content: center; width: 26px; height: 26px; border-radius: 50%; background: var(--green-dim); border: 1px solid var(--green-border); font-family: 'IBM Plex Mono', monospace; font-size: 12px; font-weight: 500; color: var(--green); margin-bottom: 10px; }
-.step-title { font-family: 'Syne', sans-serif; font-size: 15px; font-weight: 700; margin-bottom: 6px; }
-.step-sub { font-size: 12px; color: var(--muted); line-height: 1.6; }
-
-/* prompt box */
-.prompt-box { margin: 12px 0 0; background: var(--bg3); border: 1px solid var(--border2); border-radius: 12px; padding: 14px; position: relative; }
-.prompt-text { font-family: 'IBM Plex Mono', monospace; font-size: 11px; color: #c8c0b0; line-height: 1.7; white-space: pre-wrap; word-break: break-word; max-height: 180px; overflow-y: auto; }
-.copy-btn { margin-top: 10px; width: 100%; background: var(--green-dim); border: 1px solid var(--green-border); border-radius: 10px; padding: 10px; font-family: 'IBM Plex Mono', monospace; font-size: 12px; color: var(--green); transition: all .2s; }
-.copy-btn:active { background: #1a3a28; }
-.copy-success { color: var(--green); font-family: 'IBM Plex Mono', monospace; font-size: 11px; text-align: center; margin-top: 6px; opacity: 0; transition: opacity .3s; }
-.copy-success.show { opacity: 1; }
-
-/* paste area */
-.paste-area { margin: 12px 0 0; width: 100%; min-height: 120px; background: var(--bg3); border: 1px solid var(--border2); border-radius: 12px; padding: 14px; font-family: 'IBM Plex Mono', monospace; font-size: 12px; color: var(--text); outline: none; resize: vertical; transition: border-color .2s; line-height: 1.6; }
-.paste-area:focus { border-color: var(--green); }
-.paste-area::placeholder { color: var(--muted); }
-
-.import-btn { margin: 10px 16px 0; width: calc(100% - 32px); background: linear-gradient(135deg, var(--green-dim), #080f0c); border: 1px solid var(--green-border); border-radius: 16px; padding: 18px; font-family: 'Syne', sans-serif; font-size: 15px; font-weight: 800; color: var(--green); transition: all .25s; display: flex; align-items: center; justify-content: center; gap: 10px; }
-.import-btn:disabled { opacity: .35; }
-.import-btn:not(:disabled):active { background: #1a3a28; }
-
-.error-box { margin: 10px 16px 0; background: #1a0808; border: 1px solid #5a1f1f; border-radius: 14px; padding: 14px 16px; font-size: 12px; color: #ff8a80; display: flex; gap: 10px; line-height: 1.5; }
-.success-box { margin: 10px 16px 0; background: var(--green-dim); border: 1px solid var(--green-border); border-radius: 14px; padding: 14px 16px; font-size: 13px; color: var(--green); display: flex; gap: 10px; align-items: center; }
-
-/* ai links */
-.ai-links { display: flex; gap: 8px; margin-top: 12px; flex-wrap: wrap; }
-.ai-link { flex: 1; min-width: 100px; background: var(--bg3); border: 1px solid var(--border2); border-radius: 10px; padding: 10px 12px; text-align: center; text-decoration: none; color: var(--text); font-size: 12px; font-weight: 500; transition: all .2s; display: flex; align-items: center; justify-content: center; gap: 6px; }
-.ai-link:active { border-color: var(--green); color: var(--green); }
-
-/* SPARPLAN */
-.sp-total-card { margin: 16px 16px 0; border-radius: 18px; background: linear-gradient(135deg, var(--green-dim), #080f0c); border: 1px solid var(--green-border); padding: 22px; }
-.sp-total-lbl { font-family: 'IBM Plex Mono', monospace; font-size: 10px; letter-spacing: 3px; color: var(--green); text-transform: uppercase; margin-bottom: 6px; }
-.sp-total-val { font-family: 'Syne', sans-serif; font-size: 40px; font-weight: 800; color: var(--green); }
-.sp-total-sub { font-size: 12px; color: #4caf82; margin-top: 6px; }
-.sp-goals { padding: 16px 16px 0; display: flex; flex-direction: column; gap: 10px; }
-.sp-goal { background: var(--bg2); border: 1px solid var(--border); border-radius: 16px; padding: 16px; }
-.sp-goal-top { display: flex; align-items: center; gap: 10px; margin-bottom: 14px; }
-.sp-goal-ico { font-size: 22px; width: 36px; height: 36px; display: flex; align-items: center; justify-content: center; background: var(--bg3); border-radius: 10px; flex-shrink: 0; }
-.sp-goal-info { flex: 1; }
-.sp-goal-name { font-family: 'Syne', sans-serif; font-size: 14px; font-weight: 700; }
-.sp-goal-target { font-family: 'IBM Plex Mono', monospace; font-size: 11px; color: var(--muted); margin-top: 2px; }
-.sp-goal-monthly { font-family: 'IBM Plex Mono', monospace; font-size: 14px; font-weight: 500; color: var(--green); flex-shrink: 0; }
-.sp-progress-bar { height: 6px; background: var(--border2); border-radius: 3px; margin-top: 12px; overflow: hidden; }
-.sp-progress-fill { height: 100%; background: linear-gradient(90deg, var(--green), #4caf82); border-radius: 3px; transition: width .4s; }
-.sp-progress-lbl { display: flex; justify-content: space-between; margin-top: 5px; font-family: 'IBM Plex Mono', monospace; font-size: 10px; color: var(--muted); }
-.add-goal-btn { margin: 10px 16px 0; border: 1px dashed var(--border2); border-radius: 14px; padding: 14px; text-align: center; color: var(--muted); font-size: 13px; transition: all .2s; width: calc(100% - 32px); }
-.add-goal-btn:active { border-color: var(--green); color: var(--green); }
-
-/* modal */
-.modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,.8); z-index: 200; display: flex; align-items: flex-end; backdrop-filter: blur(4px); opacity: 0; pointer-events: none; transition: opacity .25s; }
-.modal-overlay.open { opacity: 1; pointer-events: all; }
-.modal { background: #141310; border: 1px solid var(--border2); border-radius: 24px 24px 0 0; padding: 24px 20px calc(20px + var(--safe)); width: 100%; transform: translateY(100%); transition: transform .3s cubic-bezier(.4,0,.2,1); }
-.modal-overlay.open .modal { transform: translateY(0); }
-.modal-title { font-family: 'Syne', sans-serif; font-size: 18px; font-weight: 800; margin-bottom: 20px; }
-.field { margin-bottom: 14px; }
-.field-lbl { font-family: 'IBM Plex Mono', monospace; font-size: 10px; letter-spacing: 2px; color: var(--muted); text-transform: uppercase; margin-bottom: 6px; }
-.field-input { width: 100%; background: var(--bg3); border: 1px solid var(--border2); border-radius: 10px; padding: 12px 14px; font-size: 14px; color: var(--text); outline: none; transition: border-color .2s; }
-.field-input:focus { border-color: var(--green); }
-.field-row { display: flex; gap: 10px; }
-.field-row .field { flex: 1; }
-.modal-actions { display: flex; gap: 10px; margin-top: 20px; }
-.btn-primary { flex: 1; background: var(--green-dim); border: 1px solid var(--green-border); border-radius: 12px; padding: 14px; font-family: 'Syne', sans-serif; font-size: 14px; font-weight: 700; color: var(--green); }
-.btn-secondary { background: var(--bg3); border: 1px solid var(--border2); border-radius: 12px; padding: 14px 18px; font-family: 'IBM Plex Mono', monospace; font-size: 12px; color: var(--muted); }
-
-/* settings */
-.settings-list { padding: 14px 16px 0; display: flex; flex-direction: column; gap: 6px; }
-.setting-row { background: var(--bg2); border: 1px solid var(--border); border-radius: 14px; padding: 14px 16px; display: flex; align-items: center; justify-content: space-between; gap: 12px; cursor: pointer; }
-.setting-lbl { font-size: 13px; font-weight: 500; }
-.setting-sub { font-size: 11px; color: var(--muted); margin-top: 2px; }
-.setting-val { font-family: 'IBM Plex Mono', monospace; font-size: 13px; color: var(--green); }
-
-.install-banner { margin: 16px 16px 0; background: linear-gradient(135deg, #1a1500, #0f0e00); border: 1px solid #5a4a00; border-radius: 18px; padding: 20px; }
-.install-title { font-family: 'Syne', sans-serif; font-size: 15px; font-weight: 700; color: var(--yellow); margin-bottom: 8px; }
-.install-steps { font-size: 12px; color: #c4930a; line-height: 1.8; }
-.install-steps span { display: block; }
-</style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <meta name="theme-color" content="#69f0ae" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <meta name="apple-mobile-web-app-title" content="MeinGeld" />
+  <title>MeinGeld</title>
+  <link rel="manifest" href="manifest.json" />
+  <link rel="stylesheet" href="style.css" />
 </head>
 <body>
 <div id="app">
 
-  <!-- OVERVIEW -->
+  <!-- ═══════════════════════════ OVERVIEW ═══════════════════════════ -->
   <div id="screen-overview" class="screen active">
     <div class="topbar">
       <div class="topbar-eyebrow">Mein Geld</div>
-      <div class="topbar-title">Finanz-<em>Übersicht</em></div>
+      <div class="topbar-row">
+        <div class="topbar-title">Finanz-<em>Übersicht</em></div>
+      </div>
     </div>
+
+    <!-- Income -->
     <div class="income-bar">
-      <div>
+      <div class="income-left">
         <div class="income-label">Einkommen / Monat</div>
         <div class="income-val" id="overview-income">– €</div>
+        <div class="income-month" id="overview-month"></div>
       </div>
       <button class="income-edit-btn" onclick="openIncomeModal()">✏ Ändern</button>
     </div>
+
+    <!-- Donut Ring -->
     <div class="ring-wrap">
-      <svg width="180" height="180" viewBox="0 0 140 140">
-        <circle cx="70" cy="70" r="52" fill="none" stroke="#1a1917" stroke-width="14"/>
-        <circle id="arc-fixed"  cx="70" cy="70" r="52" fill="none" stroke="#e8d5b7" stroke-width="14" stroke-dasharray="0 326.7" transform="rotate(-90 70 70)"/>
-        <circle id="arc-fun"    cx="70" cy="70" r="52" fill="none" stroke="#ffd180" stroke-width="14" stroke-dasharray="0 326.7" transform="rotate(-90 70 70)"/>
-        <circle id="arc-saving" cx="70" cy="70" r="52" fill="none" stroke="#a5d6a7" stroke-width="14" stroke-dasharray="0 326.7" transform="rotate(-90 70 70)"/>
-        <circle id="arc-remain" cx="70" cy="70" r="52" fill="none" stroke="#69f0ae" stroke-width="14" stroke-dasharray="0 326.7" transform="rotate(-90 70 70)"/>
+      <svg width="220" height="220" viewBox="0 0 160 160">
+        <circle cx="80" cy="80" r="62" fill="none" stroke="#1a1917" stroke-width="16"/>
+        <circle id="arc-fixed"  cx="80" cy="80" r="62" fill="none" stroke="#e8d5b7" stroke-width="16" stroke-dasharray="0 389.6" transform="rotate(-90 80 80)"/>
+        <circle id="arc-fun"    cx="80" cy="80" r="62" fill="none" stroke="#ffd180" stroke-width="16" stroke-dasharray="0 389.6" transform="rotate(-90 80 80)"/>
+        <circle id="arc-saving" cx="80" cy="80" r="62" fill="none" stroke="#a5d6a7" stroke-width="16" stroke-dasharray="0 389.6" transform="rotate(-90 80 80)"/>
+        <circle id="arc-remain" cx="80" cy="80" r="62" fill="none" stroke="#69f0ae" stroke-width="16" stroke-dasharray="0 389.6" transform="rotate(-90 80 80)"/>
       </svg>
       <div class="ring-center">
         <div class="ring-remain" id="ring-remain-val">– €</div>
         <div class="ring-lbl">Verfügbar</div>
       </div>
     </div>
+
+    <!-- Stats -->
     <div class="stat-row">
-      <div class="stat"><div class="stat-icon">🏠</div><div class="stat-val" id="stat-fixed" style="color:#e8d5b7">– €</div><div class="stat-lbl">Fixkosten</div></div>
-      <div class="stat"><div class="stat-icon">🎉</div><div class="stat-val" id="stat-fun" style="color:#ffd180">– €</div><div class="stat-lbl">Freizeit</div></div>
-      <div class="stat"><div class="stat-icon">💰</div><div class="stat-val" id="stat-saving" style="color:#a5d6a7">– €</div><div class="stat-lbl">Sparen</div></div>
+      <div class="stat">
+        <div class="stat-icon">🏠</div>
+        <div class="stat-val" id="stat-fixed" style="color:var(--col-fixed)">– €</div>
+        <div class="stat-lbl">Fixkosten</div>
+      </div>
+      <div class="stat">
+        <div class="stat-icon">🎉</div>
+        <div class="stat-val" id="stat-fun" style="color:var(--col-fun)">– €</div>
+        <div class="stat-lbl">Freizeit</div>
+      </div>
+      <div class="stat">
+        <div class="stat-icon">💰</div>
+        <div class="stat-val" id="stat-saving" style="color:var(--col-saving)">– €</div>
+        <div class="stat-lbl">Sparen</div>
+      </div>
     </div>
-    <div class="hl-card" id="hl-card" style="background:linear-gradient(135deg,#0f2018,#0c0b0a);border:1px solid #2a5a3a;">
-      <div class="hl-eyebrow" style="color:#69f0ae">✨ Noch verfügbar</div>
-      <div class="hl-val" id="hl-val" style="color:#69f0ae">– €</div>
-      <div class="hl-sub" id="hl-sub" style="color:#4caf82">Importiere deinen Kontoauszug um zu starten →</div>
+
+    <!-- Highlight -->
+    <div class="hl-card" id="hl-card">
+      <div class="hl-eyebrow" id="hl-eyebrow" style="color:var(--green)">✨ Noch verfügbar</div>
+      <div class="hl-val" id="hl-val">– €</div>
+      <div class="hl-sub" id="hl-sub"></div>
     </div>
-    <div class="cat-list" id="cat-list"></div>
-    <div style="height:10px"></div>
+
+    <!-- KI Export Button -->
+    <button class="ki-export-btn" onclick="exportForKi()">🤖 Für KI-Analyse exportieren</button>
+
+    <!-- Filter + Sort -->
+    <div class="filter-bar">
+      <div class="filter-scroll">
+        <button class="filter-chip active" data-filter="all">Alle</button>
+        <button class="filter-chip" data-filter="fixed">🏠 Fixkosten</button>
+        <button class="filter-chip" data-filter="fun">🎉 Freizeit</button>
+        <button class="filter-chip" data-filter="saving">💰 Sparen</button>
+        <button class="filter-chip" data-filter="manual">✎ Manuell</button>
+        <button class="filter-chip" data-filter="imported">⬇ Importiert</button>
+      </div>
+      <div class="sort-row">
+        <span class="sort-label">Sortierung</span>
+        <select class="sort-select" id="sort-select">
+          <option value="amount-desc">Betrag ↓</option>
+          <option value="amount-asc">Betrag ↑</option>
+          <option value="name-asc">Name A–Z</option>
+          <option value="name-desc">Name Z–A</option>
+          <option value="date-desc">Datum ↓</option>
+          <option value="date-asc">Datum ↑</option>
+          <option value="type">Nach Typ</option>
+        </select>
+      </div>
+    </div>
+
+    <!-- Entry List -->
+    <div class="entry-list" id="entry-list"></div>
+
+    <div class="spacer"></div>
+
+    <!-- FAB -->
+    <button class="fab" onclick="openAddEntryModal()" aria-label="Eintrag hinzufügen">+</button>
   </div>
 
-  <!-- IMPORT -->
+  <!-- ═══════════════════════════ IMPORT ═══════════════════════════ -->
   <div id="screen-import" class="screen">
     <div class="topbar">
       <div class="topbar-eyebrow">Schritt für Schritt</div>
       <div class="topbar-title">Kontoauszug <em>importieren</em></div>
     </div>
 
-    <!-- Step 1: Copy prompt -->
+    <!-- Step 1 -->
     <div class="import-step">
       <div class="step-badge">1</div>
       <div class="step-title">Prompt kopieren</div>
-      <div class="step-sub">Kopiere diesen Prompt und öffne ChatGPT, Claude oder Gemini. Füge dort den Prompt ein — zusammen mit deinem Kontoauszug als Foto oder PDF.</div>
+      <div class="step-sub">Öffne ChatGPT, Claude oder Gemini. Füge dort diesen Prompt ein — zusammen mit deinem Kontoauszug als Foto oder PDF.</div>
       <div class="prompt-box">
-        <div class="prompt-text" id="prompt-text"></div>
+        <div class="prompt-text" id="import-prompt-text"></div>
       </div>
-      <button class="copy-btn" onclick="copyPrompt()">📋 Prompt kopieren</button>
-      <div class="copy-success" id="copy-success">✓ Kopiert!</div>
+      <button class="copy-btn" onclick="copyImportPrompt()">📋 Prompt kopieren</button>
+      <div class="copy-feedback" id="import-copy-feedback">✓ In Zwischenablage kopiert!</div>
       <div class="ai-links">
-        <a class="ai-link" href="https://chat.openai.com" target="_blank">🤖 ChatGPT</a>
-        <a class="ai-link" href="https://claude.ai" target="_blank">✨ Claude</a>
-        <a class="ai-link" href="https://gemini.google.com" target="_blank">💎 Gemini</a>
+        <a class="ai-link" href="https://chat.openai.com" target="_blank" rel="noopener">🤖 ChatGPT</a>
+        <a class="ai-link" href="https://claude.ai" target="_blank" rel="noopener">✨ Claude</a>
+        <a class="ai-link" href="https://gemini.google.com" target="_blank" rel="noopener">💎 Gemini</a>
       </div>
     </div>
 
-    <!-- Step 2: Paste JSON -->
+    <!-- Step 2 -->
     <div class="import-step">
       <div class="step-badge">2</div>
       <div class="step-title">JSON hier einfügen</div>
-      <div class="step-sub">Kopiere die JSON-Antwort der KI und füge sie hier ein.</div>
-      <textarea class="paste-area" id="json-paste" placeholder='Hier JSON einfügen...
+      <div class="step-sub">Kopiere die JSON-Antwort der KI und füge sie unten ein.</div>
+      <textarea class="paste-area" id="json-paste" placeholder='Hier JSON einfügen…
 Beispiel:
 {
   "income": 2500,
@@ -255,14 +150,25 @@ Beispiel:
 }'></textarea>
     </div>
 
-    <button class="import-btn" onclick="runImport()">✅ Importieren & anzeigen</button>
+    <button class="import-btn" onclick="runImport()">✅ Importieren &amp; anzeigen</button>
     <div class="error-box" id="import-error" style="display:none"><span>⚠️</span><div id="import-error-msg"></div></div>
     <div class="success-box" id="import-success" style="display:none">✓ <span id="import-success-msg"></span></div>
 
-    <div style="height:10px"></div>
+    <div class="spacer"></div>
   </div>
 
-  <!-- SPARPLAN -->
+  <!-- ═══════════════════════════ HISTORY ══════════════════════════ -->
+  <div id="screen-history" class="screen">
+    <div class="topbar">
+      <div class="topbar-eyebrow">Verlauf</div>
+      <div class="topbar-title">Monats-<em>Historie</em></div>
+    </div>
+    <div class="month-selector" id="month-list"></div>
+    <button class="month-new-btn" onclick="openNewMonthModal()">+ Neuen Monat anlegen</button>
+    <div class="spacer"></div>
+  </div>
+
+  <!-- ═══════════════════════════ SPARPLAN ═════════════════════════ -->
   <div id="screen-sparplan" class="screen">
     <div class="topbar">
       <div class="topbar-eyebrow">Mein Sparplan</div>
@@ -274,16 +180,17 @@ Beispiel:
       <div class="sp-total-sub" id="sp-total-sub">Füge Sparziele hinzu</div>
     </div>
     <div class="sp-goals" id="sp-goals"></div>
-    <button class="add-goal-btn" onclick="openGoalModal()">+ Neues Sparziel hinzufügen</button>
-    <div style="height:10px"></div>
+    <button class="add-goal-btn" onclick="openAddGoalModal()">+ Neues Sparziel hinzufügen</button>
+    <div class="spacer"></div>
   </div>
 
-  <!-- SETTINGS -->
+  <!-- ═══════════════════════════ SETTINGS ═════════════════════════ -->
   <div id="screen-settings" class="screen">
     <div class="topbar">
       <div class="topbar-eyebrow">Einstellungen</div>
       <div class="topbar-title"><em>App</em> anpassen</div>
     </div>
+
     <div class="install-banner">
       <div class="install-title">📲 Als App installieren (Android)</div>
       <div class="install-steps">
@@ -292,42 +199,126 @@ Beispiel:
         <span>3. „Installieren" tippen → Fertig! 🎉</span>
       </div>
     </div>
+
     <div class="settings-list">
-      <div class="setting-row" onclick="openIncomeModal()">
-        <div><div class="setting-lbl">✏️ Einkommen bearbeiten</div><div class="setting-sub">Monatliches Nettoeinkommen</div></div>
-        <div class="setting-val" id="settings-income-val">– €</div>
+      <div class="setting-row tappable" onclick="openIncomeModal()">
+        <div>
+          <div class="setting-lbl">✏️ Einkommen bearbeiten</div>
+          <div class="setting-sub" id="settings-income-val">– €</div>
+        </div>
+        <div class="setting-arrow">›</div>
       </div>
-      <div class="setting-row" onclick="switchScreen('import')">
-        <div><div class="setting-lbl">📄 Neuer Import</div><div class="setting-sub">Kontoauszug neu importieren</div></div>
-        <div style="color:var(--muted)">›</div>
+      <div class="setting-row">
+        <div>
+          <div class="setting-lbl">📅 Aktueller Monat</div>
+          <div class="setting-sub" id="settings-month-val"></div>
+        </div>
+        <div class="setting-val"></div>
       </div>
-      <div class="setting-row" onclick="clearData()">
-        <div><div class="setting-lbl">🗑️ Alle Daten löschen</div><div class="setting-sub">Zurücksetzen auf Werkseinstellungen</div></div>
-        <div style="color:var(--muted)">›</div>
+      <div class="setting-row tappable" onclick="switchScreen('import')">
+        <div>
+          <div class="setting-lbl">📄 Neuer Import</div>
+          <div class="setting-sub">Kontoauszug neu einlesen</div>
+        </div>
+        <div class="setting-arrow">›</div>
       </div>
-      <div class="setting-row" style="cursor:default">
+      <div class="setting-row tappable" onclick="switchScreen('history')">
+        <div>
+          <div class="setting-lbl">📅 Monatshistorie</div>
+          <div class="setting-sub">Vergangene Monate ansehen</div>
+        </div>
+        <div class="setting-arrow">›</div>
+      </div>
+      <div class="setting-row tappable" onclick="clearAllData()">
+        <div>
+          <div class="setting-lbl">🗑️ Alle Daten löschen</div>
+          <div class="setting-sub">Zurücksetzen auf Werkseinstellungen</div>
+        </div>
+        <div class="setting-arrow" style="color:var(--red)">›</div>
+      </div>
+      <div class="setting-row">
         <div><div class="setting-lbl">Version</div><div class="setting-sub">MeinGeld PWA</div></div>
-        <div class="setting-val">1.0.0</div>
+        <div class="setting-val">3.0.0</div>
       </div>
     </div>
-    <div style="height:10px"></div>
+    <div class="spacer"></div>
   </div>
 
-  <!-- NAV -->
+  <!-- ═══════════════════════════ NAV ══════════════════════════════ -->
   <nav>
-    <button class="nav-btn active" id="nav-overview" onclick="switchScreen('overview')"><span class="nav-icon">📊</span><span>Übersicht</span></button>
-    <button class="nav-btn" id="nav-import" onclick="switchScreen('import')"><span class="nav-icon">📄</span><span>Import</span></button>
-    <button class="nav-btn" id="nav-sparplan" onclick="switchScreen('sparplan')"><span class="nav-icon">💰</span><span>Sparplan</span></button>
-    <button class="nav-btn" id="nav-settings" onclick="switchScreen('settings')"><span class="nav-icon">⚙️</span><span>Einstellungen</span></button>
+    <button class="nav-btn active" id="nav-overview" onclick="switchScreen('overview')">
+      <span class="nav-icon">📊</span><span>Übersicht</span>
+    </button>
+    <button class="nav-btn" id="nav-import" onclick="switchScreen('import')">
+      <span class="nav-icon">📄</span><span>Import</span>
+    </button>
+    <button class="nav-btn" id="nav-history" onclick="switchScreen('history')">
+      <span class="nav-icon">📅</span><span>Verlauf</span>
+    </button>
+    <button class="nav-btn" id="nav-sparplan" onclick="switchScreen('sparplan')">
+      <span class="nav-icon">💰</span><span>Sparplan</span>
+    </button>
+    <button class="nav-btn" id="nav-settings" onclick="switchScreen('settings')">
+      <span class="nav-icon">⚙️</span><span>Einstellungen</span>
+    </button>
   </nav>
 </div>
 
-<!-- INCOME MODAL -->
+<!-- ═══════════════════════════ MODALS ═══════════════════════════════ -->
+
+<!-- Manual Entry Modal -->
+<div class="modal-overlay" id="modal-entry">
+  <div class="modal">
+    <div class="modal-handle"></div>
+    <div class="modal-title" id="entry-modal-title">Neuer Eintrag</div>
+    <div class="field-row">
+      <div class="field" style="flex:3">
+        <label class="field-lbl">Name</label>
+        <input class="field-input" type="text" id="entry-name" placeholder="z.B. Rewe, Netflix…" />
+      </div>
+      <div class="field">
+        <label class="field-lbl">Betrag (€)</label>
+        <input class="field-input" type="number" id="entry-amount" placeholder="0.00" step="0.01" min="0" />
+      </div>
+    </div>
+    <div class="field">
+      <label class="field-lbl">Typ</label>
+      <div class="type-selector">
+        <button class="type-chip" data-type="fixed"  onclick="setEntryType('fixed')">🏠 Fixkosten</button>
+        <button class="type-chip active-fun" data-type="fun" onclick="setEntryType('fun')">🎉 Freizeit</button>
+        <button class="type-chip" data-type="saving" onclick="setEntryType('saving')">💰 Sparen</button>
+      </div>
+      <input type="hidden" id="entry-type-hidden" value="fun" />
+    </div>
+    <div class="field-row">
+      <div class="field">
+        <label class="field-lbl">Kategorie (optional)</label>
+        <input class="field-input" type="text" id="entry-category" placeholder="z.B. Lebensmittel" />
+      </div>
+      <div class="field">
+        <label class="field-lbl">Datum</label>
+        <input class="field-input" type="date" id="entry-date" />
+      </div>
+    </div>
+    <div class="field">
+      <label class="field-lbl">Notiz (optional)</label>
+      <textarea class="field-textarea" id="entry-note" placeholder="z.B. Wocheneinkauf, Barzahlung…"></textarea>
+    </div>
+    <div class="modal-actions">
+      <button class="btn-danger" id="entry-delete-btn" onclick="deleteCurrentEntry()" style="display:none">🗑 Löschen</button>
+      <button class="btn-secondary" onclick="closeModal('modal-entry')">Abbrechen</button>
+      <button class="btn-primary" onclick="saveEntry()">Speichern</button>
+    </div>
+  </div>
+</div>
+
+<!-- Income Modal -->
 <div class="modal-overlay" id="modal-income">
   <div class="modal">
+    <div class="modal-handle"></div>
     <div class="modal-title">Einkommen anpassen</div>
     <div class="field">
-      <div class="field-lbl">Monatliches Nettoeinkommen (€)</div>
+      <label class="field-lbl">Monatliches Nettoeinkommen (€)</label>
       <input class="field-input" type="number" id="income-modal-input" placeholder="2200" />
     </div>
     <div class="modal-actions">
@@ -337,338 +328,65 @@ Beispiel:
   </div>
 </div>
 
-<!-- GOAL MODAL -->
+<!-- Goal Modal -->
 <div class="modal-overlay" id="modal-goal">
   <div class="modal">
-    <div class="modal-title">Sparziel hinzufügen</div>
+    <div class="modal-handle"></div>
+    <div class="modal-title" id="goal-modal-title">Sparziel hinzufügen</div>
     <div class="field-row">
-      <div class="field"><div class="field-lbl">Emoji</div><input class="field-input" type="text" id="goal-icon" placeholder="🏖️" maxlength="2" /></div>
-      <div class="field" style="flex:3"><div class="field-lbl">Name</div><input class="field-input" type="text" id="goal-name" placeholder="z.B. Urlaub" /></div>
+      <div class="field" style="flex:0 0 70px">
+        <label class="field-lbl">Emoji</label>
+        <input class="field-input" type="text" id="goal-icon" placeholder="🏖️" maxlength="2" />
+      </div>
+      <div class="field" style="flex:1">
+        <label class="field-lbl">Name</label>
+        <input class="field-input" type="text" id="goal-name" placeholder="z.B. Urlaub" />
+      </div>
     </div>
-    <div class="field"><div class="field-lbl">Ziel-Betrag (€)</div><input class="field-input" type="number" id="goal-target" placeholder="2000" /></div>
-    <div class="field"><div class="field-lbl">Bereits gespart (€)</div><input class="field-input" type="number" id="goal-saved" placeholder="0" /></div>
+    <div class="field-row">
+      <div class="field">
+        <label class="field-lbl">Ziel-Betrag (€)</label>
+        <input class="field-input" type="number" id="goal-target" placeholder="2000" />
+      </div>
+      <div class="field">
+        <label class="field-lbl">Bereits gespart (€)</label>
+        <input class="field-input" type="number" id="goal-saved" placeholder="0" />
+      </div>
+    </div>
     <div class="field">
-      <div class="field-lbl">Monatliche Rate: <span id="goal-monthly-lbl" style="color:var(--green)">50 €</span></div>
-      <input type="range" id="goal-monthly-slider" min="10" max="500" step="10" value="50" oninput="document.getElementById('goal-monthly-lbl').textContent=this.value+' €'" />
-      <div style="display:flex;justify-content:space-between;font-family:'IBM Plex Mono',monospace;font-size:10px;color:var(--muted);margin-top:4px"><span>10 €</span><span>500 €</span></div>
+      <label class="field-lbl">Monatliche Rate: <span id="goal-monthly-lbl" style="color:var(--green)">50 €</span></label>
+      <input type="range" id="goal-monthly-slider" min="10" max="500" step="10" value="50"
+        oninput="document.getElementById('goal-monthly-lbl').textContent = this.value + ' €'" />
+      <div style="display:flex;justify-content:space-between;font-family:'IBM Plex Mono',monospace;font-size:10px;color:var(--muted);margin-top:4px">
+        <span>10 €</span><span>500 €</span>
+      </div>
     </div>
     <div class="modal-actions">
+      <button class="btn-danger" id="goal-delete-btn" onclick="deleteCurrentGoal()" style="display:none">🗑 Löschen</button>
       <button class="btn-secondary" onclick="closeModal('modal-goal')">Abbrechen</button>
       <button class="btn-primary" onclick="saveGoal()">Speichern</button>
     </div>
   </div>
 </div>
 
-<script>
-// ── PROMPT TEMPLATE ─────────────────────────────────────────────────
-const PROMPT = `Analysiere diesen Kontoauszug und gib mir NUR ein JSON-Objekt zurück.
-Kein erklärender Text, keine Markdown-Backticks, nur reines JSON.
+<!-- New Month Modal -->
+<div class="modal-overlay" id="modal-new-month">
+  <div class="modal">
+    <div class="modal-handle"></div>
+    <div class="modal-title">Neuen Monat anlegen</div>
+    <div class="field">
+      <label class="field-lbl">Monat (Format: YYYY-MM)</label>
+      <input class="field-input" type="month" id="new-month-input" />
+    </div>
+    <div class="modal-actions">
+      <button class="btn-secondary" onclick="closeModal('modal-new-month')">Abbrechen</button>
+      <button class="btn-primary" onclick="saveNewMonth()">Anlegen</button>
+    </div>
+  </div>
+</div>
 
-Gewünschtes Format:
-{
-  "income": <Gesamteinnahmen als Zahl>,
-  "categories": [
-    { "name": "<Kategoriename>", "amount": <Betrag als positive Zahl>, "type": "<fixed|fun|saving>" }
-  ]
-}
-
-Regeln:
-- Fasse ähnliche Buchungen zusammen (z.B. alle Supermärkte → "Lebensmittel")
-- "amount" ist immer positiv (Ausgabebetrag)
-- "type" Werte: fixed = wiederkehrende Fixkosten, fun = Freizeit & Shopping, saving = Sparbeiträge
-- Einnahmen (Gehalt, Gutschriften) NUR in "income", nicht in categories
-- Maximal 12 Kategorien, kleine Beträge unter "Sonstiges" zusammenfassen
-- Antworte ausschließlich mit dem JSON-Objekt`;
-
-document.getElementById('prompt-text').textContent = PROMPT;
-
-// ── STATE ────────────────────────────────────────────────────────────
-let state = { income: 0, categories: [], goals: [] };
-
-const ICONS = {
-  miete:"🏠",wohnen:"🏠",nebenkosten:"💡",strom:"💡",internet:"📡",
-  lebensmittel:"🛒",supermarkt:"🛒",transport:"🚇",öpnv:"🚇",auto:"🚗",
-  tanken:"⛽",versicherung:"🛡️",gesundheit:"💊",hobbys:"🎸",sport:"🏃",
-  freizeit:"🎉",unterhaltung:"🎬",essen:"🍜",restaurant:"🍜",lieferservice:"🛵",
-  kleidung:"👗",shopping:"🛍️",sparen:"💰",rücklagen:"🏦",gehalt:"💼",
-  streaming:"📺",telefon:"📱",sonstiges:"📌",
-};
-function iconFor(n) {
-  const low = n.toLowerCase();
-  for (const [k,v] of Object.entries(ICONS)) if (low.includes(k)) return v;
-  return "📌";
-}
-const TYPE_CFG = {
-  fixed:  { color:"#e8d5b7", label:"Fixkosten" },
-  fun:    { color:"#ffd180", label:"Freizeit"  },
-  saving: { color:"#a5d6a7", label:"Sparen"    },
-};
-
-// ── PERSISTENCE ──────────────────────────────────────────────────────
-function save() { try { localStorage.setItem("mg2_state", JSON.stringify(state)); } catch(_){} }
-function load() { try { const s = localStorage.getItem("mg2_state"); if (s) state = {...state,...JSON.parse(s)}; } catch(_){} }
-
-// ── NAV ──────────────────────────────────────────────────────────────
-function switchScreen(id) {
-  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
-  document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
-  document.getElementById('screen-'+id).classList.add('active');
-  document.getElementById('nav-'+id).classList.add('active');
-  if (id==='overview') renderOverview();
-  if (id==='sparplan') renderSparplan();
-  if (id==='settings') renderSettings();
-}
-
-// ── COPY PROMPT ──────────────────────────────────────────────────────
-function copyPrompt() {
-  navigator.clipboard.writeText(PROMPT).then(() => {
-    const el = document.getElementById('copy-success');
-    el.classList.add('show');
-    setTimeout(() => el.classList.remove('show'), 2000);
-  }).catch(() => {
-    // Fallback
-    const ta = document.createElement('textarea');
-    ta.value = PROMPT; document.body.appendChild(ta);
-    ta.select(); document.execCommand('copy');
-    document.body.removeChild(ta);
-    const el = document.getElementById('copy-success');
-    el.classList.add('show');
-    setTimeout(() => el.classList.remove('show'), 2000);
-  });
-}
-
-// ── IMPORT ───────────────────────────────────────────────────────────
-function runImport() {
-  const raw = document.getElementById('json-paste').value.trim();
-  document.getElementById('import-error').style.display = 'none';
-  document.getElementById('import-success').style.display = 'none';
-
-  if (!raw) { showImportError('Bitte zuerst das JSON einfügen.'); return; }
-
-  let parsed;
-  try {
-    const clean = raw.replace(/```json|```/g,'').trim();
-    parsed = JSON.parse(clean);
-  } catch(e) {
-    showImportError('Ungültiges JSON. Stelle sicher dass du die komplette KI-Antwort kopiert hast.');
-    return;
-  }
-
-  if (!parsed.income || !Array.isArray(parsed.categories)) {
-    showImportError('JSON-Format stimmt nicht. Fehlende Felder: income oder categories.');
-    return;
-  }
-
-  // Keep goals/auto-saving, replace imported cats
-  const autoSaving = state.categories.filter(c => c._auto);
-  state.income = parsed.income;
-  state.categories = [
-    ...parsed.categories.map(c => ({...c, _auto: false})),
-    ...autoSaving
-  ];
-  save();
-
-  document.getElementById('import-success-msg').textContent =
-    `${parsed.categories.length} Kategorien importiert · Einkommen: ${parsed.income.toLocaleString('de-DE')} €`;
-  document.getElementById('import-success').style.display = 'flex';
-  document.getElementById('json-paste').value = '';
-
-  setTimeout(() => switchScreen('overview'), 1200);
-}
-
-function showImportError(msg) {
-  document.getElementById('import-error-msg').textContent = msg;
-  document.getElementById('import-error').style.display = 'flex';
-}
-
-// ── RENDER OVERVIEW ──────────────────────────────────────────────────
-function renderOverview() {
-  const { income, categories } = state;
-  const fmt = n => n === 0 && income === 0 ? '– €' : Math.round(n).toLocaleString('de-DE') + ' €';
-
-  const fixed  = categories.filter(c=>c.type==='fixed').reduce((s,c)=>s+c.amount,0);
-  const fun    = categories.filter(c=>c.type==='fun').reduce((s,c)=>s+c.amount,0);
-  const saving = categories.filter(c=>c.type==='saving').reduce((s,c)=>s+c.amount,0);
-  const remain = income - fixed - fun - saving;
-  const remCol = remain < 0 ? '#ff6b6b' : remain < income * .08 ? '#ffd180' : '#69f0ae';
-
-  document.getElementById('overview-income').textContent = income > 0 ? Math.round(income).toLocaleString('de-DE')+' €' : '– €';
-  document.getElementById('stat-fixed').textContent  = fmt(fixed);
-  document.getElementById('stat-fun').textContent    = fmt(fun);
-  document.getElementById('stat-saving').textContent = fmt(saving);
-
-  const remText = income > 0 ? (remain>=0?'+':'')+Math.round(remain).toLocaleString('de-DE')+' €' : '– €';
-  document.getElementById('ring-remain-val').textContent = remText;
-  document.getElementById('ring-remain-val').style.color = income > 0 ? remCol : 'var(--muted)';
-
-  // Arcs
-  const CIRC = 326.7;
-  const arc = (val) => income > 0 ? (val/income)*CIRC : 0;
-  const fixD=arc(fixed), funD=arc(fun), savD=arc(saving), remD=arc(Math.max(0,remain));
-  const setArc = (id,d,off,col) => {
-    const el=document.getElementById(id);
-    el.style.strokeDasharray=`${d} ${CIRC}`;
-    el.style.strokeDashoffset=`-${off}`;
-    if(col) el.style.stroke=col;
-  };
-  setArc('arc-fixed',  fixD, 0,                null);
-  setArc('arc-fun',    funD, fixD,              null);
-  setArc('arc-saving', savD, fixD+funD,         null);
-  setArc('arc-remain', remD, fixD+funD+savD,    remCol);
-
-  // Highlight
-  const hlCard=document.getElementById('hl-card');
-  const hlVal=document.getElementById('hl-val');
-  const hlSub=document.getElementById('hl-sub');
-  if (income === 0) {
-    hlVal.textContent = '– €';
-    hlSub.textContent = 'Importiere deinen Kontoauszug → Tab „Import"';
-    hlVal.style.color = 'var(--muted)';
-  } else if (remain < 0) {
-    hlCard.style.background='linear-gradient(135deg,#2a0808,#0c0b0a)';
-    hlCard.style.border='1px solid #5a1f1f';
-    hlVal.style.color='#ff6b6b';
-    hlVal.textContent=Math.round(remain).toLocaleString('de-DE')+' €';
-    hlSub.style.color='#ff6b6b';
-    hlSub.textContent='⚠️ Ausgaben übersteigen Einnahmen!';
-  } else {
-    hlCard.style.background='linear-gradient(135deg,#0f2018,#0c0b0a)';
-    hlCard.style.border='1px solid #2a5a3a';
-    hlVal.style.color='#69f0ae';
-    hlVal.textContent='+'+Math.round(remain).toLocaleString('de-DE')+' €';
-    hlSub.style.color='#4caf82';
-    const pct=income>0?Math.round((remain/income)*100):0;
-    hlSub.textContent=`${pct}% deines Einkommens frei · ${Math.round(remain/4).toLocaleString('de-DE')} € / Woche`;
-  }
-
-  // List
-  const list=document.getElementById('cat-list');
-  list.innerHTML='';
-  if (!categories.length) {
-    list.innerHTML='<div style="text-align:center;padding:30px 20px;color:var(--muted);font-size:13px">Noch keine Daten. Gehe zu „Import" um deinen Kontoauszug zu laden.</div>';
-    return;
-  }
-  [...categories].sort((a,b)=>b.amount-a.amount).forEach(c=>{
-    const cfg=TYPE_CFG[c.type]||TYPE_CFG.fun;
-    const pct=income>0?Math.min(100,(c.amount/income)*100):0;
-    const el=document.createElement('div');
-    el.className='cat-row';
-    el.innerHTML=`
-      <div class="cat-dot" style="background:${cfg.color}"></div>
-      <div class="cat-ico">${iconFor(c.name)}</div>
-      <div class="cat-info">
-        <div class="cat-name">${c.name}</div>
-        <div class="cat-type" style="color:${cfg.color}">${cfg.label}</div>
-        <div class="cat-bar"><div class="cat-bar-fill" style="width:${pct}%;background:${cfg.color}"></div></div>
-      </div>
-      <div class="cat-amt">${c.amount.toLocaleString('de-DE',{minimumFractionDigits:2})} €</div>`;
-    list.appendChild(el);
-  });
-}
-
-// ── SPARPLAN ─────────────────────────────────────────────────────────
-function renderSparplan() {
-  const goals=state.goals;
-  const total=goals.reduce((s,g)=>s+g.monthly,0);
-  document.getElementById('sp-total-val').textContent=total.toLocaleString('de-DE')+' € / Mo';
-  document.getElementById('sp-total-sub').textContent=total>0?`${goals.length} aktive${goals.length===1?'s':''} Ziel${goals.length===1?'':'e'}`:'Füge dein erstes Sparziel hinzu';
-  const container=document.getElementById('sp-goals');
-  container.innerHTML='';
-  goals.forEach((g,i)=>{
-    const target=g.target||1, saved=g.saved||0, monthly=g.monthly||0;
-    const left=Math.max(0,target-saved);
-    const months=monthly>0?Math.ceil(left/monthly):'∞';
-    const pct=Math.min(100,Math.round((saved/target)*100));
-    const el=document.createElement('div');
-    el.className='sp-goal';
-    el.innerHTML=`
-      <div class="sp-goal-top">
-        <div class="sp-goal-ico">${g.icon||'💰'}</div>
-        <div class="sp-goal-info">
-          <div class="sp-goal-name">${g.name}</div>
-          <div class="sp-goal-target">Ziel: ${target.toLocaleString('de-DE')} € · noch ${months}${typeof months==='number'?' Mo':''}</div>
-        </div>
-        <div class="sp-goal-monthly">${monthly} €/Mo</div>
-      </div>
-      <div style="display:flex;align-items:center;gap:10px">
-        <span style="font-family:'IBM Plex Mono',monospace;font-size:10px;color:var(--muted)">10€</span>
-        <input type="range" min="10" max="500" step="10" value="${monthly}" style="flex:1"
-          oninput="updateGoalMonthly(${i},this.value)" />
-        <span style="font-family:'IBM Plex Mono',monospace;font-size:10px;color:var(--muted);width:36px">${monthly}€</span>
-        <button onclick="deleteGoal(${i})" style="color:var(--muted2);font-size:16px;padding:4px">✕</button>
-      </div>
-      <div class="sp-progress-bar"><div class="sp-progress-fill" style="width:${pct}%"></div></div>
-      <div class="sp-progress-lbl"><span>${saved.toLocaleString('de-DE')} € gespart</span><span>${pct}%</span></div>`;
-    container.appendChild(el);
-  });
-}
-
-function updateGoalMonthly(i,val) {
-  state.goals[i].monthly=parseInt(val);
-  save(); syncSaving(); renderSparplan();
-}
-function deleteGoal(i) {
-  state.goals.splice(i,1); save(); syncSaving(); renderSparplan();
-}
-function syncSaving() {
-  state.categories=state.categories.filter(c=>!c._auto);
-  const total=state.goals.reduce((s,g)=>s+g.monthly,0);
-  if (total>0) state.categories.push({name:"Sparziele gesamt",amount:total,type:"saving",_auto:true});
-  save();
-}
-
-// ── SETTINGS ─────────────────────────────────────────────────────────
-function renderSettings() {
-  document.getElementById('settings-income-val').textContent=
-    state.income>0?Math.round(state.income).toLocaleString('de-DE')+' €':'– €';
-}
-
-// ── MODALS ────────────────────────────────────────────────────────────
-function openIncomeModal() {
-  document.getElementById('income-modal-input').value=state.income||'';
-  openModal('modal-income');
-}
-function saveIncome() {
-  const v=parseInt(document.getElementById('income-modal-input').value);
-  if (v>0){state.income=v;save();renderOverview();renderSettings();}
-  closeModal('modal-income');
-}
-function openGoalModal() {
-  ['goal-icon','goal-name','goal-target'].forEach(id=>document.getElementById(id).value='');
-  document.getElementById('goal-saved').value='0';
-  document.getElementById('goal-monthly-slider').value=50;
-  document.getElementById('goal-monthly-lbl').textContent='50 €';
-  openModal('modal-goal');
-}
-function saveGoal() {
-  const name=document.getElementById('goal-name').value.trim();
-  if (!name) return;
-  state.goals.push({
-    name, icon:document.getElementById('goal-icon').value.trim()||'💰',
-    target:parseFloat(document.getElementById('goal-target').value)||0,
-    saved:parseFloat(document.getElementById('goal-saved').value)||0,
-    monthly:parseInt(document.getElementById('goal-monthly-slider').value)||50
-  });
-  save(); syncSaving(); closeModal('modal-goal'); renderSparplan();
-}
-function openModal(id){document.getElementById(id).classList.add('open');}
-function closeModal(id){document.getElementById(id).classList.remove('open');}
-document.querySelectorAll('.modal-overlay').forEach(o=>{
-  o.addEventListener('click',e=>{if(e.target===o)o.classList.remove('open');});
-});
-
-function clearData() {
-  if (confirm('Alle Daten wirklich löschen?')) {
-    state={income:0,categories:[],goals:[]};
-    save(); renderOverview(); renderSettings();
-    alert('Daten gelöscht.');
-  }
-}
-
-// ── INIT ─────────────────────────────────────────────────────────────
-load();
-renderOverview();
-if ('serviceWorker' in navigator) navigator.serviceWorker.register('./sw.js').catch(()=>{});
-</script>
+<!-- Scripts -->
+<script src="db.js"></script>
+<script src="app.js"></script>
 </body>
 </html>
