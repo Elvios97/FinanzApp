@@ -183,7 +183,10 @@ function renderEntryList() {
       </div>
       <div class="entry-amt" style="color:${cfg.color}">${entry.amount.toLocaleString("de-DE", { minimumFractionDigits: 2 })} €</div>
     `;
-    el.addEventListener("pointerdown", () => openEditEntryModal(entry));
+    el.addEventListener("pointerdown", () => {
+      console.log('Entry tapped:', entry.name);
+      openEditEntryModal(entry);
+    });
     list.appendChild(el);
   });
 }
@@ -362,6 +365,7 @@ function renderHistory() {
       </div>
     `;
     el.addEventListener("pointerdown", () => {
+      console.log('Month card tapped:', mk);
       state.currentMonth = mk;
       saveState(state);
       switchScreen("overview");
@@ -623,7 +627,10 @@ function clearAllData() {
 function openModal(id)  { document.getElementById(id).classList.add("open"); }
 function closeModal(id) { document.getElementById(id).classList.remove("open"); }
 
-document.querySelectorAll(".modal-overlay").forEach(o => {
+document.querySelectorAll(".modal-overlay"
+    console.log('Modal overlay tapped');
+    if (e.target === o) o.classList.remove("open");
+ 
   o.addEventListener("pointerdown", e => { if (e.target === o) o.classList.remove("open"); });
 });
 
@@ -653,7 +660,10 @@ function fallbackCopy(text, cb) {
 }
 
 // ── Init ──────────────────────────────────────────────────────────
-(function init() {
+(function init() {{
+      console.log('Filter chip tapped:', chip.dataset.filter);
+      setFilter(chip.dataset.filter);
+    }
   // Filter chips
   document.querySelectorAll(".filter-chip").forEach(chip => {
     chip.addEventListener("pointerdown", () => setFilter(chip.dataset.filter));
