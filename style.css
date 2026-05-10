@@ -438,3 +438,214 @@ nav {
 
 /* ── Spacer ──────────────────────────────────────────────────────── */
 .spacer { height: 16px; }
+
+/* ════════════════════════════════════════════════════════════════
+   DESKTOP RESPONSIVE — ab 768px
+   ════════════════════════════════════════════════════════════════ */
+@media (min-width: 768px) {
+
+  /* ── Scrollbar Desktop ──────────────────────────────────────── */
+  ::-webkit-scrollbar { width: 6px; }
+  ::-webkit-scrollbar-thumb { background: var(--border2); border-radius: 3px; }
+
+  /* ── App Shell: Sidebar + Content ──────────────────────────── */
+  #app {
+    flex-direction: row;
+    height: 100vh;
+    max-width: 1400px;
+    margin: 0 auto;
+  }
+
+  /* Alle Screens nebeneinander möglich, aktiver wird angezeigt */
+  .screen {
+    flex: 1;
+    padding-bottom: 32px;
+    overflow-y: auto;
+    height: 100vh;
+  }
+
+  /* ── Sidebar Navigation ─────────────────────────────────────── */
+  nav {
+    position: relative;
+    bottom: auto; left: auto; right: auto;
+    width: 220px;
+    height: 100vh;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: stretch;
+    padding: 32px 12px 24px;
+    border-top: none;
+    border-right: 1px solid var(--border);
+    gap: 4px;
+    flex-shrink: 0;
+    overflow: hidden;
+  }
+
+  /* Logo above nav items */
+  nav::before {
+    content: '💶 MeinGeld';
+    display: block;
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    font-size: 16px;
+    font-weight: 800;
+    color: var(--text);
+    padding: 0 12px 24px;
+    border-bottom: 1px solid var(--border);
+    margin-bottom: 16px;
+    letter-spacing: -0.3px;
+  }
+
+  .nav-btn {
+    flex-direction: row;
+    justify-content: flex-start;
+    gap: 12px;
+    padding: 12px 14px;
+    border-radius: 12px;
+    font-size: 13px;
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    font-weight: 600;
+    letter-spacing: 0;
+    text-transform: none;
+    transition: background .2s, color .2s;
+  }
+  .nav-btn:hover { background: var(--bg2); color: var(--text); }
+  .nav-btn.active {
+    background: var(--green-dim);
+    color: var(--green);
+    border: 1px solid var(--green-border);
+  }
+  .nav-icon { font-size: 18px; }
+
+  /* ── Topbar Desktop ─────────────────────────────────────────── */
+  .topbar { padding: 40px 32px 0; }
+  .topbar-title { font-size: 36px; }
+
+  /* ── Content max-width + padding ───────────────────────────── */
+  .income-bar        { margin: 24px 32px 0; }
+  .stat-row          { padding: 18px 32px 0; }
+  .filter-bar        { padding: 18px 32px 0; }
+  .entry-list        { padding: 14px 32px 0; }
+  .hl-card           { margin: 18px 32px 0; }
+  .ki-export-btn     { margin: 16px 32px 0; width: calc(100% - 64px); }
+  .import-step       { margin: 16px 32px 0; }
+  .import-btn        { margin: 12px 32px 0; width: calc(100% - 64px); }
+  .error-box,
+  .success-box       { margin: 10px 32px 0; }
+  .month-selector    { padding: 0 32px; margin-top: 20px; }
+  .month-new-btn     { margin: 10px 32px 0; width: calc(100% - 64px); }
+  .sp-total-card     { margin: 20px 32px 0; }
+  .sp-goals          { padding: 16px 32px 0; }
+  .add-goal-btn      { margin: 12px 32px 0; width: calc(100% - 64px); }
+  .settings-list     { padding: 16px 32px 0; }
+  .install-banner    { margin: 20px 32px 0; }
+
+  /* ── FAB → fixed position desktop ──────────────────────────── */
+  .fab {
+    position: fixed;
+    bottom: 32px;
+    right: 32px;
+    width: 56px;
+    height: 56px;
+    font-size: 26px;
+  }
+
+  /* ── Income Bar Desktop ─────────────────────────────────────── */
+  .income-val { font-size: 42px; }
+
+  /* ── Ring bigger on desktop ─────────────────────────────────── */
+  .ring-wrap svg { width: 260px; height: 260px; }
+  .ring-remain { font-size: 36px; }
+
+  /* ── Stats wider ────────────────────────────────────────────── */
+  .stat { padding: 18px 14px 16px; }
+  .stat-val { font-size: 20px; }
+  .stat-icon { font-size: 24px; }
+
+  /* ── Highlight card bigger ──────────────────────────────────── */
+  .hl-val { font-size: 48px; }
+  .hl-sub { font-size: 14px; }
+
+  /* ── Entry rows desktop ─────────────────────────────────────── */
+  .entry-row { padding: 14px 18px; border-radius: 16px; }
+  .entry-name { font-size: 14px; }
+  .entry-amt  { font-size: 16px; }
+
+  /* ── Highlight: 2-col layout for overview ───────────────────── */
+  .overview-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0;
+  }
+
+  /* ── Modal centered on desktop ──────────────────────────────── */
+  .modal-overlay { align-items: center; justify-content: center; padding: 20px; }
+  .modal {
+    border-radius: 20px;
+    max-width: 520px;
+    max-height: 85vh;
+    padding: 32px;
+    transform: scale(.96) translateY(8px);
+    transition: transform .25s cubic-bezier(.4,0,.2,1), opacity .25s;
+  }
+  .modal-overlay.open .modal { transform: scale(1) translateY(0); }
+  .modal-handle { display: none; }
+
+  /* ── Sparplan goal card ─────────────────────────────────────── */
+  .sp-goal { padding: 20px; }
+  .sp-goal-name { font-size: 16px; }
+  .sp-total-val { font-size: 48px; }
+
+  /* ── Month cards ────────────────────────────────────────────── */
+  .month-selector { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+  .month-card { border-radius: 18px; }
+
+  /* ── Settings rows wider ────────────────────────────────────── */
+  .setting-lbl { font-size: 14px; }
+  .setting-sub { font-size: 12px; }
+
+  /* ── Filter chips ───────────────────────────────────────────── */
+  .filter-chip { font-size: 12px; padding: 8px 16px; }
+  .sort-select { font-size: 12px; }
+
+  /* ── Import screen ──────────────────────────────────────────── */
+  .ai-links { gap: 12px; }
+  .ai-link { padding: 12px 16px; font-size: 13px; }
+  .paste-area { min-height: 140px; font-size: 13px; }
+  .prompt-text { max-height: 220px; font-size: 12px; }
+}
+
+/* ════════════════════════════════════════════════════════════════
+   LARGE DESKTOP — ab 1100px: 2-Spalten Übersicht
+   ════════════════════════════════════════════════════════════════ */
+@media (min-width: 1100px) {
+
+  nav { width: 240px; }
+
+  /* Übersicht: Ring+Stats links, Liste rechts */
+  #screen-overview {
+    display: grid;
+    grid-template-columns: 380px 1fr;
+    grid-template-rows: auto;
+    align-content: start;
+    column-gap: 0;
+  }
+
+  /* Linke Spalte: Topbar, Income, Ring, Stats, Highlight */
+  #screen-overview .topbar      { grid-column: 1; padding-right: 24px; }
+  #screen-overview .income-bar  { grid-column: 1; margin-right: 24px; }
+  #screen-overview .ring-wrap   { grid-column: 1; }
+  #screen-overview .stat-row    { grid-column: 1; padding-right: 24px; }
+  #screen-overview .hl-card     { grid-column: 1; margin-right: 24px; }
+  #screen-overview .ki-export-btn { grid-column: 1; margin-right: 24px; width: calc(100% - 56px); }
+
+  /* Rechte Spalte: Filter + Liste */
+  #screen-overview .filter-bar  { grid-column: 2; padding-left: 24px; padding-right: 32px; border-left: 1px solid var(--border); }
+  #screen-overview .entry-list  { grid-column: 2; padding-left: 24px; padding-right: 32px; border-left: 1px solid var(--border); }
+  #screen-overview .spacer      { grid-column: 2; border-left: 1px solid var(--border); }
+
+  /* Ring noch etwas größer */
+  .ring-wrap svg { width: 280px; height: 280px; }
+  .ring-remain { font-size: 38px; }
+  .hl-val { font-size: 44px; }
+}
+
