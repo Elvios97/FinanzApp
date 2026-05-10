@@ -1,5 +1,5 @@
 const CACHE = "meingeld-v3";
-const ASSETS = ["./index.html", "./style.css", "./app.js", "./db.js", "./manifest.json"];
+const ASSETS = ["./index.html", "./style.css", "./app.js", "./db.js", "./manifest.json", "./icon-192.png", "./icon-512.png"];
 
 self.addEventListener("install", e => {
   e.waitUntil(caches.open(CACHE).then(c => c.addAll(ASSETS)));

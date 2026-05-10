@@ -183,7 +183,7 @@ function renderEntryList() {
       </div>
       <div class="entry-amt" style="color:${cfg.color}">${entry.amount.toLocaleString("de-DE", { minimumFractionDigits: 2 })} €</div>
     `;
-    el.addEventListener("click", () => openEditEntryModal(entry));
+    el.addEventListener("pointerdown", () => openEditEntryModal(entry));
     list.appendChild(el);
   });
 }
@@ -361,7 +361,7 @@ function renderHistory() {
         <div class="month-card-income">${Math.round(data.income).toLocaleString("de-DE")} € Einnahmen</div>
       </div>
     `;
-    el.addEventListener("click", () => {
+    el.addEventListener("pointerdown", () => {
       state.currentMonth = mk;
       saveState(state);
       switchScreen("overview");
@@ -624,7 +624,7 @@ function openModal(id)  { document.getElementById(id).classList.add("open"); }
 function closeModal(id) { document.getElementById(id).classList.remove("open"); }
 
 document.querySelectorAll(".modal-overlay").forEach(o => {
-  o.addEventListener("click", e => { if (e.target === o) o.classList.remove("open"); });
+  o.addEventListener("pointerdown", e => { if (e.target === o) o.classList.remove("open"); });
 });
 
 // ── DOM Helpers ───────────────────────────────────────────────────
@@ -656,7 +656,7 @@ function fallbackCopy(text, cb) {
 (function init() {
   // Filter chips
   document.querySelectorAll(".filter-chip").forEach(chip => {
-    chip.addEventListener("click", () => setFilter(chip.dataset.filter));
+    chip.addEventListener("pointerdown", () => setFilter(chip.dataset.filter));
   });
 
   // Sort select
