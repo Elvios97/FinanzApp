@@ -183,7 +183,7 @@ function renderEntryList() {
       </div>
       <div class="entry-amt" style="color:${cfg.color}">${entry.amount.toLocaleString("de-DE", { minimumFractionDigits: 2 })} €</div>
     `;
-    el.addEventListener("pointerdown", () => {
+    el.addEventListener("click", () => {
       console.log('Entry tapped:', entry.name);
       openEditEntryModal(entry);
     });
@@ -364,7 +364,7 @@ function renderHistory() {
         <div class="month-card-income">${Math.round(data.income).toLocaleString("de-DE")} € Einnahmen</div>
       </div>
     `;
-    el.addEventListener("pointerdown", () => {
+    el.addEventListener("click", () => {
       console.log('Month card tapped:', mk);
       state.currentMonth = mk;
       saveState(state);
