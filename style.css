@@ -203,7 +203,8 @@ nav {
   position: fixed; bottom: calc(72px + var(--safe)); right: 20px;
   width: 52px; height: 52px; border-radius: 50%;
   background: var(--green); color: #0c0b0a;
-  font-size: 24px; font-weight: 700; display: flex; align-items: center; justify-content: center;
+  font-size: 24px; font-weight: 700; font-family: 'JetBrains Mono', monospace; text-align: center;
+  display: flex; align-items: center; justify-content: center;
   box-shadow: 0 4px 20px #69f0ae44; z-index: 101; transition: transform .15s, box-shadow .15s;
 }
 .fab:active { transform: scale(.93); box-shadow: 0 2px 12px #69f0ae33; }
@@ -549,6 +550,10 @@ nav {
     width: 56px;
     height: 56px;
     font-size: 26px;
+    font-family: 'JetBrains Mono', monospace;
+    text-align: center;
+  }
+    font-size: 26px;
   }
 
   /* ── Income Bar Desktop ─────────────────────────────────────── */
@@ -621,7 +626,19 @@ nav {
    ════════════════════════════════════════════════════════════════ */
 @media (min-width: 1100px) {
 
-  nav { width: 240px; }
+  nav {
+    position: fixed; top: 0; left: 0; bottom: 0; width: 80px;
+    height: auto; padding-bottom: 0;
+    border-top: none; border-right: 1px solid var(--border);
+    flex-direction: column;
+  }
+  .nav-btn {
+    flex: none; height: 80px; flex-direction: column;
+    font-size: 8px;
+  }
+  .nav-icon { font-size: 24px; }
+
+  .screen { padding-left: 80px; padding-bottom: 0; }
 
   /* Übersicht: Ring+Stats links, Liste rechts */
   #screen-overview {
@@ -650,4 +667,17 @@ nav {
   .ring-remain { font-size: 38px; }
   .hl-val { font-size: 44px; }
 }
-
+/* ── Mobile Styles ───────────────────────────────────────────────── */
+.mobile .topbar { padding: 32px 16px 0; }
+.mobile .topbar-title { font-size: 24px; }
+.mobile .income-bar { margin: 16px 12px 0; padding: 16px 18px; }
+.mobile .income-val { font-size: 32px; }
+.mobile .ring-wrap svg { width: 200px; height: 200px; }
+.mobile .ring-remain { font-size: 28px; }
+.mobile .stat-val { font-size: 24px; }
+.mobile .hl-val { font-size: 36px; }
+.mobile .entry-row { padding: 12px 16px; }
+.mobile .entry-name { font-size: 15px; }
+.mobile .entry-amt { font-size: 18px; }
+.mobile .nav-btn { font-size: 8px; }
+.mobile .nav-icon { font-size: 18px; }
