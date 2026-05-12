@@ -820,22 +820,24 @@ input:checked + .toggle-slider:before { transform: translateX(26px); background:
 
   #screen-overview.active {
     display: grid;
-    grid-template-columns: 380px 1fr;
-    grid-template-rows: auto auto auto auto auto auto auto 1fr;
+    grid-template-columns: minmax(380px, 500px) minmax(320px, 420px);
+    grid-template-rows: auto auto auto auto auto auto minmax(220px, 1fr);
     align-content: start;
-    column-gap: 0;
+    justify-content: center;
+    column-gap: 32px;
+    padding-right: 48px;
   }
 
-  #screen-overview .topbar      { grid-column: 1; padding-right: 24px; }
-  #screen-overview .income-bar  { grid-column: 1; margin-right: 24px; }
-  #screen-overview .ring-wrap   { grid-column: 1; margin-right: 24px; }
-  #screen-overview .stat-row    { grid-column: 1; padding-right: 24px; }
-  #screen-overview .hl-card     { grid-column: 1; margin-right: 24px; }
-  #screen-overview .category-card { grid-column: 1; margin-right: 24px; }
-  #screen-overview .ki-export-btn { grid-column: 1; margin-right: 24px; width: calc(100% - 56px); }
-  #screen-overview .filter-bar  { grid-column: 2; grid-row: 1; padding-left: 24px; padding-right: 32px; border-left: 1px solid var(--border); }
-  #screen-overview .entry-list  { grid-column: 2; grid-row: 2 / span 7; padding-left: 24px; padding-right: 32px; border-left: 1px solid var(--border); }
-  #screen-overview .spacer      { grid-column: 2; grid-row: 9; border-left: 1px solid var(--border); }
+  #screen-overview .topbar      { grid-column: 1; padding-left: 0; padding-right: 0; }
+  #screen-overview .income-bar  { grid-column: 1; margin-left: 0; margin-right: 0; }
+  #screen-overview .ring-wrap   { grid-column: 1; margin-right: 0; }
+  #screen-overview .stat-row    { grid-column: 1; padding-left: 0; padding-right: 0; }
+  #screen-overview .hl-card     { grid-column: 1; margin-left: 0; margin-right: 0; }
+  #screen-overview .filter-bar  { grid-column: 1; grid-row: 6; padding-left: 0; padding-right: 0; }
+  #screen-overview .entry-list  { grid-column: 1; grid-row: 7; padding-left: 0; padding-right: 0; max-height: 38vh; overflow-y: auto; }
+  #screen-overview .category-card { grid-column: 2; grid-row: 2 / span 4; align-self: start; margin: 32px 0 0; }
+  #screen-overview .ki-export-btn { grid-column: 2; grid-row: 6; align-self: start; margin: 24px 0 0; width: 100%; }
+  #screen-overview .spacer      { grid-column: 1 / -1; grid-row: 8; }
 
 
 
