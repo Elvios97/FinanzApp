@@ -65,6 +65,11 @@
         <div class="stat-val" id="stat-saving" style="color:var(--col-saving)">– €</div>
         <div class="stat-lbl">Sparen</div>
       </div>
+      <div class="stat">
+        <div class="stat-icon">📥</div>
+        <div class="stat-val" id="stat-income" style="color:var(--col-income)">– €</div>
+        <div class="stat-lbl">Einnahmen</div>
+      </div>
     </div>
 
     <!-- Highlight -->
@@ -104,6 +109,7 @@
         <button class="filter-chip" data-filter="fixed">🏠 Fixkosten</button>
         <button class="filter-chip" data-filter="fun">🎉 Freizeit</button>
         <button class="filter-chip" data-filter="saving">💰 Sparen</button>
+        <button class="filter-chip" data-filter="income">📥 Einnahmen</button>
         <button class="filter-chip" data-filter="manual">✎ Manuell</button>
         <button class="filter-chip" data-filter="imported">⬇ Importiert</button>
       </div>
@@ -317,6 +323,7 @@ Beispiel:
         <button class="type-chip" data-type="fixed"  onclick="setEntryType('fixed')">🏠 Fixkosten</button>
         <button class="type-chip active-fun" data-type="fun" onclick="setEntryType('fun')">🎉 Freizeit</button>
         <button class="type-chip" data-type="saving" onclick="setEntryType('saving')">💰 Sparen</button>
+        <button class="type-chip" data-type="income" onclick="setEntryType('income')">📥 Einnahme</button>
       </div>
       <input type="hidden" id="entry-type-hidden" value="fun" />
     </div>

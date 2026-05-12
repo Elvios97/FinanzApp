@@ -37,12 +37,41 @@ function saveState(state) {
   try { localStorage.setItem(DB_KEY, JSON.stringify(state)); } catch (_) {}
 }
 
+function normalizeEntryType(type) {
+  const value = String(type || "").trim().toLowerCase();
+  const aliases = {
+    fixkosten: "fixed",
+    fixedcost: "fixed",
+    fixed_cost: "fixed",
+    freizeit: "fun",
+    sparen: "saving",
+    sparbetrag: "saving",
+    savings: "saving",
+    einnahme: "income",
+    einnahmen: "income",
+    revenue: "income",
+  };
+  return aliases[value] || (["fixed", "fun", "saving", "income"].includes(value) ? value : "fun");
+}
+
+function normalizeState(state) {
+  Object.values(state.months || {}).forEach(month => {
+    month.income = parseFloat(month.income) || 0;
+    month.entries = (month.entries || []).map(entry => ({
+      ...entry,
+      amount: Math.abs(parseFloat(entry.amount) || 0),
+      type: normalizeEntryType(entry.type),
+    }));
+  });
+  return state;
+}
+
 function loadState() {
   try {
     const raw = localStorage.getItem(DB_KEY);
     if (raw) {
       const parsed = JSON.parse(raw);
-      return { ...defaultState(), ...parsed };
+      return normalizeState({ ...defaultState(), ...parsed });
     }
   } catch (_) {}
   return defaultState();
@@ -53,12 +82,20 @@ function generateId() {
   return Date.now().toString(36) + Math.random().toString(36).slice(2, 6);
 }
 
-function createEntry({ name, amount, type, category, date, note, source }) {
+function createEntry(data) {
+  const name = data.name || data.titel;
+  const amount = data.amount ?? data.betrag;
+  const type = data.type ?? data.typ;
+  const category = data.category ?? data.kategorie;
+  const date = data.date ?? data.datum;
+  const note = data.note ?? data.notiz;
+  const source = data.source ?? data.quelle;
+
   return {
     id:       generateId(),
     name:     name || "Unbekannt",
-    amount:   parseFloat(amount) || 0,
-    type:     type || "fun",           // fixed | fun | saving | income
+    amount:   Math.abs(parseFloat(amount) || 0),
+    type:     normalizeEntryType(type), // fixed | fun | saving | income
     category: category || name || "Sonstiges",
     date:     date || new Date().toISOString().slice(0, 10),
     note:     note || "",
@@ -78,6 +115,8 @@ function updateEntry(state, monthKey, id, updates) {
   ensureMonth(state, monthKey);
   const idx = state.months[monthKey].entries.findIndex(e => e.id === id);
   if (idx !== -1) {
+    if (updates.type) updates.type = normalizeEntryType(updates.type);
+    if (updates.amount !== undefined) updates.amount = Math.abs(parseFloat(updates.amount) || 0);
     state.months[monthKey].entries[idx] = {
       ...state.months[monthKey].entries[idx],
       ...updates,
@@ -108,9 +147,11 @@ function importEntries(state, monthKey, { income, categories }) {
   (categories || []).forEach(c => {
     addEntry(state, monthKey, {
       name:     c.name,
-      amount:   c.amount,
-      type:     c.type,
-      category: c.name,
+      amount:   c.amount ?? c.betrag,
+      type:     c.type ?? c.typ,
+      category: c.category ?? c.kategorie ?? c.name,
+      date:     c.date ?? c.datum,
+      note:     c.note ?? c.notiz,
       source:   "imported",
     });
   });
@@ -119,13 +160,19 @@ function importEntries(state, monthKey, { income, categories }) {
 // ── Computed / Aggregates ────────────────────────────────────────
 function getMonthData(state, monthKey) {
   ensureMonth(state, monthKey);
-  const { income, entries } = state.months[monthKey];
-  const fixed   = entries.filter(e => e.type === "fixed").reduce((s, e) => s + e.amount, 0);
-  const fun     = entries.filter(e => e.type === "fun").reduce((s, e) => s + e.amount, 0);
-  const saving  = entries.filter(e => e.type === "saving").reduce((s, e) => s + e.amount, 0);
+  const { entries } = state.months[monthKey];
+  const baseIncome = parseFloat(state.months[monthKey].income) || 0;
+  const sumByType = type => entries
+    .filter(e => normalizeEntryType(e.type) === type)
+    .reduce((s, e) => s + (parseFloat(e.amount) || 0), 0);
+  const fixed   = sumByType("fixed");
+  const fun     = sumByType("fun");
+  const saving  = sumByType("saving");
+  const extraIncome = sumByType("income");
+  const income = baseIncome + extraIncome;
   const totalOut = fixed + fun + saving;
   const remaining = income - totalOut;
-  return { income, entries, fixed, fun, saving, totalOut, remaining };
+  return { income, baseIncome, extraIncome, entries, fixed, fun, saving, totalOut, remaining };
 }
 
 function getAvailableMonths(state) {
@@ -162,9 +209,12 @@ function buildKiExport(state, monthKey) {
       quelle: e.source,
     })),
     zusammenfassung: {
+      monatliches_einkommen: data.baseIncome,
+      weitere_einnahmen: data.extraIncome,
       fixkosten: data.fixed,
       freizeit: data.fun,
       sparen: data.saving,
+      ausgaben: data.totalOut,
       verfügbar: data.remaining,
     }
   }, null, 2);
@@ -193,14 +243,14 @@ Gewünschtes Format:
 {
   "income": <Gesamteinnahmen als Zahl>,
   "categories": [
-    { "name": "<Kategoriename>", "amount": <Betrag als positive Zahl>, "type": "<fixed|fun|saving>" }
+    { "name": "<Kategoriename>", "amount": <Betrag als positive Zahl>, "type": "<fixed|fun|saving|income>" }
   ]
 }
 
 Regeln:
 - Fasse ähnliche Buchungen zusammen (z.B. alle Supermärkte → "Lebensmittel")
-- "amount" ist immer positiv (Ausgabebetrag)
-- "type": fixed = Fixkosten, fun = Freizeit & Shopping, saving = Sparbeiträge
-- Einnahmen (Gehalt) NUR in "income", nicht in categories
+- "amount" ist immer positiv (Betrag)
+- "type": fixed = Fixkosten, fun = Freizeit & Shopping, saving = Sparbeiträge, income = zusätzliche Einnahmen
+- Regelmäßiges Gehalt NUR in "income"; einzelne zusätzliche Einnahmen dürfen als category mit "type": "income" erscheinen
 - Maximal 12 Kategorien, Kleinbeträge unter "Sonstiges"
 - Antworte ausschließlich mit dem JSON-Objekt`;

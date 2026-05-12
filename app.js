@@ -31,6 +31,7 @@ const TYPE_CFG = {
   fixed:  { color: "var(--col-fixed)",  label: "Fixkosten",  bg: "#2a200a" },
   fun:    { color: "var(--col-fun)",    label: "Freizeit",   bg: "#2a1f00" },
   saving: { color: "var(--col-saving)", label: "Sparen",     bg: "#0f2018" },
+  income: { color: "var(--col-income)", label: "Einnahme",    bg: "#082523" },
 };
 
 // ── State ─────────────────────────────────────────────────────────
@@ -60,7 +61,7 @@ function renderOverview() {
   const mk   = state.currentMonth;
   const data = getMonthData(state, mk);
   const fmt  = n => Math.round(Math.abs(n)).toLocaleString("de-DE") + " €";
-  const { income, fixed, fun, saving, remaining } = data;
+  const { income, fixed, fun, saving, extraIncome, remaining } = data;
 
   const remCol = remaining < 0 ? "var(--red)" : remaining < income * .08 ? "var(--yellow)" : "var(--green)";
 
@@ -94,6 +95,7 @@ function renderOverview() {
   document.getElementById("stat-fixed").textContent  = fmt(fixed);
   document.getElementById("stat-fun").textContent    = fmt(fun);
   document.getElementById("stat-saving").textContent = fmt(saving);
+  document.getElementById("stat-income").textContent = fmt(extraIncome);
 
   // Highlight
   const hlCard = document.getElementById("hl-card");
@@ -132,6 +134,7 @@ function renderEntryList() {
     "fixed":    e => e.type === "fixed",
     "fun":      e => e.type === "fun",
     "saving":   e => e.type === "saving",
+    "income":   e => e.type === "income",
     "manual":   e => e.source === "manual",
     "imported": e => e.source === "imported",
   };
@@ -164,8 +167,9 @@ function renderEntryList() {
   entries.forEach(entry => {
     const cfg  = TYPE_CFG[entry.type] || TYPE_CFG.fun;
     const pct  = income > 0 ? Math.min(100, (entry.amount / income) * 100) : 0;
-    const icon = iconFor(entry.name);
+    const icon = entry.type === "income" ? "📥" : iconFor(entry.name);
     const dateStr = entry.date ? new Date(entry.date).toLocaleDateString("de-DE", { day: "2-digit", month: "2-digit" }) : "";
+    const signedAmount = (entry.type === "income" ? "+" : "-") + entry.amount.toLocaleString("de-DE", { minimumFractionDigits: 2 }) + " €";
 
     const el = document.createElement("div");
     el.className = "entry-row";
@@ -182,7 +186,7 @@ function renderEntryList() {
         ${entry.note ? `<div class="entry-note">${entry.note}</div>` : ""}
         <div class="entry-bar"><div class="entry-bar-fill" style="width:${pct}%;background:${cfg.color}"></div></div>
       </div>
-      <div class="entry-amt" style="color:${cfg.color}">${entry.amount.toLocaleString("de-DE", { minimumFractionDigits: 2 })} €</div>
+      <div class="entry-amt" style="color:${cfg.color}">${signedAmount}</div>
     `;
     el.addEventListener("click", () => {
       console.log('Entry tapped:', entry.name);
@@ -278,7 +282,7 @@ function openEditEntryModal(entry) {
 }
 
 function setEntryType(type) {
-  document.querySelectorAll(".type-chip").forEach(c => {
+  document.querySelectorAll(".type-selector .type-chip").forEach(c => {
     c.className = "type-chip";
     if (c.dataset.type === type) c.classList.add("active-" + type);
   });

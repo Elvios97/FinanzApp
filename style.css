@@ -66,13 +66,13 @@ input[type=number]::-webkit-outer-spin-button { -webkit-appearance: none; }
 
 /* ── Layout ──────────────────────────────────────────────────────── */
 #app { display: flex; flex-direction: column; height: 100vh; height: 100dvh; }
-.screen { display: none; flex: 1; overflow-y: auto; padding-bottom: 0; }
+.screen { display: none; flex: 1; overflow-y: auto; padding-bottom: calc(96px + var(--safe)); }
 .screen.active { display: block; }
 
 /* ── Navigation ──────────────────────────────────────────────────── */
 nav {
   position: fixed; bottom: 0; left: 0; right: 0;
-  height: 80px; padding-bottom: var(--safe);
+  height: calc(76px + var(--safe)); padding: 6px 8px calc(8px + var(--safe));
   background: var(--bg); border-top: 1px solid var(--border);
   display: flex; z-index: 100;
   backdrop-filter: blur(16px);
@@ -87,10 +87,14 @@ nav {
   letter-spacing: .5px; text-transform: uppercase;
   padding: 8px;
 }
-.nav-btn.active { color: var(--green); }
+.nav-btn.active {
+  color: var(--green);
+  background: var(--green-dim);
+  border-radius: 14px;
+}
 .nav-icon { font-size: 20px; }
 
-#app { display: flex; flex-direction: column; height: 100vh; height: 100dvh; padding-bottom: 80px; }
+#app { display: flex; flex-direction: column; height: 100vh; height: 100dvh; }
 
 /* ── Topbar ──────────────────────────────────────────────────────── */
 .topbar { padding: 20px 20px 0; }
@@ -143,9 +147,9 @@ nav {
 }
 
 /* ── Stat Row ────────────────────────────────────────────────────── */
-.stat-row { display: flex; gap: 8px; padding: 14px 16px 0; }
+.stat-row { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; padding: 14px 16px 0; }
 .stat {
-  flex: 1; background: var(--bg2); border: 1px solid var(--border);
+  background: var(--bg2); border: 1px solid var(--border);
   border-radius: 14px; padding: 14px 8px 12px; text-align: center;
 }
 .stat-icon { font-size: 20px; margin-bottom: 6px; }
@@ -563,6 +567,7 @@ input:checked + .toggle-slider:before { transform: translateX(26px); background:
 .type-chip.active-fixed  { background: var(--col-fixed); border-color: var(--col-fixed);  color: white;  }
 .type-chip.active-fun    { background: var(--col-fun); border-color: var(--col-fun);    color: black;    }
 .type-chip.active-saving { background: var(--col-saving); border-color: var(--col-saving); color: white; }
+.type-chip.active-income { background: var(--col-income); border-color: var(--col-income); color: black; }
 .modal-actions { display: flex; gap: 10px; margin-top: 20px; }
 .btn-primary {
   flex: 1; background: var(--green); border: none;
@@ -611,6 +616,7 @@ input:checked + .toggle-slider:before { transform: translateX(26px); background:
     height: 100vh;
     max-width: 1400px;
     margin: 0 auto;
+    padding-bottom: 0;
   }
 
   /* Alle Screens nebeneinander möglich, aktiver wird angezeigt */
@@ -664,6 +670,7 @@ input:checked + .toggle-slider:before { transform: translateX(26px); background:
     background: var(--green-dim);
     color: var(--green);
     border: 1px solid var(--green-border);
+    border-radius: 0;
   }
   .nav-icon { font-size: 18px; }
 
@@ -709,8 +716,6 @@ input:checked + .toggle-slider:before { transform: translateX(26px); background:
     font-size: 26px;
     font-family: 'JetBrains Mono', monospace;
     text-align: center;
-  }
-    font-size: 26px;
   }
 
   /* ── Income Bar Desktop ─────────────────────────────────────── */
@@ -782,7 +787,7 @@ input:checked + .toggle-slider:before { transform: translateX(26px); background:
 /* ════════════════════════════════════════════════════════════════
    LARGE DESKTOP — ab 700px: Left sidebar navigation
    ════════════════════════════════════════════════════════════════ */
-@media (min-width: 700px) {
+@media (min-width: 768px) {
 
   nav {
     position: fixed; top: 0; left: 0; bottom: 0; width: 80px;
@@ -799,7 +804,7 @@ input:checked + .toggle-slider:before { transform: translateX(26px); background:
   .screen { padding-left: 80px; padding-bottom: 0; }
 
   /* Übersicht: Ring+Stats links, Liste rechts */
-  #screen-overview {
+  #screen-overview.active {
     display: grid;
     grid-template-columns: 380px 1fr;
     grid-template-rows: auto;

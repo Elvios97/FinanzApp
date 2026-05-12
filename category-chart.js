@@ -58,7 +58,7 @@ function buildCategoryChartData(entries) {
   const totals = new Map();
 
   entries
-    .filter(entry => entry && entry.type !== "income" && Number(entry.amount) > 0)
+    .filter(entry => entry && ["fixed", "fun", "saving"].includes(entry.type) && Number(entry.amount) > 0)
     .forEach(entry => {
       const category = normalizeCategoryName(entry);
       const amount = Number(entry.amount) || 0;
