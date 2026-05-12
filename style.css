@@ -65,14 +65,14 @@ input[type=number]::-webkit-outer-spin-button { -webkit-appearance: none; }
 ::-webkit-scrollbar-thumb { background: var(--border2); border-radius: 2px; }
 
 /* ── Layout ──────────────────────────────────────────────────────── */
-#app { display: flex; flex-direction: column; height: 100vh; height: 100dvh; }
-.screen { display: none; flex: 1; overflow-y: auto; padding-bottom: calc(96px + var(--safe)); }
+#app { display: flex; flex-direction: column; height: 100vh; height: 100dvh; padding-bottom: 80px; }
+.screen { display: none; flex: 1; overflow-y: auto; padding-bottom: 0; }
 .screen.active { display: block; }
 
 /* ── Navigation ──────────────────────────────────────────────────── */
 nav {
   position: fixed; bottom: 0; left: 0; right: 0;
-  height: calc(76px + var(--safe)); padding: 6px 8px calc(8px + var(--safe));
+  height: 80px; padding-bottom: var(--safe);
   background: var(--bg); border-top: 1px solid var(--border);
   display: flex; z-index: 100;
   backdrop-filter: blur(16px);
@@ -89,12 +89,8 @@ nav {
 }
 .nav-btn.active {
   color: var(--green);
-  background: var(--green-dim);
-  border-radius: 14px;
 }
 .nav-icon { font-size: 20px; }
-
-#app { display: flex; flex-direction: column; height: 100vh; height: 100dvh; }
 
 /* ── Topbar ──────────────────────────────────────────────────────── */
 .topbar { padding: 20px 20px 0; }
@@ -147,9 +143,9 @@ nav {
 }
 
 /* ── Stat Row ────────────────────────────────────────────────────── */
-.stat-row { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; padding: 14px 16px 0; }
+.stat-row { display: flex; gap: 8px; padding: 14px 16px 0; }
 .stat {
-  background: var(--bg2); border: 1px solid var(--border);
+  flex: 1; min-width: 0; background: var(--bg2); border: 1px solid var(--border);
   border-radius: 14px; padding: 14px 8px 12px; text-align: center;
 }
 .stat-icon { font-size: 20px; margin-bottom: 6px; }
@@ -601,6 +597,41 @@ input:checked + .toggle-slider:before { transform: translateX(26px); background:
 /* ── Spacer ──────────────────────────────────────────────────────── */
 .spacer { height: 16px; }
 
+@media (max-width: 767px) {
+  #app { padding-bottom: calc(80px + var(--safe)); }
+  nav {
+    top: auto;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    width: auto;
+    height: 80px;
+    padding-bottom: var(--safe);
+    border-top: 1px solid var(--border);
+    border-right: none;
+    flex-direction: row;
+  }
+  .nav-btn {
+    flex: 1;
+    height: auto;
+    font-size: 8px;
+  }
+  .nav-icon { font-size: 18px; }
+  .stat { padding-left: 6px; padding-right: 6px; }
+  .stat-val { font-size: 14px; }
+  .stat-lbl { font-size: 8px; }
+  .topbar { padding: 32px 16px 0; }
+  .topbar-title { font-size: 24px; }
+  .income-bar { margin: 16px 12px 0; padding: 16px 18px; }
+  .income-val { font-size: 32px; }
+  .ring-wrap svg { width: 200px; height: 200px; }
+  .ring-remain { font-size: 28px; }
+  .hl-val { font-size: 36px; }
+  .entry-row { padding: 12px 16px; }
+  .entry-name { font-size: 15px; }
+  .entry-amt { font-size: 18px; }
+}
+
 /* ════════════════════════════════════════════════════════════════
    DESKTOP RESPONSIVE — ab 768px
    ════════════════════════════════════════════════════════════════ */
@@ -633,7 +664,7 @@ input:checked + .toggle-slider:before { transform: translateX(26px); background:
     top: 0;
     left: 0;
     bottom: 0;
-    width: 100px;
+    width: 80px;
     height: 100vh;
     flex-direction: column;
     justify-content: flex-start;
@@ -656,7 +687,7 @@ input:checked + .toggle-slider:before { transform: translateX(26px); background:
     justify-content: center;
     gap: 4px;
     padding: 0;
-    height: 100px;
+    height: 80px;
     border-radius: 0;
     font-size: 9px;
     font-family: 'JetBrains Mono', monospace;
@@ -672,7 +703,8 @@ input:checked + .toggle-slider:before { transform: translateX(26px); background:
     border: 1px solid var(--green-border);
     border-radius: 0;
   }
-  .nav-icon { font-size: 18px; }
+  .nav-icon { font-size: 24px; }
+  .screen { padding-left: 80px; }
 
   /* ── Topbar Desktop ─────────────────────────────────────────── */
   .topbar { padding: 48px 48px 0; }
@@ -782,28 +814,7 @@ input:checked + .toggle-slider:before { transform: translateX(26px); background:
   .ai-link { padding: 12px 16px; font-size: 13px; }
   .paste-area { min-height: 140px; font-size: 13px; }
   .prompt-text { max-height: 220px; font-size: 12px; }
-}
 
-/* ════════════════════════════════════════════════════════════════
-   LARGE DESKTOP — ab 700px: Left sidebar navigation
-   ════════════════════════════════════════════════════════════════ */
-@media (min-width: 768px) {
-
-  nav {
-    position: fixed; top: 0; left: 0; bottom: 0; width: 80px;
-    height: auto; padding-bottom: 0;
-    border-top: none; border-right: 1px solid var(--border);
-    flex-direction: column;
-  }
-  .nav-btn {
-    flex: none; height: 80px; flex-direction: column;
-    font-size: 8px;
-  }
-  .nav-icon { font-size: 24px; }
-
-  .screen { padding-left: 80px; padding-bottom: 0; }
-
-  /* Übersicht: Ring+Stats links, Liste rechts */
   #screen-overview.active {
     display: grid;
     grid-template-columns: 380px 1fr;
@@ -812,7 +823,6 @@ input:checked + .toggle-slider:before { transform: translateX(26px); background:
     column-gap: 0;
   }
 
-  /* Linke Spalte: Topbar, Income, Ring, Stats, Highlight */
   #screen-overview .topbar      { grid-column: 1; padding-right: 24px; }
   #screen-overview .income-bar  { grid-column: 1; margin-right: 24px; }
   #screen-overview .ring-wrap   { grid-column: 1; }
@@ -820,21 +830,22 @@ input:checked + .toggle-slider:before { transform: translateX(26px); background:
   #screen-overview .hl-card     { grid-column: 1; margin-right: 24px; }
   #screen-overview .category-card { grid-column: 1; margin-right: 24px; }
   #screen-overview .ki-export-btn { grid-column: 1; margin-right: 24px; width: calc(100% - 56px); }
-
-  /* Rechte Spalte: Filter + Liste */
   #screen-overview .filter-bar  { grid-column: 2; padding-left: 24px; padding-right: 32px; border-left: 1px solid var(--border); }
   #screen-overview .entry-list  { grid-column: 2; padding-left: 24px; padding-right: 32px; border-left: 1px solid var(--border); }
   #screen-overview .spacer      { grid-column: 2; border-left: 1px solid var(--border); }
 
-  /* Ring noch etwas größer */
-  .ring-wrap svg { width: 280px; height: 280px; }
-  .ring-remain { font-size: 38px; }
-  .hl-val { font-size: 44px; }
+
+
   .category-content { grid-template-columns: 1fr; }
   .category-pie { width: min(190px, 56vw); }
   .category-values { font-size: 10px; }
 }
 
+/* ════════════════════════════════════════════════════════════════
+   LARGE DESKTOP — ab 700px: Left sidebar navigation
+   ════════════════════════════════════════════════════════════════ */
+  /* Übersicht: Ring+Stats links, Liste rechts */
+  /* Ring noch etwas größer */
 @media (max-width: 620px) {
   .category-content { grid-template-columns: 1fr; }
   .category-pie { width: min(210px, 62vw); }
@@ -849,16 +860,3 @@ input:checked + .toggle-slider:before { transform: translateX(26px); background:
 }
 
 /* ── Mobile Styles ───────────────────────────────────────────────── */
-.mobile .topbar { padding: 32px 16px 0; }
-.mobile .topbar-title { font-size: 24px; }
-.mobile .income-bar { margin: 16px 12px 0; padding: 16px 18px; }
-.mobile .income-val { font-size: 32px; }
-.mobile .ring-wrap svg { width: 200px; height: 200px; }
-.mobile .ring-remain { font-size: 28px; }
-.mobile .stat-val { font-size: 24px; }
-.mobile .hl-val { font-size: 36px; }
-.mobile .entry-row { padding: 12px 16px; }
-.mobile .entry-name { font-size: 15px; }
-.mobile .entry-amt { font-size: 18px; }
-.mobile .nav-btn { font-size: 8px; }
-.mobile .nav-icon { font-size: 18px; }
