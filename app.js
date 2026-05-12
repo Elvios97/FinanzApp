@@ -115,6 +115,7 @@ function renderOverview() {
     hlSub.textContent = `${pct}% frei · ${Math.round(remaining / 4).toLocaleString("de-DE")} € / Woche`;
   }
 
+  renderCategoryPieChart(data.entries);
   renderEntryList();
 }
 
@@ -612,6 +613,7 @@ function renderSettings() {
   document.getElementById("settings-income-val").textContent =
     income > 0 ? Math.round(income).toLocaleString("de-DE") + " €" : "– €";
   document.getElementById("settings-month-val").textContent = monthLabel(mk);
+  applyTheme(state.theme);
 }
 
 function clearAllData() {
@@ -621,6 +623,26 @@ function clearAllData() {
   renderOverview();
   renderSettings();
   alert("Alle Daten wurden gelöscht.");
+}
+
+// ── Theme Toggle ──────────────────────────────────────────────────
+function applyTheme(theme) {
+  const nextTheme = theme === "light" ? "light" : "dark";
+  const switchEl = document.getElementById("theme-switch");
+  const labelEl = document.getElementById("theme-label");
+
+  state.theme = nextTheme;
+  document.documentElement.setAttribute("data-theme", nextTheme);
+
+  if (switchEl) switchEl.checked = nextTheme === "light";
+  if (labelEl) labelEl.textContent = nextTheme === "light" ? "Helles Design" : "Dunkles Design";
+}
+
+function toggleTheme() {
+  const switchEl = document.getElementById("theme-switch");
+  const isLight = switchEl.checked;
+  applyTheme(isLight ? "light" : "dark");
+  saveState(state);
 }
 
 // ── Modal Helpers ─────────────────────────────────────────────────
@@ -661,6 +683,21 @@ function fallbackCopy(text, cb) {
 
 // ── Init ──────────────────────────────────────────────────────────
 (function init() {
+  // Theme initialization
+  applyTheme(state.theme);
+  const switchEl = document.getElementById("theme-switch");
+  const themeRow = document.getElementById("theme-row");
+  if (switchEl) {
+    switchEl.addEventListener("change", toggleTheme);
+  }
+  if (themeRow && switchEl) {
+    themeRow.addEventListener("click", (event) => {
+      if (event.target.closest(".theme-toggle")) return;
+      switchEl.checked = !switchEl.checked;
+      toggleTheme();
+    });
+  }
+
   // Platform detection
   const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
   document.body.classList.add(isMobile ? 'mobile' : 'desktop');

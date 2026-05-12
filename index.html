@@ -74,6 +74,26 @@
       <div class="hl-sub" id="hl-sub"></div>
     </div>
 
+    <!-- Category Pie Chart -->
+    <section class="category-card" aria-labelledby="category-chart-title">
+      <div class="category-card-head">
+        <div>
+          <div class="category-eyebrow">Ausgabenmix</div>
+          <h2 class="category-title" id="category-chart-title">Kategorien</h2>
+        </div>
+        <div class="category-total" id="category-total">0 EUR</div>
+      </div>
+      <div class="category-empty" id="category-empty">
+        Noch keine Ausgaben vorhanden. Sobald du Einträge importierst oder manuell hinzufügst, erscheint hier deine Verteilung.
+      </div>
+      <div class="category-content" id="category-content">
+        <div class="category-pie-wrap">
+          <div class="category-pie" id="category-pie" role="img" aria-label="Kreisdiagramm der Ausgaben nach Kategorien"></div>
+        </div>
+        <div class="category-legend" id="category-legend"></div>
+      </div>
+    </section>
+
     <!-- KI Export Button -->
     <button class="ki-export-btn" onclick="exportForKi()">🤖 Für KI-Analyse exportieren</button>
 
@@ -235,6 +255,16 @@ Beispiel:
           <div class="setting-sub">Zurücksetzen auf Werkseinstellungen</div>
         </div>
         <div class="setting-arrow" style="color:var(--red)">›</div>
+      </div>
+      <div class="setting-row tappable" id="theme-row">
+        <div>
+          <div class="setting-lbl">🌙 Design</div>
+          <div class="setting-sub" id="theme-label">Dunkles Design</div>
+        </div>
+        <label class="theme-toggle">
+          <input type="checkbox" id="theme-switch">
+          <span class="toggle-slider"></span>
+        </label>
       </div>
       <div class="setting-row">
         <div><div class="setting-lbl">Version</div><div class="setting-sub">MeinGeld PWA</div></div>
@@ -442,6 +472,7 @@ Beispiel:
 
 <!-- Scripts -->
 <script src="db.js"></script>
+<script src="category-chart.js"></script>
 <script src="app.js"></script>
 </body>
 </html>

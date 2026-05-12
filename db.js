@@ -10,6 +10,7 @@ function defaultState() {
     currentMonth: currentMonthKey(),
     months: {},   // { "2025-05": { income: 0, entries: [] } }
     goals: [],
+    theme: "dark", // "dark" | "light"
   };
 }
 
