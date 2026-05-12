@@ -125,7 +125,8 @@ nav {
 .income-edit-btn:hover { background: #0056b3; }
 
 /* ── Donut Ring ──────────────────────────────────────────────────── */
-.ring-wrap { display: flex; justify-content: center; padding: 20px 0 0; position: relative; }
+.ring-wrap { display: flex; justify-content: center; width: 100%; padding: 20px 0 0; position: relative; }
+.ring-wrap svg { display: block; margin: 0 auto; }
 .ring-center {
   position: absolute; top: 50%; left: 50%;
   transform: translate(-50%, -50%); text-align: center; pointer-events: none; min-width: 130px;
@@ -215,6 +216,8 @@ nav {
 .category-pie-wrap {
   display: grid;
   place-items: center;
+  justify-self: center;
+  width: 100%;
 }
 .category-pie {
   width: min(180px, 52vw);
@@ -825,7 +828,7 @@ input:checked + .toggle-slider:before { transform: translateX(26px); background:
 
   #screen-overview .topbar      { grid-column: 1; padding-right: 24px; }
   #screen-overview .income-bar  { grid-column: 1; margin-right: 24px; }
-  #screen-overview .ring-wrap   { grid-column: 1; }
+  #screen-overview .ring-wrap   { grid-column: 1; margin-right: 24px; }
   #screen-overview .stat-row    { grid-column: 1; padding-right: 24px; }
   #screen-overview .hl-card     { grid-column: 1; margin-right: 24px; }
   #screen-overview .category-card { grid-column: 1; margin-right: 24px; }
