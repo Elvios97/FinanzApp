@@ -36,14 +36,14 @@
     <!-- Donut Ring -->
     <div class="ring-wrap">
       <svg width="220" height="220" viewBox="0 0 160 160">
-        <circle cx="80" cy="80" r="62" fill="none" stroke="#1a1917" stroke-width="16"/>
-        <circle id="arc-fixed"  cx="80" cy="80" r="62" fill="none" stroke="#e8d5b7" stroke-width="16" stroke-dasharray="0 389.6" transform="rotate(-90 80 80)"/>
-        <circle id="arc-fun"    cx="80" cy="80" r="62" fill="none" stroke="#ffd180" stroke-width="16" stroke-dasharray="0 389.6" transform="rotate(-90 80 80)"/>
-        <circle id="arc-saving" cx="80" cy="80" r="62" fill="none" stroke="#a5d6a7" stroke-width="16" stroke-dasharray="0 389.6" transform="rotate(-90 80 80)"/>
-        <circle id="arc-remain" cx="80" cy="80" r="62" fill="none" stroke="#69f0ae" stroke-width="16" stroke-dasharray="0 389.6" transform="rotate(-90 80 80)"/>
+        <circle class="ring-track" cx="80" cy="80" r="62" fill="none" stroke-width="16"/>
+        <circle id="arc-fixed"  cx="80" cy="80" r="62" fill="none" stroke-width="16" stroke-dasharray="0 389.6" transform="rotate(-90 80 80)"/>
+        <circle id="arc-fun"    cx="80" cy="80" r="62" fill="none" stroke-width="16" stroke-dasharray="0 389.6" transform="rotate(-90 80 80)"/>
+        <circle id="arc-saving" cx="80" cy="80" r="62" fill="none" stroke-width="16" stroke-dasharray="0 389.6" transform="rotate(-90 80 80)"/>
+        <circle id="arc-remain" cx="80" cy="80" r="62" fill="none" stroke-width="16" stroke-dasharray="0 389.6" transform="rotate(-90 80 80)"/>
       </svg>
       <div class="ring-center">
-          <div class="ring-remain" id="ring-remain-val" data-testid="remaining-ring">– €</div>
+        <div class="ring-remain" id="ring-remain-val" data-testid="remaining-ring">– €</div>
         <div class="ring-lbl">Verfügbar</div>
       </div>
     </div>
@@ -75,7 +75,6 @@
     <!-- Highlight -->
     <div class="hl-card" id="hl-card">
       <div class="hl-card-main">
-        <div class="hl-icon" aria-hidden="true">✨</div>
         <div class="hl-copy">
           <div class="hl-eyebrow" id="hl-eyebrow" style="color:var(--green)">Noch verfügbar</div>
           <div class="hl-val" id="hl-val" data-testid="remaining-highlight">– €</div>

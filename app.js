@@ -28,10 +28,10 @@ function iconFor(name) {
 }
 
 const TYPE_CFG = {
-  fixed:  { color: "var(--col-fixed)",  label: "Fixkosten",  bg: "#2a200a" },
-  fun:    { color: "var(--col-fun)",    label: "Freizeit",   bg: "#2a1f00" },
-  saving: { color: "var(--col-saving)", label: "Sparen",     bg: "#0f2018" },
-  income: { color: "var(--col-income)", label: "Einnahme",    bg: "#082523" },
+  fixed:  { color: "var(--col-fixed)",  label: "Fixkosten",  bg: "var(--type-fixed-bg)" },
+  fun:    { color: "var(--col-fun)",    label: "Freizeit",   bg: "var(--type-fun-bg)" },
+  saving: { color: "var(--col-saving)", label: "Sparen",     bg: "var(--type-saving-bg)" },
+  income: { color: "var(--col-income)", label: "Einnahme",    bg: "var(--type-income-bg)" },
 };
 
 // ── State ─────────────────────────────────────────────────────────
@@ -102,18 +102,19 @@ function renderOverview() {
   const hlVal  = document.getElementById("hl-val");
   const hlSub  = document.getElementById("hl-sub");
   hlCard.style.setProperty("--hl-accent", income === 0 ? "var(--muted)" : remCol);
+  hlCard.classList.remove("hl-empty", "hl-negative", "hl-positive");
   if (income === 0) {
-    hlCard.style.cssText = "background:linear-gradient(135deg,#0f2018,#0c0b0a);border:1px solid #2a5a3a;";
+    hlCard.classList.add("hl-empty");
     hlVal.style.color = "var(--muted)"; hlVal.textContent = "– €";
     hlSub.style.color = "var(--muted)"; hlSub.textContent = "Einkommen eintragen oder Kontoauszug importieren →";
   } else if (remaining < 0) {
-    hlCard.style.cssText = "background:linear-gradient(135deg,#2a0808,#0c0b0a);border:1px solid #5a1f1f;";
+    hlCard.classList.add("hl-negative");
     hlVal.style.color = "var(--red)"; hlVal.textContent = "-" + fmt(remaining);
     hlSub.style.color = "var(--red)"; hlSub.textContent = "⚠️ Ausgaben übersteigen Einnahmen!";
   } else {
-    hlCard.style.cssText = "background:linear-gradient(135deg,#0f2018,#0c0b0a);border:1px solid #2a5a3a;";
+    hlCard.classList.add("hl-positive");
     hlVal.style.color = "var(--green)"; hlVal.textContent = "+" + fmt(remaining);
-    hlSub.style.color = "#4caf82";
+    hlSub.style.color = "var(--hl-accent)";
     const pct = income > 0 ? Math.round((remaining / income) * 100) : 0;
     hlSub.textContent = `${pct}% frei · ${Math.round(remaining / 4).toLocaleString("de-DE")} € / Woche`;
   }
@@ -191,7 +192,6 @@ function renderEntryList() {
       <div class="entry-amt" style="color:${cfg.color}">${signedAmount}</div>
     `;
     el.addEventListener("click", () => {
-      console.log('Entry tapped:', entry.name);
       openEditEntryModal(entry);
     });
     list.appendChild(el);
@@ -383,7 +383,6 @@ function renderHistory() {
       </div>
     `;
     el.addEventListener("click", () => {
-      console.log('Month card tapped:', mk);
       state.currentMonth = mk;
       saveState(state);
       switchScreen("overview");
@@ -678,7 +677,6 @@ function closeModal(id) {
 
 document.querySelectorAll(".modal-overlay").forEach(o => {
   o.addEventListener("pointerdown", e => {
-    console.log('Modal overlay tapped');
     if (e.target === o) closeModal(o.id);
   });
 });
@@ -736,10 +734,6 @@ function fallbackCopy(text, cb) {
       toggleTheme();
     });
   }
-
-  // Platform detection
-  const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
-  document.body.classList.add(isMobile ? 'mobile' : 'desktop');
 
   // Filter chips
   document.querySelectorAll(".filter-chip").forEach(chip => {
