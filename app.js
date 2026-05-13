@@ -101,6 +101,7 @@ function renderOverview() {
   const hlCard = document.getElementById("hl-card");
   const hlVal  = document.getElementById("hl-val");
   const hlSub  = document.getElementById("hl-sub");
+  hlCard.style.setProperty("--hl-accent", income === 0 ? "var(--muted)" : remCol);
   if (income === 0) {
     hlCard.style.cssText = "background:linear-gradient(135deg,#0f2018,#0c0b0a);border:1px solid #2a5a3a;";
     hlVal.style.color = "var(--muted)"; hlVal.textContent = "– €";
