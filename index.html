@@ -76,7 +76,7 @@
     <div class="hl-card" id="hl-card">
       <div class="hl-card-main">
         <div class="hl-copy">
-          <div class="hl-eyebrow" id="hl-eyebrow" style="color:var(--green)">Noch verfügbar</div>
+          <div class="hl-eyebrow" id="hl-eyebrow" style="color:var(--hl-accent,var(--accent))">Noch verfügbar</div>
           <div class="hl-val" id="hl-val" data-testid="remaining-highlight">– €</div>
         </div>
       </div>
@@ -178,9 +178,9 @@ Beispiel:
     { "name": "Hobbys", "amount": 150, "type": "fun" }
   ]
 }'></textarea>
+      <button class="import-btn" onclick="runImport()">✅ Importieren &amp; anzeigen</button>
     </div>
 
-    <button class="import-btn" onclick="runImport()">✅ Importieren &amp; anzeigen</button>
     <div class="error-box" id="import-error" style="display:none"><span>⚠️</span><div id="import-error-msg"></div></div>
     <div class="success-box" id="import-success" style="display:none">✓ <span id="import-success-msg"></span></div>
 
@@ -411,7 +411,7 @@ Beispiel:
 
       <!-- Rate mode -->
       <div id="goal-mode-rate">
-        <label class="field-lbl">Monatliche Rate: <span id="goal-monthly-lbl" style="color:var(--green)">50 €</span></label>
+        <label class="field-lbl">Monatliche Rate: <span id="goal-monthly-lbl" style="color:var(--accent)">50 €</span></label>
         <input type="range" id="goal-monthly-slider" min="10" max="500" step="10" value="50"
           oninput="onGoalSliderChange(this.value)" />
         <div style="display:flex;justify-content:space-between;font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--muted);margin-top:4px">
@@ -439,22 +439,22 @@ Beispiel:
 
     <!-- Live preview -->
     <div id="goal-preview" style="
-      background:var(--green-dim);border:1px solid var(--green-border);
+      background:var(--accent-soft);border:1px solid var(--accent-border);
       border-radius:12px;padding:14px 16px;margin-top:4px;display:none
     ">
-      <div style="font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:2px;color:var(--green);text-transform:uppercase;margin-bottom:8px">📊 Vorschau</div>
+      <div style="font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:2px;color:var(--accent);text-transform:uppercase;margin-bottom:8px">📊 Vorschau</div>
       <div style="display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap">
         <div>
           <div style="font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--muted)">Rate / Monat</div>
-          <div id="preview-rate" style="font-family:'Plus Jakarta Sans',sans-serif;font-size:18px;font-weight:800;color:var(--green)">–</div>
+          <div id="preview-rate" style="font-family:'Plus Jakarta Sans',sans-serif;font-size:18px;font-weight:800;color:var(--accent)">–</div>
         </div>
         <div>
           <div style="font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--muted)">Dauer</div>
-          <div id="preview-duration" style="font-family:'Plus Jakarta Sans',sans-serif;font-size:18px;font-weight:800;color:var(--green)">–</div>
+          <div id="preview-duration" style="font-family:'Plus Jakarta Sans',sans-serif;font-size:18px;font-weight:800;color:var(--accent)">–</div>
         </div>
         <div>
           <div style="font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--muted)">Fertig im</div>
-          <div id="preview-date" style="font-family:'Plus Jakarta Sans',sans-serif;font-size:18px;font-weight:800;color:var(--green)">–</div>
+          <div id="preview-date" style="font-family:'Plus Jakarta Sans',sans-serif;font-size:18px;font-weight:800;color:var(--accent)">–</div>
         </div>
       </div>
     </div>
