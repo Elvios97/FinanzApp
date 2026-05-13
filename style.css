@@ -182,8 +182,9 @@ nav {
   position: relative;
   z-index: 1;
   display: flex;
-  align-items: center;
-  gap: 14px;
+  align-items: stretch;
+  gap: 18px;
+  padding-left: 14px;
 }
 .hl-icon {
   width: 42px;
@@ -195,6 +196,7 @@ nav {
   background: color-mix(in srgb, var(--hl-accent, var(--green)) 12%, transparent);
   color: var(--hl-accent, var(--green));
   flex: 0 0 auto;
+  align-self: center;
 }
 .hl-copy { min-width: 0; }
 .hl-eyebrow {
@@ -213,7 +215,7 @@ nav {
   z-index: 1;
   font-size: 12px;
   opacity: .75;
-  margin-left: 56px;
+  margin-left: 74px;
   line-height: 1.5;
 }
 
