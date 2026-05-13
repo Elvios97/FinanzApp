@@ -19,7 +19,7 @@
     <div class="topbar">
       <div class="topbar-eyebrow">Mein Geld</div>
       <div class="topbar-row">
-        <div class="topbar-title">Finanz-<em>Übersicht</em></div>
+        <div class="topbar-title" data-testid="overview-title">Finanz-<em>Übersicht</em></div>
       </div>
     </div>
 
@@ -30,7 +30,7 @@
         <div class="income-val" id="overview-income">– €</div>
         <div class="income-month" id="overview-month"></div>
       </div>
-      <button class="income-edit-btn" onclick="openIncomeModal()">✏ Ändern</button>
+      <button class="income-edit-btn" data-testid="open-income-modal" onclick="openIncomeModal()">✏ Ändern</button>
     </div>
 
     <!-- Donut Ring -->
@@ -43,7 +43,7 @@
         <circle id="arc-remain" cx="80" cy="80" r="62" fill="none" stroke="#69f0ae" stroke-width="16" stroke-dasharray="0 389.6" transform="rotate(-90 80 80)"/>
       </svg>
       <div class="ring-center">
-        <div class="ring-remain" id="ring-remain-val">– €</div>
+          <div class="ring-remain" id="ring-remain-val" data-testid="remaining-ring">– €</div>
         <div class="ring-lbl">Verfügbar</div>
       </div>
     </div>
@@ -52,22 +52,22 @@
     <div class="stat-row">
       <div class="stat">
         <div class="stat-icon">🏠</div>
-        <div class="stat-val" id="stat-fixed" style="color:var(--col-fixed)">– €</div>
+        <div class="stat-val" id="stat-fixed" data-testid="stat-fixed" style="color:var(--col-fixed)">– €</div>
         <div class="stat-lbl">Fixkosten</div>
       </div>
       <div class="stat">
         <div class="stat-icon">🎉</div>
-        <div class="stat-val" id="stat-fun" style="color:var(--col-fun)">– €</div>
+        <div class="stat-val" id="stat-fun" data-testid="stat-fun" style="color:var(--col-fun)">– €</div>
         <div class="stat-lbl">Freizeit</div>
       </div>
       <div class="stat">
         <div class="stat-icon">💰</div>
-        <div class="stat-val" id="stat-saving" style="color:var(--col-saving)">– €</div>
+        <div class="stat-val" id="stat-saving" data-testid="stat-saving" style="color:var(--col-saving)">– €</div>
         <div class="stat-lbl">Sparen</div>
       </div>
       <div class="stat">
         <div class="stat-icon">📥</div>
-        <div class="stat-val" id="stat-income" style="color:var(--col-income)">– €</div>
+        <div class="stat-val" id="stat-income" data-testid="stat-income" style="color:var(--col-income)">– €</div>
         <div class="stat-lbl">Einnahmen</div>
       </div>
     </div>
@@ -75,7 +75,7 @@
     <!-- Highlight -->
     <div class="hl-card" id="hl-card">
       <div class="hl-eyebrow" id="hl-eyebrow" style="color:var(--green)">✨ Noch verfügbar</div>
-      <div class="hl-val" id="hl-val">– €</div>
+      <div class="hl-val" id="hl-val" data-testid="remaining-highlight">– €</div>
       <div class="hl-sub" id="hl-sub"></div>
     </div>
 
@@ -86,16 +86,16 @@
           <div class="category-eyebrow">Ausgabenmix</div>
           <h2 class="category-title" id="category-chart-title">Kategorien</h2>
         </div>
-        <div class="category-total" id="category-total">0 EUR</div>
+        <div class="category-total" id="category-total" data-testid="category-total">0 EUR</div>
       </div>
       <div class="category-empty" id="category-empty">
         Noch keine Ausgaben vorhanden. Sobald du Einträge importierst oder manuell hinzufügst, erscheint hier deine Verteilung.
       </div>
       <div class="category-content" id="category-content">
         <div class="category-pie-wrap">
-          <div class="category-pie" id="category-pie" role="img" aria-label="Kreisdiagramm der Ausgaben nach Kategorien"></div>
+          <div class="category-pie" id="category-pie" data-testid="category-pie" role="img" aria-label="Kreisdiagramm der Ausgaben nach Kategorien"></div>
         </div>
-        <div class="category-legend" id="category-legend"></div>
+        <div class="category-legend" id="category-legend" data-testid="category-legend"></div>
       </div>
     </section>
 
@@ -133,7 +133,7 @@
     <div class="spacer"></div>
 
     <!-- FAB -->
-    <button class="fab" onclick="openAddEntryModal()" aria-label="Eintrag hinzufügen">+</button>
+    <button class="fab" data-testid="open-entry-modal" onclick="openAddEntryModal()" aria-label="Eintrag hinzufügen">+</button>
   </div>
 
   <!-- ═══════════════════════════ IMPORT ═══════════════════════════ -->
@@ -281,7 +281,7 @@ Beispiel:
   </div>
 
   <!-- ═══════════════════════════ NAV ══════════════════════════════ -->
-  <nav>
+  <nav data-testid="main-nav">
     <button class="nav-btn active" id="nav-overview" onclick="switchScreen('overview')">
       <span class="nav-icon">📊</span><span>Übersicht</span>
     </button>
@@ -303,70 +303,72 @@ Beispiel:
 <!-- ═══════════════════════════ MODALS ═══════════════════════════════ -->
 
 <!-- Manual Entry Modal -->
-<div class="modal-overlay" id="modal-entry">
+<div class="modal-overlay" id="modal-entry" data-testid="entry-modal" hidden>
   <div class="modal">
     <div class="modal-handle"></div>
     <div class="modal-title" id="entry-modal-title">Neuer Eintrag</div>
     <div class="field-row">
       <div class="field" style="flex:3">
-        <label class="field-lbl">Name</label>
-        <input class="field-input" type="text" id="entry-name" placeholder="z.B. Rewe, Netflix…" />
+        <label class="field-lbl" for="entry-name">Name</label>
+        <input class="field-input" type="text" id="entry-name" data-testid="entry-name" placeholder="z.B. Rewe, Netflix…" />
       </div>
       <div class="field">
-        <label class="field-lbl">Betrag (€)</label>
-        <input class="field-input" type="number" id="entry-amount" placeholder="0.00" step="0.01" min="0" />
+        <label class="field-lbl" for="entry-amount">Betrag (€)</label>
+        <input class="field-input" type="number" id="entry-amount" data-testid="entry-amount" placeholder="0.00" step="0.01" min="0" />
       </div>
     </div>
     <div class="field">
       <label class="field-lbl">Typ</label>
       <div class="type-selector">
-        <button class="type-chip" data-type="fixed"  onclick="setEntryType('fixed')">🏠 Fixkosten</button>
-        <button class="type-chip active-fun" data-type="fun" onclick="setEntryType('fun')">🎉 Freizeit</button>
-        <button class="type-chip" data-type="saving" onclick="setEntryType('saving')">💰 Sparen</button>
-        <button class="type-chip" data-type="income" onclick="setEntryType('income')">📥 Einnahme</button>
+        <button class="type-chip" data-type="fixed" data-testid="entry-type-fixed" onclick="setEntryType('fixed')">🏠 Fixkosten</button>
+        <button class="type-chip active-fun" data-type="fun" data-testid="entry-type-fun" onclick="setEntryType('fun')">🎉 Freizeit</button>
+        <button class="type-chip" data-type="saving" data-testid="entry-type-saving" onclick="setEntryType('saving')">💰 Sparen</button>
+        <button class="type-chip" data-type="income" data-testid="entry-type-income" onclick="setEntryType('income')">📥 Einnahme</button>
       </div>
       <input type="hidden" id="entry-type-hidden" value="fun" />
     </div>
     <div class="field-row">
       <div class="field">
-        <label class="field-lbl">Kategorie (optional)</label>
-        <input class="field-input" type="text" id="entry-category" placeholder="z.B. Lebensmittel" />
+        <label class="field-lbl" for="entry-category">Kategorie (optional)</label>
+        <input class="field-input" type="text" id="entry-category" data-testid="entry-category" placeholder="z.B. Lebensmittel" />
       </div>
       <div class="field">
-        <label class="field-lbl">Datum</label>
+        <label class="field-lbl" for="entry-date">Datum</label>
         <input class="field-input" type="date" id="entry-date" />
       </div>
     </div>
     <div class="field">
-      <label class="field-lbl">Notiz (optional)</label>
+      <label class="field-lbl" for="entry-note">Notiz (optional)</label>
       <textarea class="field-textarea" id="entry-note" placeholder="z.B. Wocheneinkauf, Barzahlung…"></textarea>
     </div>
+    <div class="form-error" id="entry-form-error" data-testid="entry-form-error" role="alert" hidden></div>
     <div class="modal-actions">
       <button class="btn-danger" id="entry-delete-btn" onclick="deleteCurrentEntry()" style="display:none">🗑 Löschen</button>
       <button class="btn-secondary" onclick="closeModal('modal-entry')">Abbrechen</button>
-      <button class="btn-primary" onclick="saveEntry()">Speichern</button>
+      <button class="btn-primary" data-testid="save-entry" onclick="saveEntry()">Speichern</button>
     </div>
   </div>
 </div>
 
 <!-- Income Modal -->
-<div class="modal-overlay" id="modal-income">
+<div class="modal-overlay" id="modal-income" data-testid="income-modal" hidden>
   <div class="modal">
     <div class="modal-handle"></div>
     <div class="modal-title">Einkommen anpassen</div>
     <div class="field">
-      <label class="field-lbl">Monatliches Nettoeinkommen (€)</label>
-      <input class="field-input" type="number" id="income-modal-input" placeholder="2200" />
+      <label class="field-lbl" for="income-modal-input">Monatliches Nettoeinkommen (€)</label>
+      <input class="field-input" type="number" id="income-modal-input" data-testid="income-input" placeholder="2200" />
     </div>
+    <div class="form-error" id="income-form-error" data-testid="income-form-error" role="alert" hidden></div>
     <div class="modal-actions">
       <button class="btn-secondary" onclick="closeModal('modal-income')">Abbrechen</button>
-      <button class="btn-primary" onclick="saveIncome()">Speichern</button>
+      <button class="btn-primary" data-testid="save-income" onclick="saveIncome()">Speichern</button>
     </div>
   </div>
 </div>
 
 <!-- Goal Modal -->
-<div class="modal-overlay" id="modal-goal">
+<div class="modal-overlay" id="modal-goal" hidden>
   <div class="modal">
     <div class="modal-handle"></div>
     <div class="modal-title" id="goal-modal-title">Sparziel hinzufügen</div>
@@ -462,7 +464,7 @@ Beispiel:
 </div>
 
 <!-- New Month Modal -->
-<div class="modal-overlay" id="modal-new-month">
+<div class="modal-overlay" id="modal-new-month" hidden>
   <div class="modal">
     <div class="modal-handle"></div>
     <div class="modal-title">Neuen Monat anlegen</div>

@@ -1,0 +1,12 @@
+::1 - - [12/May/2026 23:52:30] "GET / HTTP/1.1" 200 -
+::1 - - [12/May/2026 23:52:30] "GET /style.css HTTP/1.1" 200 -
+::1 - - [12/May/2026 23:52:30] "GET /db.js HTTP/1.1" 200 -
+::1 - - [12/May/2026 23:52:30] "GET /category-chart.js HTTP/1.1" 200 -
+::1 - - [12/May/2026 23:52:30] "GET /app.js HTTP/1.1" 200 -
+::1 - - [12/May/2026 23:52:30] "GET /manifest.json HTTP/1.1" 200 -
+::1 - - [12/May/2026 23:52:31] "GET /sw.js HTTP/1.1" 200 -
+::1 - - [12/May/2026 23:52:31] "GET /index.html HTTP/1.1" 200 -
+::1 - - [12/May/2026 23:52:31] "GET /icon-192.png HTTP/1.1" 200 -
+::1 - - [12/May/2026 23:52:31] "GET /icon-512.png HTTP/1.1" 200 -
+::1 - - [12/May/2026 23:52:31] code 404, message File not found
+::1 - - [12/May/2026 23:52:31] "GET /favicon.ico HTTP/1.1" 404 -

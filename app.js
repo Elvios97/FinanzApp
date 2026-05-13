@@ -173,6 +173,7 @@ function renderEntryList() {
 
     const el = document.createElement("div");
     el.className = "entry-row";
+    el.dataset.testid = "entry-row";
     el.innerHTML = `
       <div class="entry-dot" style="background:${cfg.color}"></div>
       <div class="entry-ico">${icon}</div>
@@ -257,6 +258,7 @@ function showImportError(msg) {
 // ── Manual Entry Modal ─────────────────────────────────────────────
 function openAddEntryModal() {
   editEntryId = null;
+  clearFormError("entry-form-error");
   document.getElementById("entry-modal-title").textContent = "Neuer Eintrag";
   document.getElementById("entry-name").value     = "";
   document.getElementById("entry-amount").value   = "";
@@ -270,6 +272,7 @@ function openAddEntryModal() {
 
 function openEditEntryModal(entry) {
   editEntryId = entry.id;
+  clearFormError("entry-form-error");
   document.getElementById("entry-modal-title").textContent = "Eintrag bearbeiten";
   document.getElementById("entry-name").value     = entry.name;
   document.getElementById("entry-amount").value   = entry.amount;
@@ -297,8 +300,13 @@ function saveEntry() {
   const note     = document.getElementById("entry-note").value.trim();
   const type     = document.getElementById("entry-type-hidden").value;
 
-  if (!name || isNaN(amount) || amount <= 0) {
-    alert("Bitte Name und gültigen Betrag eingeben."); return;
+  if (!name) {
+    showFormError("entry-form-error", "Bitte gib einen Namen ein.");
+    return;
+  }
+  if (isNaN(amount) || amount <= 0) {
+    showFormError("entry-form-error", "Bitte gib einen Betrag groesser als 0 ein.");
+    return;
   }
 
   if (editEntryId) {
@@ -325,19 +333,23 @@ function deleteCurrentEntry() {
 function openIncomeModal() {
   const mk = state.currentMonth;
   ensureMonth(state, mk);
+  clearFormError("income-form-error");
   document.getElementById("income-modal-input").value = state.months[mk].income || "";
   openModal("modal-income");
 }
 
 function saveIncome() {
   const v = parseFloat(document.getElementById("income-modal-input").value);
-  if (v > 0) {
-    ensureMonth(state, state.currentMonth);
-    state.months[state.currentMonth].income = v;
-    saveState(state);
-    renderOverview();
-    renderSettings();
+  if (isNaN(v) || v <= 0) {
+    showFormError("income-form-error", "Bitte gib ein Einkommen groesser als 0 ein.");
+    return;
   }
+
+  ensureMonth(state, state.currentMonth);
+  state.months[state.currentMonth].income = v;
+  saveState(state);
+  renderOverview();
+  renderSettings();
   closeModal("modal-income");
 }
 
@@ -650,19 +662,41 @@ function toggleTheme() {
 }
 
 // ── Modal Helpers ─────────────────────────────────────────────────
-function openModal(id)  { document.getElementById(id).classList.add("open"); }
-function closeModal(id) { document.getElementById(id).classList.remove("open"); }
+function openModal(id)  {
+  const modal = document.getElementById(id);
+  if (!modal) return;
+  modal.hidden = false;
+  modal.classList.add("open");
+}
+function closeModal(id) {
+  const modal = document.getElementById(id);
+  if (!modal) return;
+  modal.classList.remove("open");
+  modal.hidden = true;
+}
 
 document.querySelectorAll(".modal-overlay").forEach(o => {
   o.addEventListener("pointerdown", e => {
     console.log('Modal overlay tapped');
-    if (e.target === o) o.classList.remove("open");
+    if (e.target === o) closeModal(o.id);
   });
 });
 
 // ── DOM Helpers ───────────────────────────────────────────────────
 function showEl(id) { const el = document.getElementById(id); if (el) el.style.display = ""; }
 function hideEl(id) { const el = document.getElementById(id); if (el) el.style.display = "none"; }
+function showFormError(id, message) {
+  const el = document.getElementById(id);
+  if (!el) return;
+  el.textContent = message;
+  el.hidden = false;
+}
+function clearFormError(id) {
+  const el = document.getElementById(id);
+  if (!el) return;
+  el.textContent = "";
+  el.hidden = true;
+}
 
 function copyToClipboard(text, feedbackId) {
   const run = () => {

@@ -526,6 +526,7 @@ input:checked + .toggle-slider:before { transform: translateX(26px); background:
   opacity: 0; pointer-events: none; transition: opacity .25s;
   touch-action: none;
 }
+.modal-overlay[hidden] { display: none; }
 .modal-overlay.open { opacity: 1; pointer-events: all; touch-action: auto; }
 .modal {
   background: var(--bg); border: 1px solid var(--border);
@@ -584,6 +585,17 @@ input:checked + .toggle-slider:before { transform: translateX(26px); background:
   padding: 14px 18px; font-size: 16px; color: white; transition: background .2s;
 }
 .btn-danger:hover { background: #c82333; }
+
+.form-error {
+  margin-top: 4px;
+  border: 1px solid #5a1f1f;
+  border-radius: 8px;
+  background: #1a0808;
+  color: #ff8a80;
+  font-size: 13px;
+  line-height: 1.4;
+  padding: 10px 12px;
+}
 
 /* ── Feedback Boxes ──────────────────────────────────────────────── */
 .error-box {
@@ -648,7 +660,7 @@ input:checked + .toggle-slider:before { transform: translateX(26px); background:
   #app {
     flex-direction: row;
     height: 100vh;
-    max-width: 1400px;
+    max-width: none;
     margin: 0 auto;
     padding-bottom: 0;
   }
@@ -820,12 +832,12 @@ input:checked + .toggle-slider:before { transform: translateX(26px); background:
 
   #screen-overview.active {
     display: grid;
-    grid-template-columns: minmax(380px, 500px) minmax(320px, 420px);
+    grid-template-columns: minmax(520px, 720px) minmax(420px, 560px);
     grid-template-rows: auto auto auto auto auto auto minmax(220px, 1fr);
     align-content: start;
     justify-content: center;
-    column-gap: 32px;
-    padding-right: 48px;
+    column-gap: 56px;
+    padding-right: 72px;
   }
 
   #screen-overview .topbar      { grid-column: 1; padding-left: 0; padding-right: 0; }
