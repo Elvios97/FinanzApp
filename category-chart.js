@@ -1,14 +1,12 @@
 // Category chart aggregation and rendering for the overview screen.
 
-const CATEGORY_CHART_COLORS = [
-  "#69f0ae",
-  "#80cbc4",
-  "#ffd180",
-  "#ce93d8",
-  "#ff8a80",
-  "#90caf9",
-  "#e8d5b7",
-];
+const CATEGORY_TYPE_COLORS = {
+  fixed: "var(--col-fixed)",
+  fun: "var(--col-fun)",
+  saving: "var(--col-saving)",
+};
+
+const CHART_ENTRY_TYPES = Object.keys(CATEGORY_TYPE_COLORS);
 
 const CATEGORY_BUCKETS = [
   {
@@ -58,33 +56,55 @@ function buildCategoryChartData(entries) {
   const totals = new Map();
 
   entries
-    .filter(entry => entry && ["fixed", "fun", "saving"].includes(entry.type) && Number(entry.amount) > 0)
+    .filter(isChartEntry)
     .forEach(entry => {
       const category = normalizeCategoryName(entry);
       const amount = Number(entry.amount) || 0;
-      totals.set(category, (totals.get(category) || 0) + amount);
+      const current = totals.get(category) || createCategoryTotal();
+
+      current.amount += amount;
+      current.typeTotals[entry.type] += amount;
+      totals.set(category, current);
     });
 
-  const total = [...totals.values()].reduce((sum, amount) => sum + amount, 0);
+  const total = [...totals.values()].reduce((sum, item) => sum + item.amount, 0);
 
   if (total <= 0) {
     return { total: 0, items: [] };
   }
 
   const items = [...totals.entries()]
-    .map(([category, amount], index) => ({
+    .map(([category, item]) => ({
       category,
-      amount,
-      percent: (amount / total) * 100,
-      color: CATEGORY_CHART_COLORS[index % CATEGORY_CHART_COLORS.length],
-    }))
-    .sort((a, b) => b.amount - a.amount)
-    .map((item, index) => ({
-      ...item,
-      color: CATEGORY_CHART_COLORS[index % CATEGORY_CHART_COLORS.length],
+      amount: item.amount,
+      percent: (item.amount / total) * 100,
+      color: getCategoryColor(item.typeTotals),
     }));
 
-  return { total, items };
+  return {
+    total,
+    items: items.sort((a, b) => b.amount - a.amount),
+  };
+}
+
+function isChartEntry(entry) {
+  return entry && CHART_ENTRY_TYPES.includes(entry.type) && Number(entry.amount) > 0;
+}
+
+function createCategoryTotal() {
+  return {
+    amount: 0,
+    typeTotals: { fixed: 0, fun: 0, saving: 0 },
+  };
+}
+
+function getCategoryColor(typeTotals) {
+  return CATEGORY_TYPE_COLORS[getDominantType(typeTotals)] || CATEGORY_TYPE_COLORS.fun;
+}
+
+function getDominantType(typeTotals) {
+  const sortedTypes = Object.entries(typeTotals).sort((a, b) => b[1] - a[1]);
+  return sortedTypes[0]?.[0] || "fun";
 }
 
 function renderCategoryPieChart(entries) {

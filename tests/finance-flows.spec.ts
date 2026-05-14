@@ -1,6 +1,17 @@
-import { expect, test } from "@playwright/test";
+import { expect, test, type Page } from "@playwright/test";
 import { addEntryThroughUi, setIncomeThroughUi } from "./support/actions";
 import { createEntry, createState, openApp } from "./support/app-state";
+
+async function readCssVariableColor(page: Page, name: string): Promise<string> {
+  return page.evaluate((variableName) => {
+    const el = document.createElement("span");
+    el.style.color = `var(${variableName})`;
+    document.body.appendChild(el);
+    const color = getComputedStyle(el).color;
+    el.remove();
+    return color;
+  }, name);
+}
 
 test.describe("Finanz-App Test-Agent", () => {
   test("fuegt Einnahmen ueber die Eingabemaske hinzu", async ({ page }) => {
@@ -51,6 +62,12 @@ test.describe("Finanz-App Test-Agent", () => {
     await expect(page.getByTestId("category-legend")).toContainText("Wohnen");
     await expect(page.getByTestId("category-legend")).toContainText("Lebensmittel");
     await expect(page.getByTestId("category-legend")).toContainText("Software/KI");
+
+    const fixedColor = await readCssVariableColor(page, "--col-fixed");
+    const funColor = await readCssVariableColor(page, "--col-fun");
+
+    await expect(page.locator(".category-legend-row").filter({ hasText: "Wohnen" }).locator(".category-dot")).toHaveCSS("background-color", fixedColor);
+    await expect(page.locator(".category-legend-row").filter({ hasText: "Lebensmittel" }).locator(".category-dot")).toHaveCSS("background-color", funColor);
   });
 
   test("berechnet Gesamtbetrag, Fixkosten, Freizeit und verfuegbares Geld korrekt", async ({ page }) => {

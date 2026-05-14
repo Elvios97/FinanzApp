@@ -34,6 +34,28 @@ const TYPE_CFG = {
   income: { color: "var(--col-income)", label: "Einnahme",    bg: "var(--type-income-bg)" },
 };
 
+const RING_CIRCUMFERENCE = 389.6;
+
+const ENTRY_FILTERS = {
+  all:      () => true,
+  fixed:    entry => entry.type === "fixed",
+  fun:      entry => entry.type === "fun",
+  saving:   entry => entry.type === "saving",
+  income:   entry => entry.type === "income",
+  manual:   entry => entry.source === "manual",
+  imported: entry => entry.source === "imported",
+};
+
+const ENTRY_SORTERS = {
+  "amount-desc": (a, b) => b.amount - a.amount,
+  "amount-asc":  (a, b) => a.amount - b.amount,
+  "name-asc":    (a, b) => a.name.localeCompare(b.name, "de"),
+  "name-desc":   (a, b) => b.name.localeCompare(a.name, "de"),
+  "date-desc":   (a, b) => (b.date || "").localeCompare(a.date || ""),
+  "date-asc":    (a, b) => (a.date || "").localeCompare(b.date || ""),
+  type:          (a, b) => a.type.localeCompare(b.type),
+};
+
 // ── State ─────────────────────────────────────────────────────────
 let state = loadState();
 let activeFilter = "all";
@@ -41,6 +63,33 @@ let activeSort   = "amount-desc";
 let activeOverviewPanel = "list";
 let editEntryId  = null;
 let editGoalId   = null;
+
+function formatWholeEuro(value) {
+  return Math.round(Math.abs(value)).toLocaleString("de-DE") + " €";
+}
+
+function formatDecimalEuro(value) {
+  return Number(value).toLocaleString("de-DE", { minimumFractionDigits: 2 }) + " €";
+}
+
+function formatSignedWholeEuro(value) {
+  return (value >= 0 ? "+" : "-") + formatWholeEuro(value);
+}
+
+function getRemainingColor(remaining, income) {
+  if (remaining < 0) return "var(--red)";
+  if (remaining < income * .08) return "var(--yellow)";
+  return "var(--green)";
+}
+
+function escapeHtml(value) {
+  return String(value ?? "")
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&#039;");
+}
 
 // ── Navigation ────────────────────────────────────────────────────
 function switchScreen(id) {
@@ -75,101 +124,92 @@ function setOverviewSidePanel(panel) {
 function renderOverview() {
   const mk   = state.currentMonth;
   const data = getMonthData(state, mk);
-  const fmt  = n => Math.round(Math.abs(n)).toLocaleString("de-DE") + " €";
-  const { income, fixed, fun, saving, extraIncome, remaining } = data;
 
-  const remCol = remaining < 0 ? "var(--red)" : remaining < income * .08 ? "var(--yellow)" : "var(--green)";
-
-  // Income bar
-  document.getElementById("overview-income").textContent = income > 0 ? fmt(income) : "– €";
-  document.getElementById("overview-month").textContent  = monthLabel(mk);
-
-  // Ring
-  const CIRC = 389.6;
-  const arc  = v => income > 0 ? (v / income) * CIRC : 0;
-  const fixD = arc(fixed), funD = arc(fun), savD = arc(saving);
-  const remD = arc(Math.max(0, remaining));
-
-  const setArc = (id, d, off, col) => {
-    const el = document.getElementById(id);
-    if (!el) return;
-    el.style.strokeDasharray  = `${d} ${CIRC}`;
-    el.style.strokeDashoffset = `-${off}`;
-    if (col) el.style.stroke = col;
-  };
-  setArc("arc-fixed",  fixD, 0,                    null);
-  setArc("arc-fun",    funD, fixD,                  null);
-  setArc("arc-saving", savD, fixD + funD,           null);
-  setArc("arc-remain", remD, fixD + funD + savD,    remCol);
-
-  const rv = document.getElementById("ring-remain-val");
-  rv.textContent = income > 0 ? (remaining >= 0 ? "+" : "-") + fmt(remaining) : "– €";
-  rv.style.color = income > 0 ? remCol : "var(--muted)";
-
-  // Stats
-  document.getElementById("stat-fixed").textContent  = fmt(fixed);
-  document.getElementById("stat-fun").textContent    = fmt(fun);
-  document.getElementById("stat-saving").textContent = fmt(saving);
-  document.getElementById("stat-income").textContent = fmt(extraIncome);
-
-  // Highlight
-  const hlCard = document.getElementById("hl-card");
-  const hlVal  = document.getElementById("hl-val");
-  const hlSub  = document.getElementById("hl-sub");
-  hlCard.style.setProperty("--hl-accent", income === 0 ? "var(--muted)" : remCol);
-  hlCard.classList.remove("hl-empty", "hl-negative", "hl-positive");
-  if (income === 0) {
-    hlCard.classList.add("hl-empty");
-    hlVal.style.color = "var(--muted)"; hlVal.textContent = "– €";
-    hlSub.style.color = "var(--muted)"; hlSub.textContent = "Einkommen eintragen oder Kontoauszug importieren →";
-  } else if (remaining < 0) {
-    hlCard.classList.add("hl-negative");
-    hlVal.style.color = "var(--red)"; hlVal.textContent = "-" + fmt(remaining);
-    hlSub.style.color = "var(--red)"; hlSub.textContent = "⚠️ Ausgaben übersteigen Einnahmen!";
-  } else {
-    hlCard.classList.add("hl-positive");
-    hlVal.style.color = "var(--green)"; hlVal.textContent = "+" + fmt(remaining);
-    hlSub.style.color = "var(--hl-accent)";
-    const pct = income > 0 ? Math.round((remaining / income) * 100) : 0;
-    hlSub.textContent = `${pct}% frei · ${Math.round(remaining / 4).toLocaleString("de-DE")} € / Woche`;
-  }
-
+  renderIncomeSummary(mk, data.income);
+  renderBudgetRing(data);
+  renderOverviewStats(data);
+  renderRemainingHighlight(data);
   renderCategoryPieChart(data.entries);
   renderEntryList();
   setOverviewSidePanel(activeOverviewPanel);
 }
 
+function renderIncomeSummary(monthKey, income) {
+  document.getElementById("overview-income").textContent = income > 0 ? formatWholeEuro(income) : "– €";
+  document.getElementById("overview-month").textContent = monthLabel(monthKey);
+}
+
+function renderBudgetRing({ income, fixed, fun, saving, remaining }) {
+  const remainingColor = getRemainingColor(remaining, income);
+  const arc = value => income > 0 ? (value / income) * RING_CIRCUMFERENCE : 0;
+  const fixedArc = arc(fixed);
+  const funArc = arc(fun);
+  const savingArc = arc(saving);
+  const remainingArc = arc(Math.max(0, remaining));
+
+  setRingArc("arc-fixed", fixedArc, 0);
+  setRingArc("arc-fun", funArc, fixedArc);
+  setRingArc("arc-saving", savingArc, fixedArc + funArc);
+  setRingArc("arc-remain", remainingArc, fixedArc + funArc + savingArc, remainingColor);
+
+  const remainingValue = document.getElementById("ring-remain-val");
+  remainingValue.textContent = income > 0 ? formatSignedWholeEuro(remaining) : "– €";
+  remainingValue.style.color = income > 0 ? remainingColor : "var(--muted)";
+}
+
+function setRingArc(id, dashLength, offset, color) {
+  const arc = document.getElementById(id);
+  if (!arc) return;
+  arc.style.strokeDasharray = `${dashLength} ${RING_CIRCUMFERENCE}`;
+  arc.style.strokeDashoffset = `-${offset}`;
+  if (color) arc.style.stroke = color;
+}
+
+function renderOverviewStats({ fixed, fun, saving, extraIncome }) {
+  document.getElementById("stat-fixed").textContent = formatWholeEuro(fixed);
+  document.getElementById("stat-fun").textContent = formatWholeEuro(fun);
+  document.getElementById("stat-saving").textContent = formatWholeEuro(saving);
+  document.getElementById("stat-income").textContent = formatWholeEuro(extraIncome);
+}
+
+function renderRemainingHighlight({ income, remaining }) {
+  const remainingColor = income === 0 ? "var(--muted)" : getRemainingColor(remaining, income);
+  const card = document.getElementById("hl-card");
+  const value = document.getElementById("hl-val");
+  const subline = document.getElementById("hl-sub");
+
+  card.style.setProperty("--hl-accent", remainingColor);
+  card.classList.remove("hl-empty", "hl-negative", "hl-positive");
+
+  if (income === 0) {
+    card.classList.add("hl-empty");
+    value.style.color = "var(--muted)";
+    value.textContent = "– €";
+    subline.style.color = "var(--muted)";
+    subline.textContent = "Einkommen eintragen oder Kontoauszug importieren →";
+    return;
+  }
+
+  if (remaining < 0) {
+    card.classList.add("hl-negative");
+    value.style.color = "var(--red)";
+    value.textContent = formatSignedWholeEuro(remaining);
+    subline.style.color = "var(--red)";
+    subline.textContent = "⚠️ Ausgaben übersteigen Einnahmen!";
+    return;
+  }
+
+  card.classList.add("hl-positive");
+  value.style.color = "var(--green)";
+  value.textContent = formatSignedWholeEuro(remaining);
+  subline.style.color = "var(--hl-accent)";
+  subline.textContent = `${Math.round((remaining / income) * 100)}% frei · ${formatWholeEuro(remaining / 4)} / Woche`;
+}
+
 // ── Entry List with Filter + Sort ─────────────────────────────────
 function renderEntryList() {
-  const mk      = state.currentMonth;
-  const data    = getMonthData(state, mk);
-  let   entries = [...data.entries];
-  const income  = data.income;
-
-  // Filter
-  const filterMap = {
-    "all":      () => true,
-    "fixed":    e => e.type === "fixed",
-    "fun":      e => e.type === "fun",
-    "saving":   e => e.type === "saving",
-    "income":   e => e.type === "income",
-    "manual":   e => e.source === "manual",
-    "imported": e => e.source === "imported",
-  };
-  entries = entries.filter(filterMap[activeFilter] || (() => true));
-
-  // Sort
-  const sortMap = {
-    "amount-desc": (a, b) => b.amount - a.amount,
-    "amount-asc":  (a, b) => a.amount - b.amount,
-    "name-asc":    (a, b) => a.name.localeCompare(b.name, "de"),
-    "name-desc":   (a, b) => b.name.localeCompare(a.name, "de"),
-    "date-desc":   (a, b) => (b.date || "").localeCompare(a.date || ""),
-    "date-asc":    (a, b) => (a.date || "").localeCompare(b.date || ""),
-    "type":        (a, b) => a.type.localeCompare(b.type),
-  };
-  entries.sort(sortMap[activeSort] || sortMap["amount-desc"]);
-
+  const data = getMonthData(state, state.currentMonth);
+  const entries = getVisibleEntries(data.entries);
   const list = document.getElementById("entry-list");
   list.innerHTML = "";
 
@@ -183,35 +223,46 @@ function renderEntryList() {
   }
 
   entries.forEach(entry => {
-    const cfg  = TYPE_CFG[entry.type] || TYPE_CFG.fun;
-    const pct  = income > 0 ? Math.min(100, (entry.amount / income) * 100) : 0;
-    const icon = entry.type === "income" ? "📥" : iconFor(entry.name);
-    const dateStr = entry.date ? new Date(entry.date).toLocaleDateString("de-DE", { day: "2-digit", month: "2-digit" }) : "";
-    const signedAmount = (entry.type === "income" ? "+" : "-") + entry.amount.toLocaleString("de-DE", { minimumFractionDigits: 2 }) + " €";
-
-    const el = document.createElement("div");
-    el.className = "entry-row";
-    el.dataset.testid = "entry-row";
-    el.innerHTML = `
-      <div class="entry-dot" style="background:${cfg.color}"></div>
-      <div class="entry-ico">${icon}</div>
-      <div class="entry-info">
-        <div class="entry-name">${entry.name}</div>
-        <div class="entry-meta">
-          <span class="entry-type-badge" style="background:${cfg.bg};color:${cfg.color}">${cfg.label}</span>
-          ${dateStr ? `<span class="entry-date">${dateStr}</span>` : ""}
-          <span class="entry-source-badge">${entry.source === "manual" ? "✎ manuell" : "⬇ import"}</span>
-        </div>
-        ${entry.note ? `<div class="entry-note">${entry.note}</div>` : ""}
-        <div class="entry-bar"><div class="entry-bar-fill" style="width:${pct}%;background:${cfg.color}"></div></div>
-      </div>
-      <div class="entry-amt" style="color:${cfg.color}">${signedAmount}</div>
-    `;
-    el.addEventListener("click", () => {
-      openEditEntryModal(entry);
-    });
-    list.appendChild(el);
+    list.appendChild(createEntryRow(entry, data.income));
   });
+}
+
+function getVisibleEntries(entries) {
+  const filter = ENTRY_FILTERS[activeFilter] || ENTRY_FILTERS.all;
+  const sorter = ENTRY_SORTERS[activeSort] || ENTRY_SORTERS["amount-desc"];
+  return [...entries].filter(filter).sort(sorter);
+}
+
+function createEntryRow(entry, income) {
+  const cfg = TYPE_CFG[entry.type] || TYPE_CFG.fun;
+  const percentOfIncome = income > 0 ? Math.min(100, (entry.amount / income) * 100) : 0;
+  const dateStr = entry.date
+    ? new Date(entry.date).toLocaleDateString("de-DE", { day: "2-digit", month: "2-digit" })
+    : "";
+  const signedAmount = (entry.type === "income" ? "+" : "-") + formatDecimalEuro(entry.amount);
+  const safeName = escapeHtml(entry.name);
+  const safeNote = escapeHtml(entry.note);
+
+  const row = document.createElement("div");
+  row.className = "entry-row";
+  row.dataset.testid = "entry-row";
+  row.innerHTML = `
+    <div class="entry-dot" style="background:${cfg.color}"></div>
+    <div class="entry-ico">${entry.type === "income" ? "📥" : iconFor(entry.name)}</div>
+    <div class="entry-info">
+      <div class="entry-name">${safeName}</div>
+      <div class="entry-meta">
+        <span class="entry-type-badge" style="background:${cfg.bg};color:${cfg.color}">${cfg.label}</span>
+        ${dateStr ? `<span class="entry-date">${dateStr}</span>` : ""}
+        <span class="entry-source-badge">${entry.source === "manual" ? "✎ manuell" : "⬇ import"}</span>
+      </div>
+      ${entry.note ? `<div class="entry-note">${safeNote}</div>` : ""}
+      <div class="entry-bar"><div class="entry-bar-fill" style="width:${percentOfIncome}%;background:${cfg.color}"></div></div>
+    </div>
+    <div class="entry-amt" style="color:${cfg.color}">${signedAmount}</div>
+  `;
+  row.addEventListener("click", () => openEditEntryModal(entry));
+  return row;
 }
 
 // ── Filter + Sort UI ──────────────────────────────────────────────
@@ -372,7 +423,7 @@ function saveIncome() {
 
 // ── History Screen ────────────────────────────────────────────────
 function renderHistory() {
-  const months  = getAvailableMonths(state);
+  const months = getAvailableMonths(state);
   const current = state.currentMonth;
   const container = document.getElementById("month-list");
   container.innerHTML = "";
@@ -383,28 +434,32 @@ function renderHistory() {
   }
 
   months.forEach(mk => {
-    const data    = getMonthData(state, mk);
-    const isCurr  = mk === current;
-    const remCol  = data.remaining < 0 ? "var(--red)" : data.remaining < data.income * .08 ? "var(--yellow)" : "var(--green)";
-    const el      = document.createElement("div");
-    el.className  = "month-card" + (isCurr ? " current" : "");
-    el.innerHTML  = `
-      <div class="month-card-left">
-        <div class="month-card-name">${monthLabel(mk)}${isCurr ? " <span style='color:var(--green);font-size:11px'>●</span>" : ""}</div>
-        <div class="month-card-entries">${data.entries.length} Einträge</div>
-      </div>
-      <div class="month-card-right">
-        <div class="month-card-remain" style="color:${remCol}">${data.remaining >= 0 ? "+" : ""}${Math.round(data.remaining).toLocaleString("de-DE")} €</div>
-        <div class="month-card-income">${Math.round(data.income).toLocaleString("de-DE")} € Einnahmen</div>
-      </div>
-    `;
-    el.addEventListener("click", () => {
-      state.currentMonth = mk;
-      saveState(state);
-      switchScreen("overview");
-    });
-    container.appendChild(el);
+    container.appendChild(createMonthCard(mk, mk === current));
   });
+}
+
+function createMonthCard(monthKey, isCurrent) {
+  const data = getMonthData(state, monthKey);
+  const remainingColor = getRemainingColor(data.remaining, data.income);
+  const card = document.createElement("div");
+
+  card.className = "month-card" + (isCurrent ? " current" : "");
+  card.innerHTML = `
+    <div class="month-card-left">
+      <div class="month-card-name">${monthLabel(monthKey)}${isCurrent ? " <span style='color:var(--green);font-size:11px'>●</span>" : ""}</div>
+      <div class="month-card-entries">${data.entries.length} Einträge</div>
+    </div>
+    <div class="month-card-right">
+      <div class="month-card-remain" style="color:${remainingColor}">${formatSignedWholeEuro(data.remaining)}</div>
+      <div class="month-card-income">${formatWholeEuro(data.income)} Einnahmen</div>
+    </div>
+  `;
+  card.addEventListener("click", () => {
+    state.currentMonth = monthKey;
+    saveState(state);
+    switchScreen("overview");
+  });
+  return card;
 }
 
 function openNewMonthModal() {
@@ -427,69 +482,96 @@ function saveNewMonth() {
 // ── Sparplan ──────────────────────────────────────────────────────
 function renderSparplan() {
   const goals = state.goals;
-  const total = goals.reduce((s, g) => s + (g.monthly || 0), 0);
-  document.getElementById("sp-total-val").textContent = total.toLocaleString("de-DE") + " € / Mo";
-  document.getElementById("sp-total-sub").textContent = total > 0
-    ? `${goals.length} aktive${goals.length === 1 ? "s" : ""} Ziel${goals.length === 1 ? "" : "e"} · ${(total * 12).toLocaleString("de-DE")} € / Jahr`
-    : "Füge dein erstes Sparziel hinzu";
-
+  renderSparplanSummary();
   const container = document.getElementById("sp-goals");
   container.innerHTML = "";
 
-  goals.forEach((g) => {
-    const target  = g.target  || 1;
-    const saved   = g.saved   || 0;
-    const monthly = g.monthly || 0;
-    const left    = Math.max(0, target - saved);
-    const months  = monthly > 0 ? Math.ceil(left / monthly) : null;
-    const pct     = Math.min(100, Math.round((saved / target) * 100));
+  goals.forEach(goal => container.appendChild(createGoalCard(goal)));
+}
 
-    // Finish date
-    let finishStr = "–";
-    let durStr    = monthly > 0 ? "∞" : "–";
-    if (months) {
-      const finish = new Date();
-      finish.setMonth(finish.getMonth() + months);
-      finishStr = finish.toLocaleDateString("de-DE", { month: "short", year: "numeric" });
-      const y = Math.floor(months / 12), m = months % 12;
-      durStr = (y > 0 ? y + " J " : "") + (m > 0 ? m + " Mo" : "");
-      if (!durStr.trim()) durStr = "< 1 Mo";
-    }
-    const el      = document.createElement("div");
-    el.className  = "sp-goal";
-    el.innerHTML  = `
-      <div class="sp-goal-top">
-        <div class="sp-goal-ico">${g.icon || "💰"}</div>
-        <div class="sp-goal-info">
-          <div class="sp-goal-name">${g.name}</div>
-          <div class="sp-goal-meta">
-            Ziel: ${target.toLocaleString("de-DE")} €
-            ${months ? ` · ${durStr.trim()} · fertig ${finishStr}` : ""}
-          </div>
+function renderSparplanSummary() {
+  const goals = state.goals;
+  const totalMonthly = goals.reduce((sum, goal) => sum + (goal.monthly || 0), 0);
+  document.getElementById("sp-total-val").textContent = totalMonthly.toLocaleString("de-DE") + " € / Mo";
+  document.getElementById("sp-total-sub").textContent = totalMonthly > 0
+    ? `${goals.length} aktive${goals.length === 1 ? "s" : ""} Ziel${goals.length === 1 ? "" : "e"} · ${(totalMonthly * 12).toLocaleString("de-DE")} € / Jahr`
+    : "Füge dein erstes Sparziel hinzu";
+}
+
+function createGoalCard(goal) {
+  const projection = getGoalProjection(goal);
+  const card = document.createElement("div");
+  const safeIcon = escapeHtml(goal.icon || "💰");
+  const safeName = escapeHtml(goal.name);
+
+  card.className = "sp-goal";
+  card.innerHTML = `
+    <div class="sp-goal-top">
+      <div class="sp-goal-ico">${safeIcon}</div>
+      <div class="sp-goal-info">
+        <div class="sp-goal-name">${safeName}</div>
+        <div class="sp-goal-meta">
+          Ziel: ${projection.target.toLocaleString("de-DE")} €
+          ${projection.months ? ` · ${projection.durationLabel} · fertig ${projection.finishLabel}` : ""}
         </div>
-        <div class="sp-goal-monthly">${monthly} €/Mo</div>
       </div>
-      <div class="sp-slider-row">
-        <span class="sp-slider-side">10€</span>
-        <input type="range" min="10" max="500" step="10" value="${monthly}" style="flex:1"
-          oninput="updateGoalMonthly('${g.id}', this.value, this.nextElementSibling)" />
-        <span class="sp-slider-side right" id="sp-side-${g.id}">${monthly}€</span>
-        <button onclick="openEditGoalModal('${g.id}')" style="color:var(--muted);font-size:14px;padding:4px 6px;margin-left:4px">✎</button>
-        <button onclick="removeGoal('${g.id}')" style="color:var(--muted2);font-size:16px;padding:4px 4px">✕</button>
-      </div>
-      <div class="sp-progress-bar"><div class="sp-progress-fill" style="width:${pct}%"></div></div>
-      <div class="sp-progress-lbl"><span>${saved.toLocaleString("de-DE")} € gespart</span><span>${pct}%</span></div>
-    `;
-    container.appendChild(el);
-  });
+      <div class="sp-goal-monthly">${projection.monthly} €/Mo</div>
+    </div>
+    <div class="sp-slider-row">
+      <span class="sp-slider-side">10€</span>
+      <input type="range" min="10" max="500" step="10" value="${projection.monthly}" style="flex:1"
+        oninput="updateGoalMonthly('${goal.id}', this.value, this.nextElementSibling)" />
+      <span class="sp-slider-side right" id="sp-side-${goal.id}">${projection.monthly}€</span>
+      <button onclick="openEditGoalModal('${goal.id}')" style="color:var(--muted);font-size:14px;padding:4px 6px;margin-left:4px">✎</button>
+      <button onclick="removeGoal('${goal.id}')" style="color:var(--muted2);font-size:16px;padding:4px 4px">✕</button>
+    </div>
+    <div class="sp-progress-bar"><div class="sp-progress-fill" style="width:${projection.percent}%"></div></div>
+    <div class="sp-progress-lbl"><span>${projection.saved.toLocaleString("de-DE")} € gespart</span><span>${projection.percent}%</span></div>
+  `;
+  return card;
+}
+
+function getGoalProjection(goal) {
+  const target = goal.target || 1;
+  const saved = goal.saved || 0;
+  const monthly = goal.monthly || 0;
+  const left = Math.max(0, target - saved);
+  const months = monthly > 0 ? Math.ceil(left / monthly) : null;
+
+  if (!months) {
+    return { target, saved, monthly, months, percent: getGoalProgressPercent(saved, target), durationLabel: "–", finishLabel: "–" };
+  }
+
+  const finish = new Date();
+  finish.setMonth(finish.getMonth() + months);
+
+  return {
+    target,
+    saved,
+    monthly,
+    months,
+    percent: getGoalProgressPercent(saved, target),
+    durationLabel: formatDurationMonths(months),
+    finishLabel: finish.toLocaleDateString("de-DE", { month: "short", year: "numeric" }),
+  };
+}
+
+function getGoalProgressPercent(saved, target) {
+  return Math.min(100, Math.round((saved / target) * 100));
+}
+
+function formatDurationMonths(totalMonths) {
+  const years = Math.floor(totalMonths / 12);
+  const months = totalMonths % 12;
+  const label = (years > 0 ? years + " J " : "") + (months > 0 ? months + " Mo" : "");
+  return label.trim() || "< 1 Mo";
 }
 
 function updateGoalMonthly(id, val, sideEl) {
   updateGoal(state, id, { monthly: parseInt(val) });
   if (sideEl) sideEl.textContent = val + "€";
   saveState(state);
-  const total = state.goals.reduce((s, g) => s + (g.monthly || 0), 0);
-  document.getElementById("sp-total-val").textContent = total.toLocaleString("de-DE") + " € / Mo";
+  renderSparplanSummary();
 }
 
 function removeGoal(id) {
@@ -529,40 +611,38 @@ function recalcGoalPreview() {
 
   if (target <= 0) { preview.style.display = "none"; return; }
 
-  let rate, durationMonths;
-
-  if (goalMode === "rate") {
-    rate          = parseInt(document.getElementById("goal-monthly-slider").value) || 50;
-    durationMonths = rate > 0 ? Math.ceil(left / rate) : null;
-  } else {
-    durationMonths = parseInt(document.getElementById("goal-duration-months").value) || null;
-    rate          = durationMonths && durationMonths > 0 ? Math.ceil(left / durationMonths) : null;
-    // update slider to reflect computed rate
-    if (rate) {
-      const clamped = Math.min(500, Math.max(10, rate));
-      document.getElementById("goal-monthly-slider").value = clamped;
-      document.getElementById("goal-monthly-lbl").textContent = rate + " €";
-    }
-  }
+  const { rate, durationMonths } = getGoalPreviewValues(left);
 
   if (!rate || !durationMonths) { preview.style.display = "none"; return; }
 
-  // Compute finish date
   const finish = new Date();
   finish.setMonth(finish.getMonth() + durationMonths);
-  const finishStr = finish.toLocaleDateString("de-DE", { month: "short", year: "numeric" });
-
-  const years  = Math.floor(durationMonths / 12);
-  const months = durationMonths % 12;
-  let durStr   = "";
-  if (years > 0)  durStr += years  + " J ";
-  if (months > 0) durStr += months + " Mo";
-  if (!durStr)    durStr = "< 1 Mo";
 
   document.getElementById("preview-rate").textContent     = rate.toLocaleString("de-DE") + " €";
-  document.getElementById("preview-duration").textContent = durStr.trim();
-  document.getElementById("preview-date").textContent     = finishStr;
+  document.getElementById("preview-duration").textContent = formatDurationMonths(durationMonths);
+  document.getElementById("preview-date").textContent     = finish.toLocaleDateString("de-DE", { month: "short", year: "numeric" });
   preview.style.display = "";
+}
+
+function getGoalPreviewValues(left) {
+  if (goalMode === "rate") {
+    const rate = parseInt(document.getElementById("goal-monthly-slider").value) || 50;
+    return {
+      rate,
+      durationMonths: rate > 0 ? Math.ceil(left / rate) : null,
+    };
+  }
+
+  const durationMonths = parseInt(document.getElementById("goal-duration-months").value) || null;
+  const rate = durationMonths && durationMonths > 0 ? Math.ceil(left / durationMonths) : null;
+
+  if (rate) {
+    const clampedRate = Math.min(500, Math.max(10, rate));
+    document.getElementById("goal-monthly-slider").value = clampedRate;
+    document.getElementById("goal-monthly-lbl").textContent = rate + " €";
+  }
+
+  return { rate, durationMonths };
 }
 
 function openAddGoalModal() {
@@ -751,8 +831,8 @@ function fallbackCopy(text, cb) {
     });
   }
 
-  // Filter chips
-  document.querySelectorAll(".filter-chip").forEach(chip => {
+  // Only overview filter chips carry data-filter; Sparplan quick buttons reuse the visual class.
+  document.querySelectorAll(".filter-chip[data-filter]").forEach(chip => {
     chip.addEventListener("pointerdown", () => setFilter(chip.dataset.filter));
   });
 

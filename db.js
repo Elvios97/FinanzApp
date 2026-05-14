@@ -3,6 +3,8 @@
 // ═══════════════════════════════════════════════════════════════
 
 const DB_KEY = "meingeld_v3";
+const ENTRY_TYPES = ["fixed", "fun", "saving", "income"];
+const DEFAULT_ENTRY_TYPE = "fun";
 
 // ── Default State ────────────────────────────────────────────────
 function defaultState() {
@@ -37,6 +39,10 @@ function saveState(state) {
   try { localStorage.setItem(DB_KEY, JSON.stringify(state)); } catch (_) {}
 }
 
+function parsePositiveNumber(value) {
+  return Math.abs(parseFloat(value) || 0);
+}
+
 function normalizeEntryType(type) {
   const value = String(type || "").trim().toLowerCase();
   const aliases = {
@@ -51,7 +57,7 @@ function normalizeEntryType(type) {
     einnahmen: "income",
     revenue: "income",
   };
-  return aliases[value] || (["fixed", "fun", "saving", "income"].includes(value) ? value : "fun");
+  return aliases[value] || (ENTRY_TYPES.includes(value) ? value : DEFAULT_ENTRY_TYPE);
 }
 
 function normalizeState(state) {
@@ -59,7 +65,7 @@ function normalizeState(state) {
     month.income = parseFloat(month.income) || 0;
     month.entries = (month.entries || []).map(entry => ({
       ...entry,
-      amount: Math.abs(parseFloat(entry.amount) || 0),
+      amount: parsePositiveNumber(entry.amount),
       type: normalizeEntryType(entry.type),
     }));
   });
@@ -94,7 +100,7 @@ function createEntry(data) {
   return {
     id:       generateId(),
     name:     name || "Unbekannt",
-    amount:   Math.abs(parseFloat(amount) || 0),
+    amount:   parsePositiveNumber(amount),
     type:     normalizeEntryType(type), // fixed | fun | saving | income
     category: category || name || "Sonstiges",
     date:     date || new Date().toISOString().slice(0, 10),
@@ -116,7 +122,7 @@ function updateEntry(state, monthKey, id, updates) {
   const idx = state.months[monthKey].entries.findIndex(e => e.id === id);
   if (idx !== -1) {
     if (updates.type) updates.type = normalizeEntryType(updates.type);
-    if (updates.amount !== undefined) updates.amount = Math.abs(parseFloat(updates.amount) || 0);
+    if (updates.amount !== undefined) updates.amount = parsePositiveNumber(updates.amount);
     state.months[monthKey].entries[idx] = {
       ...state.months[monthKey].entries[idx],
       ...updates,
@@ -127,14 +133,6 @@ function updateEntry(state, monthKey, id, updates) {
 function deleteEntry(state, monthKey, id) {
   ensureMonth(state, monthKey);
   state.months[monthKey].entries = state.months[monthKey].entries.filter(e => e.id !== id);
-}
-
-function mergeCategories(state, monthKey, fromName, toName) {
-  ensureMonth(state, monthKey);
-  state.months[monthKey].entries.forEach(e => {
-    if (e.category === fromName) e.category = toName;
-    if (e.name === fromName) e.name = toName;
-  });
 }
 
 function importEntries(state, monthKey, { income, categories }) {
@@ -162,13 +160,14 @@ function getMonthData(state, monthKey) {
   ensureMonth(state, monthKey);
   const { entries } = state.months[monthKey];
   const baseIncome = parseFloat(state.months[monthKey].income) || 0;
-  const sumByType = type => entries
-    .filter(e => normalizeEntryType(e.type) === type)
-    .reduce((s, e) => s + (parseFloat(e.amount) || 0), 0);
-  const fixed   = sumByType("fixed");
-  const fun     = sumByType("fun");
-  const saving  = sumByType("saving");
-  const extraIncome = sumByType("income");
+  const totals = entries.reduce((result, entry) => {
+    const type = normalizeEntryType(entry.type);
+    result[type] += parseFloat(entry.amount) || 0;
+    return result;
+  }, { fixed: 0, fun: 0, saving: 0, income: 0 });
+
+  const { fixed, fun, saving } = totals;
+  const extraIncome = totals.income;
   const income = baseIncome + extraIncome;
   const totalOut = fixed + fun + saving;
   const remaining = income - totalOut;
@@ -180,8 +179,16 @@ function getAvailableMonths(state) {
 }
 
 // ── Goals CRUD ───────────────────────────────────────────────────
-function addGoal(state, { name, icon, target, saved, monthly }) {
-  const goal = { id: generateId(), name, icon: icon || "💰", target: parseFloat(target) || 0, saved: parseFloat(saved) || 0, monthly: parseInt(monthly) || 50 };
+function addGoal(state, { name, icon, target, saved, monthly, durationMonths }) {
+  const goal = {
+    id: generateId(),
+    name,
+    icon: icon || "💰",
+    target: parseFloat(target) || 0,
+    saved: parseFloat(saved) || 0,
+    monthly: parseInt(monthly) || 50,
+    durationMonths: durationMonths || null,
+  };
   state.goals.push(goal);
   return goal;
 }
