@@ -169,9 +169,10 @@ function getMonthData(state, monthKey) {
   const { fixed, fun, saving } = totals;
   const extraIncome = totals.income;
   const income = baseIncome + extraIncome;
-  const totalOut = fixed + fun + saving;
+  const expenses = fixed + fun;
+  const totalOut = expenses + saving;
   const remaining = income - totalOut;
-  return { income, baseIncome, extraIncome, entries, fixed, fun, saving, totalOut, remaining };
+  return { income, baseIncome, extraIncome, entries, fixed, fun, saving, expenses, totalOut, remaining };
 }
 
 function getAvailableMonths(state) {
@@ -208,7 +209,18 @@ function buildKiExport(state, monthKey) {
   const label = monthLabel(monthKey);
   const json = JSON.stringify({
     monat: label,
-    einkommen: data.income,
+    einnahmen: {
+      fest: data.baseIncome,
+      zusatz: data.extraIncome,
+      gesamt: data.income,
+    },
+    ausgaben: {
+      fixkosten: data.fixed,
+      freizeit: data.fun,
+      sparen: data.saving,
+      gesamt: data.totalOut,
+    },
+    verfügbar: data.remaining,
     kategorien: data.entries.map(e => ({
       name: e.name,
       betrag: e.amount,
@@ -218,10 +230,12 @@ function buildKiExport(state, monthKey) {
     zusammenfassung: {
       monatliches_einkommen: data.baseIncome,
       weitere_einnahmen: data.extraIncome,
+      gesamte_einnahmen: data.income,
       fixkosten: data.fixed,
       freizeit: data.fun,
       sparen: data.saving,
-      ausgaben: data.totalOut,
+      ausgaben_ohne_sparen: data.expenses,
+      ausgaben_und_sparen: data.totalOut,
       verfügbar: data.remaining,
     }
   }, null, 2);

@@ -179,13 +179,24 @@ nav {
 }
 
 /* ── Stat Row ────────────────────────────────────────────────────── */
-.stat-row { display: flex; gap: 8px; padding: 14px 16px 0; }
+.stat-row { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; padding: 14px 16px 0; }
 .stat {
-  flex: 1; min-width: 0; background: var(--bg2); border: 1px solid var(--border);
+  min-width: 0; background: var(--bg2); border: 1px solid var(--border);
   border-radius: 14px; padding: 14px 8px 12px; text-align: center;
 }
+.stat-base-income { border-color: color-mix(in srgb, var(--col-income) 45%, var(--border)); background: color-mix(in srgb, var(--type-income-bg) 45%, var(--bg2)); }
+.stat-extra-income { border-color: color-mix(in srgb, var(--col-income) 56%, var(--border)); background: color-mix(in srgb, var(--type-income-bg) 60%, var(--bg2)); }
+.stat-expenses { border-color: color-mix(in srgb, var(--red) 38%, var(--border)); background: color-mix(in srgb, var(--red) 10%, var(--bg2)); }
+.stat-saving { border-color: color-mix(in srgb, var(--col-saving) 45%, var(--border)); background: color-mix(in srgb, var(--type-saving-bg) 55%, var(--bg2)); }
+.stat-available { border-color: color-mix(in srgb, var(--accent) 45%, var(--border)); background: color-mix(in srgb, var(--accent-soft) 55%, var(--bg2)); }
+.stat-available { grid-column: 1 / -1; }
 .stat-icon { font-size: 20px; margin-bottom: 6px; }
 .stat-val { font-family: 'Plus Jakarta Sans', sans-serif; font-size: 16px; font-weight: 800; letter-spacing: -0.5px; line-height: 1; }
+.stat-base-income .stat-val,
+.stat-extra-income .stat-val { color: var(--col-income); }
+.stat-expenses .stat-val { color: var(--red); }
+.stat-saving .stat-val { color: var(--col-saving); }
+.stat-available .stat-val { color: var(--accent); }
 .stat-lbl {
   font-family: 'JetBrains Mono', monospace; font-size: 9px;
   letter-spacing: 1px; text-transform: uppercase; color: var(--muted); margin-top: 4px;
@@ -512,6 +523,10 @@ nav {
   transition: box-shadow .15s; cursor: pointer;
 }
 .entry-row:hover { border-color: var(--accent-border); box-shadow: 0 8px 20px rgba(0,0,0,.18); }
+.entry-row.entry-income {
+  border-color: color-mix(in srgb, var(--col-income) 36%, var(--border));
+  background: color-mix(in srgb, var(--type-income-bg) 34%, var(--bg));
+}
 .entry-dot { width: 9px; height: 9px; border-radius: 50%; flex-shrink: 0; }
 .entry-ico { font-size: 18px; width: 26px; text-align: center; flex-shrink: 0; }
 .entry-info { flex: 1; min-width: 0; }
@@ -978,6 +993,8 @@ input:checked + .toggle-slider:before { transform: translateX(26px); background:
   .ring-remain { font-size: 36px; }
 
   /* ── Stats wider ────────────────────────────────────────────── */
+  .stat-row { grid-template-columns: repeat(5, minmax(0, 1fr)); }
+  .stat-available { grid-column: auto; }
   .stat { padding: 18px 14px 16px; }
   .stat-val { font-size: 20px; }
   .stat-icon { font-size: 24px; }

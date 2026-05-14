@@ -25,8 +25,9 @@ test.describe("Finanz-App Test-Agent", () => {
     });
 
     await expect(page.getByTestId("entry-row").filter({ hasText: "Nebenjob" })).toContainText("+300,00");
-    await expect(page.getByTestId("stat-income")).toContainText("300");
-    await expect(page.locator("#overview-income")).toContainText("2.300");
+    await expect(page.getByTestId("stat-base-income")).toContainText("2.000");
+    await expect(page.getByTestId("stat-extra-income")).toContainText("300");
+    await expect(page.locator("#overview-income")).toContainText("2.000");
   });
 
   test("fuegt Ausgaben ueber die Eingabemaske hinzu", async ({ page }) => {
@@ -40,7 +41,7 @@ test.describe("Finanz-App Test-Agent", () => {
     });
 
     await expect(page.getByTestId("entry-row").filter({ hasText: "Miete" })).toContainText("-850,00");
-    await expect(page.getByTestId("stat-fixed")).toContainText("850");
+    await expect(page.getByTestId("stat-expenses")).toContainText("850");
     await expect(page.getByTestId("remaining-highlight")).toContainText("+1.150");
   });
 
@@ -59,15 +60,14 @@ test.describe("Finanz-App Test-Agent", () => {
 
     await expect(page.locator("#category-empty")).toBeHidden();
     await expect(page.getByTestId("category-total")).toContainText("1.100,00");
-    await expect(page.getByTestId("category-legend")).toContainText("Wohnen");
-    await expect(page.getByTestId("category-legend")).toContainText("Lebensmittel");
-    await expect(page.getByTestId("category-legend")).toContainText("Software/KI");
+    await expect(page.getByTestId("category-legend")).toContainText("Fixkosten");
+    await expect(page.getByTestId("category-legend")).toContainText("Freizeit");
 
     const fixedColor = await readCssVariableColor(page, "--col-fixed");
     const funColor = await readCssVariableColor(page, "--col-fun");
 
-    await expect(page.locator(".category-legend-row").filter({ hasText: "Wohnen" }).locator(".category-dot")).toHaveCSS("background-color", fixedColor);
-    await expect(page.locator(".category-legend-row").filter({ hasText: "Lebensmittel" }).locator(".category-dot")).toHaveCSS("background-color", funColor);
+    await expect(page.locator(".category-legend-row").filter({ hasText: "Fixkosten" }).locator(".category-dot")).toHaveCSS("background-color", fixedColor);
+    await expect(page.locator(".category-legend-row").filter({ hasText: "Freizeit" }).locator(".category-dot")).toHaveCSS("background-color", funColor);
   });
 
   test("berechnet Gesamtbetrag, Fixkosten, Freizeit und verfuegbares Geld korrekt", async ({ page }) => {
@@ -84,12 +84,14 @@ test.describe("Finanz-App Test-Agent", () => {
       ),
     );
 
-    await expect(page.locator("#overview-income")).toContainText("3.300");
-    await expect(page.getByTestId("stat-fixed")).toContainText("1.000");
-    await expect(page.getByTestId("stat-fun")).toContainText("400");
+    await expect(page.locator("#overview-income")).toContainText("3.000");
+    await expect(page.getByTestId("stat-base-income")).toContainText("3.000");
+    await expect(page.getByTestId("stat-extra-income")).toContainText("300");
+    await expect(page.getByTestId("stat-expenses")).toContainText("1.400");
     await expect(page.getByTestId("stat-saving")).toContainText("200");
-    await expect(page.getByTestId("stat-income")).toContainText("300");
+    await expect(page.getByTestId("stat-available")).toContainText("+1.700");
     await expect(page.getByTestId("category-total")).toContainText("1.600,00");
+    await expect(page.getByTestId("category-legend")).not.toContainText("Einnahmen");
     await expect(page.getByTestId("remaining-highlight")).toContainText("+1.700");
     await expect(page.getByTestId("remaining-ring")).toContainText("+1.700");
   });
@@ -113,7 +115,7 @@ test.describe("Finanz-App Test-Agent", () => {
       category: "Transport",
     });
 
-    await expect(page.getByTestId("category-legend")).toContainText("Transport");
+    await expect(page.getByTestId("category-legend")).toContainText("Fixkosten");
     await expect(page.getByTestId("category-total")).toContainText("49,00");
   });
 

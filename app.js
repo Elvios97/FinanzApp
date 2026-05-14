@@ -125,7 +125,7 @@ function renderOverview() {
   const mk   = state.currentMonth;
   const data = getMonthData(state, mk);
 
-  renderIncomeSummary(mk, data.income);
+  renderIncomeSummary(mk, data.baseIncome);
   renderBudgetRing(data);
   renderOverviewStats(data);
   renderRemainingHighlight(data);
@@ -165,11 +165,13 @@ function setRingArc(id, dashLength, offset, color) {
   if (color) arc.style.stroke = color;
 }
 
-function renderOverviewStats({ fixed, fun, saving, extraIncome }) {
-  document.getElementById("stat-fixed").textContent = formatWholeEuro(fixed);
-  document.getElementById("stat-fun").textContent = formatWholeEuro(fun);
+function renderOverviewStats({ baseIncome, extraIncome, expenses, saving, income, remaining }) {
+  document.getElementById("stat-base-income").textContent = formatWholeEuro(baseIncome);
+  document.getElementById("stat-extra-income").textContent = formatWholeEuro(extraIncome);
+  document.getElementById("stat-expenses").textContent = formatWholeEuro(expenses);
   document.getElementById("stat-saving").textContent = formatWholeEuro(saving);
-  document.getElementById("stat-income").textContent = formatWholeEuro(extraIncome);
+  document.getElementById("stat-available").textContent = income > 0 ? formatSignedWholeEuro(remaining) : "– €";
+  document.getElementById("stat-available").style.color = income > 0 ? getRemainingColor(remaining, income) : "var(--muted)";
 }
 
 function renderRemainingHighlight({ income, remaining }) {
@@ -244,7 +246,7 @@ function createEntryRow(entry, income) {
   const safeNote = escapeHtml(entry.note);
 
   const row = document.createElement("div");
-  row.className = "entry-row";
+  row.className = `entry-row entry-${entry.type}`;
   row.dataset.testid = "entry-row";
   row.innerHTML = `
     <div class="entry-dot" style="background:${cfg.color}"></div>

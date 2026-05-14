@@ -34,6 +34,35 @@
       <button class="income-edit-btn" data-testid="open-income-modal" onclick="openIncomeModal()">✏ Ändern</button>
     </div>
 
+    <!-- Stats -->
+    <div class="stat-row">
+      <div class="stat stat-base-income">
+        <div class="stat-icon">💼</div>
+        <div class="stat-val" id="stat-base-income" data-testid="stat-base-income">– €</div>
+        <div class="stat-lbl">Festes Einkommen</div>
+      </div>
+      <div class="stat stat-extra-income">
+        <div class="stat-icon">📥</div>
+        <div class="stat-val" id="stat-extra-income" data-testid="stat-extra-income">– €</div>
+        <div class="stat-lbl">Extra-Einnahmen</div>
+      </div>
+      <div class="stat stat-expenses">
+        <div class="stat-icon">↗</div>
+        <div class="stat-val" id="stat-expenses" data-testid="stat-expenses">– €</div>
+        <div class="stat-lbl">Ausgaben</div>
+      </div>
+      <div class="stat stat-saving">
+        <div class="stat-icon">💰</div>
+        <div class="stat-val" id="stat-saving" data-testid="stat-saving">– €</div>
+        <div class="stat-lbl">Sparen</div>
+      </div>
+      <div class="stat stat-available">
+        <div class="stat-icon">✓</div>
+        <div class="stat-val" id="stat-available" data-testid="stat-available">– €</div>
+        <div class="stat-lbl">Verfügbar</div>
+      </div>
+    </div>
+
     <!-- Donut Ring -->
     <div class="ring-wrap">
       <svg width="220" height="220" viewBox="0 0 160 160">
@@ -46,30 +75,6 @@
       <div class="ring-center">
         <div class="ring-remain" id="ring-remain-val" data-testid="remaining-ring">– €</div>
         <div class="ring-lbl">Verfügbar</div>
-      </div>
-    </div>
-
-    <!-- Stats -->
-    <div class="stat-row">
-      <div class="stat">
-        <div class="stat-icon">🏠</div>
-        <div class="stat-val" id="stat-fixed" data-testid="stat-fixed" style="color:var(--col-fixed)">– €</div>
-        <div class="stat-lbl">Fixkosten</div>
-      </div>
-      <div class="stat">
-        <div class="stat-icon">🎉</div>
-        <div class="stat-val" id="stat-fun" data-testid="stat-fun" style="color:var(--col-fun)">– €</div>
-        <div class="stat-lbl">Freizeit</div>
-      </div>
-      <div class="stat">
-        <div class="stat-icon">💰</div>
-        <div class="stat-val" id="stat-saving" data-testid="stat-saving" style="color:var(--col-saving)">– €</div>
-        <div class="stat-lbl">Sparen</div>
-      </div>
-      <div class="stat">
-        <div class="stat-icon">📥</div>
-        <div class="stat-val" id="stat-income" data-testid="stat-income" style="color:var(--col-income)">– €</div>
-        <div class="stat-lbl">Einnahmen</div>
       </div>
     </div>
 
@@ -97,7 +102,7 @@
       <div class="category-card-head">
         <div>
           <div class="category-eyebrow">Ausgabenmix</div>
-          <h2 class="category-title" id="category-chart-title">Kategorien</h2>
+          <h2 class="category-title" id="category-chart-title">Fix · Freizeit · Sparen</h2>
         </div>
         <div class="category-total" id="category-total" data-testid="category-total">0 EUR</div>
       </div>
