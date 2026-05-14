@@ -274,6 +274,13 @@ Beispiel:
         </div>
         <div class="setting-arrow">›</div>
       </div>
+      <div class="setting-row tappable" data-testid="feedback-link" onclick="openFeedbackReport()">
+        <div>
+          <div class="setting-lbl">🐞 Bug melden / Feedback geben</div>
+          <div class="setting-sub">Einfaches Formular für Fehler oder Ideen</div>
+        </div>
+        <div class="setting-arrow">›</div>
+      </div>
       <div class="setting-row tappable" onclick="clearAllData()">
         <div>
           <div class="setting-lbl">🗑️ Alle Daten löschen</div>
@@ -362,7 +369,7 @@ Beispiel:
     </div>
     <div class="form-error" id="entry-form-error" data-testid="entry-form-error" role="alert" hidden></div>
     <div class="modal-actions">
-      <button class="btn-danger" id="entry-delete-btn" onclick="deleteCurrentEntry()" style="display:none">🗑 Löschen</button>
+      <button class="btn-danger" id="entry-delete-btn" data-testid="delete-entry" onclick="deleteCurrentEntry()" style="display:none">🗑 Löschen</button>
       <button class="btn-secondary" onclick="closeModal('modal-entry')">Abbrechen</button>
       <button class="btn-primary" data-testid="save-entry" onclick="saveEntry()">Speichern</button>
     </div>
@@ -382,6 +389,66 @@ Beispiel:
     <div class="modal-actions">
       <button class="btn-secondary" onclick="closeModal('modal-income')">Abbrechen</button>
       <button class="btn-primary" data-testid="save-income" onclick="saveIncome()">Speichern</button>
+    </div>
+  </div>
+</div>
+
+<!-- Feedback Modal -->
+<div class="modal-overlay" id="modal-feedback" data-testid="feedback-modal" hidden>
+  <div class="modal feedback-modal">
+    <div class="modal-handle"></div>
+    <div class="modal-title">Bug melden / Feedback geben</div>
+
+    <div class="field">
+      <label class="field-lbl" for="feedback-title">Titel</label>
+      <input class="field-input" type="text" id="feedback-title" data-testid="feedback-title" placeholder="Kurzer Titel des Problems" />
+    </div>
+
+    <div class="field">
+      <label class="field-lbl" for="feedback-description">Beschreibung</label>
+      <textarea class="field-textarea" id="feedback-description" data-testid="feedback-description" placeholder="Worum geht es?"></textarea>
+    </div>
+
+    <div class="field">
+      <label class="field-lbl" for="feedback-steps">Was hast du gemacht?</label>
+      <textarea class="field-textarea" id="feedback-steps" data-testid="feedback-steps" placeholder="Beschreibe kurz die Schritte bis zum Problem."></textarea>
+    </div>
+
+    <div class="field-row">
+      <div class="field">
+        <label class="field-lbl" for="feedback-actual">Was ist passiert?</label>
+        <textarea class="field-textarea" id="feedback-actual" data-testid="feedback-actual" placeholder="Tatsächliches Verhalten"></textarea>
+      </div>
+      <div class="field">
+        <label class="field-lbl" for="feedback-expected">Was hättest du erwartet?</label>
+        <textarea class="field-textarea" id="feedback-expected" data-testid="feedback-expected" placeholder="Erwartetes Verhalten"></textarea>
+      </div>
+    </div>
+
+    <div class="field">
+      <label class="field-lbl" for="feedback-device">Gerät / Browser</label>
+      <input class="field-input" type="text" id="feedback-device" data-testid="feedback-device" />
+    </div>
+
+    <div class="field">
+      <label class="field-lbl" for="feedback-notes">Weitere Hinweise (optional)</label>
+      <textarea class="field-textarea" id="feedback-notes" data-testid="feedback-notes" placeholder="z.B. Screenshot-Hinweis, Häufigkeit, Zeitraum"></textarea>
+    </div>
+
+    <div class="feedback-honeypot" aria-hidden="true">
+      <label for="feedback-website">Website</label>
+      <input type="text" id="feedback-website" tabindex="-1" autocomplete="off" />
+    </div>
+
+    <div class="form-error" id="feedback-form-error" data-testid="feedback-form-error" role="alert" hidden></div>
+    <div class="success-box feedback-success" id="feedback-success" data-testid="feedback-success" hidden></div>
+    <div class="copy-feedback" id="feedback-copy-feedback" data-testid="feedback-copy-feedback">✓ Bug-Report kopiert!</div>
+
+    <div class="modal-actions feedback-actions">
+      <button class="btn-secondary" onclick="closeModal('modal-feedback')">Schließen</button>
+      <button class="btn-secondary" data-testid="copy-feedback-report" onclick="copyFeedbackReport()">Bug-Report kopieren</button>
+      <button class="btn-secondary" id="feedback-email-btn" data-testid="email-feedback-report" onclick="sendFeedbackEmail()" hidden>Per E-Mail senden</button>
+      <button class="btn-primary" id="feedback-submit-btn" data-testid="submit-feedback-report" onclick="submitFeedbackReport()">Bug melden</button>
     </div>
   </div>
 </div>

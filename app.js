@@ -34,6 +34,8 @@ const TYPE_CFG = {
   income: { color: "var(--col-income)", label: "Einnahme",    bg: "var(--type-income-bg)" },
 };
 
+const BUG_REPORT_ENDPOINT = "/api/report-bug";
+const FEEDBACK_EMAIL = "happypsyduck97@gmail.com";
 const RING_CIRCUMFERENCE = 389.6;
 
 const ENTRY_FILTERS = {
@@ -737,6 +739,154 @@ function clearAllData() {
   renderOverview();
   renderSettings();
   alert("Alle Daten wurden gelöscht.");
+}
+
+function openFeedbackReport() {
+  clearFormError("feedback-form-error");
+  resetFeedbackSuccess();
+  setFeedbackSubmitState(false);
+
+  const copyFeedback = document.getElementById("feedback-copy-feedback");
+  if (copyFeedback) copyFeedback.classList.remove("show");
+
+  const deviceField = document.getElementById("feedback-device");
+  if (deviceField && !deviceField.value) deviceField.value = navigator.userAgent;
+
+  const emailButton = document.getElementById("feedback-email-btn");
+  if (emailButton) emailButton.hidden = !FEEDBACK_EMAIL;
+
+  openModal("modal-feedback");
+}
+
+async function submitFeedbackReport() {
+  const feedback = getFeedbackFormValues();
+  if (!validateFeedback(feedback)) return;
+
+  setFeedbackSubmitState(true);
+  resetFeedbackSuccess();
+
+  try {
+    const response = await fetch(BUG_REPORT_ENDPOINT, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(feedback),
+    });
+    const result = await readJsonResponse(response);
+
+    if (!response.ok) {
+      if (response.status === 404) {
+        throw new Error("Bug-Report API nicht erreichbar. Lokal bitte mit `npm run dev:vercel` starten, damit /api/report-bug verfügbar ist.");
+      }
+      throw new Error(result.error || "Der Bug-Report konnte nicht gesendet werden.");
+    }
+
+    showFeedbackSuccess(result.issueUrl);
+  } catch (error) {
+    showFormError("feedback-form-error", error.message || "Der Bug-Report konnte nicht gesendet werden. Bitte kopiere den Report und melde ihn manuell.");
+  } finally {
+    setFeedbackSubmitState(false);
+  }
+}
+
+function copyFeedbackReport() {
+  const feedback = getFeedbackFormValues();
+  if (!validateFeedback(feedback)) return;
+
+  copyToClipboard(buildFeedbackReport(feedback), "feedback-copy-feedback");
+}
+
+function sendFeedbackEmail() {
+  if (!FEEDBACK_EMAIL) return;
+
+  const feedback = getFeedbackFormValues();
+  if (!validateFeedback(feedback)) return;
+
+  window.location.href = `mailto:${FEEDBACK_EMAIL}?subject=${encodeURIComponent(feedback.title)}&body=${encodeURIComponent(buildFeedbackReport(feedback))}`;
+}
+
+function getFeedbackFormValues() {
+  const valueOf = id => document.getElementById(id)?.value.trim() || "";
+
+  return {
+    title: valueOf("feedback-title") || "Feedback zur FinanzApp",
+    description: valueOf("feedback-description"),
+    steps: valueOf("feedback-steps"),
+    actual: valueOf("feedback-actual"),
+    expected: valueOf("feedback-expected"),
+    device: valueOf("feedback-device"),
+    notes: valueOf("feedback-notes"),
+    website: valueOf("feedback-website"),
+  };
+}
+
+function validateFeedback({ title, description }) {
+  if (!title || !description) {
+    showFormError("feedback-form-error", "Bitte gib mindestens einen Titel und eine Beschreibung ein.");
+    return false;
+  }
+
+  clearFormError("feedback-form-error");
+  return true;
+}
+
+async function readJsonResponse(response) {
+  try {
+    return await response.json();
+  } catch (_) {
+    return {};
+  }
+}
+
+function setFeedbackSubmitState(isSubmitting) {
+  const button = document.getElementById("feedback-submit-btn");
+  if (!button) return;
+
+  button.disabled = isSubmitting;
+  button.textContent = isSubmitting ? "Wird gesendet..." : "Bug melden";
+}
+
+function showFeedbackSuccess(issueUrl) {
+  const success = document.getElementById("feedback-success");
+  if (!success) return;
+
+  success.style.display = "";
+  success.hidden = false;
+  success.innerHTML = issueUrl
+    ? `Danke, dein Bug wurde gemeldet. <a href="${escapeHtml(issueUrl)}" target="_blank" rel="noopener">Issue ansehen</a>`
+    : "Danke, dein Bug wurde gemeldet.";
+}
+
+function resetFeedbackSuccess() {
+  const success = document.getElementById("feedback-success");
+  if (!success) return;
+
+  success.hidden = true;
+  success.style.display = "";
+  success.textContent = "";
+}
+
+function buildFeedbackReport({ title, description, steps, actual, expected, device, notes }) {
+  const fallback = "Keine Angabe";
+
+  return `# ${title}
+
+## Beschreibung
+${description || fallback}
+
+## Schritte zum Reproduzieren
+${steps || fallback}
+
+## Tatsächliches Verhalten
+${actual || fallback}
+
+## Erwartetes Verhalten
+${expected || fallback}
+
+## Gerät / Browser
+${device || fallback}
+
+## Weitere Hinweise
+${notes || fallback}`;
 }
 
 // ── Theme Toggle ──────────────────────────────────────────────────

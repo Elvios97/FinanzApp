@@ -160,6 +160,8 @@ function getMonthData(state, monthKey) {
   ensureMonth(state, monthKey);
   const { entries } = state.months[monthKey];
   const baseIncome = parseFloat(state.months[monthKey].income) || 0;
+
+  // Zusätzliche Einnahmen bleiben getrennt, damit das feste Monatseinkommen planbar bleibt.
   const totals = entries.reduce((result, entry) => {
     const type = normalizeEntryType(entry.type);
     result[type] += parseFloat(entry.amount) || 0;

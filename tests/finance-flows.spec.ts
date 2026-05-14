@@ -175,4 +175,76 @@ test.describe("Finanz-App Test-Agent", () => {
     await expect(page.getByTestId("entry-row").filter({ hasText: "Persistente Miete" })).toContainText("-700,00");
     await expect(page.getByTestId("remaining-highlight")).toContainText("+1.300");
   });
+
+  test("bearbeitet eine Transaktion und aktualisiert Summen, Diagramm und Persistenz", async ({ page }) => {
+    await openApp(
+      page,
+      createState(
+        [
+          createEntry("rent", "Miete alt", 700, "fixed", "Wohnen"),
+          createEntry("food", "Rewe", 100, "fun", "Lebensmittel"),
+        ],
+        2_000,
+      ),
+    );
+
+    await page.getByTestId("entry-row").filter({ hasText: "Miete alt" }).click();
+    await expect(page.getByTestId("entry-modal")).toBeVisible();
+    await page.getByTestId("entry-name").fill("Miete neu");
+    await page.getByTestId("entry-amount").fill("800");
+    await page.getByTestId("entry-category").fill("Wohnung");
+    await page.getByTestId("entry-type-saving").click();
+    await page.getByTestId("save-entry").click();
+
+    await expect(page.getByTestId("entry-modal")).toBeHidden();
+    await expect(page.getByTestId("entry-row").filter({ hasText: "Miete neu" })).toContainText("-800,00");
+    await expect(page.getByTestId("stat-expenses")).toContainText("100");
+    await expect(page.getByTestId("stat-saving")).toContainText("800");
+    await expect(page.getByTestId("category-total")).toContainText("900,00");
+    await expect(page.getByTestId("category-legend")).toContainText("Sparen");
+    await expect(page.getByTestId("remaining-highlight")).toContainText("+1.100");
+
+    await page.reload();
+
+    await expect(page.getByTestId("entry-row").filter({ hasText: "Miete neu" })).toContainText("-800,00");
+    await expect(page.getByTestId("entry-row")).toHaveCount(2);
+    await expect(page.getByTestId("stat-saving")).toContainText("800");
+    await expect(page.getByTestId("remaining-highlight")).toContainText("+1.100");
+  });
+
+  test("loescht eine Transaktion und aktualisiert Liste, Summen und Diagramm", async ({ page }) => {
+    await openApp(
+      page,
+      createState(
+        [
+          createEntry("rent", "Miete", 700, "fixed", "Wohnen"),
+          createEntry("food", "Rewe", 100, "fun", "Lebensmittel"),
+        ],
+        2_000,
+      ),
+    );
+
+    page.once("dialog", async dialog => {
+      expect(dialog.message()).toContain("Eintrag");
+      await dialog.accept();
+    });
+
+    await page.getByTestId("entry-row").filter({ hasText: "Miete" }).click();
+    await expect(page.getByTestId("entry-modal")).toBeVisible();
+    await page.getByTestId("delete-entry").click();
+
+    await expect(page.getByTestId("entry-modal")).toBeHidden();
+    await expect(page.getByTestId("entry-row").filter({ hasText: "Miete" })).toHaveCount(0);
+    await expect(page.getByTestId("entry-row")).toHaveCount(1);
+    await expect(page.getByTestId("stat-expenses")).toContainText("100");
+    await expect(page.getByTestId("category-total")).toContainText("100,00");
+    await expect(page.getByTestId("category-legend")).not.toContainText("Fixkosten");
+    await expect(page.getByTestId("remaining-highlight")).toContainText("+1.900");
+
+    await page.reload();
+
+    await expect(page.getByTestId("entry-row").filter({ hasText: "Miete" })).toHaveCount(0);
+    await expect(page.getByTestId("entry-row").filter({ hasText: "Rewe" })).toBeVisible();
+    await expect(page.getByTestId("remaining-highlight")).toContainText("+1.900");
+  });
 });
