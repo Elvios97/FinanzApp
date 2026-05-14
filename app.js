@@ -38,6 +38,7 @@ const TYPE_CFG = {
 let state = loadState();
 let activeFilter = "all";
 let activeSort   = "amount-desc";
+let activeOverviewPanel = "list";
 let editEntryId  = null;
 let editGoalId   = null;
 
@@ -54,6 +55,20 @@ function switchScreen(id) {
   if (id === "sparplan")  renderSparplan();
   if (id === "settings")  renderSettings();
   if (id === "import")    renderImport();
+}
+
+function setOverviewSidePanel(panel) {
+  activeOverviewPanel = panel === "mix" ? "mix" : "list";
+  const showMix = activeOverviewPanel === "mix";
+
+  document.getElementById("screen-overview")?.classList.toggle("show-mix", showMix);
+  document.getElementById("screen-overview")?.classList.toggle("show-list", !showMix);
+
+  document.querySelectorAll(".overview-panel-tab").forEach(tab => {
+    const isActive = tab.id === (showMix ? "overview-tab-mix" : "overview-tab-list");
+    tab.classList.toggle("active", isActive);
+    tab.setAttribute("aria-selected", isActive ? "true" : "false");
+  });
 }
 
 // ── Render Overview ───────────────────────────────────────────────
@@ -121,6 +136,7 @@ function renderOverview() {
 
   renderCategoryPieChart(data.entries);
   renderEntryList();
+  setOverviewSidePanel(activeOverviewPanel);
 }
 
 // ── Entry List with Filter + Sort ─────────────────────────────────

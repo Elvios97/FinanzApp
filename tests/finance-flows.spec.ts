@@ -112,6 +112,7 @@ test.describe("Finanz-App Test-Agent", () => {
       ),
     );
 
+    await page.getByRole("tab", { name: "Ausgabenmix" }).click();
     const chart = page.getByRole("img", { name: /Kreisdiagramm/i });
     await expect(chart).toBeVisible();
     await expect(chart).toHaveCSS("background-image", /conic-gradient/);

@@ -16,6 +16,7 @@
 
   <!-- ═══════════════════════════ OVERVIEW ═══════════════════════════ -->
   <div id="screen-overview" class="screen active">
+    <main class="overview-main-panel">
     <div class="topbar">
       <div class="topbar-eyebrow">Mein Geld</div>
       <div class="topbar-row">
@@ -83,6 +84,14 @@
       <div class="hl-sub" id="hl-sub"></div>
     </div>
 
+    </main>
+
+    <aside class="overview-side-panel" aria-label="Details zur Übersicht">
+    <div class="overview-panel-tabs" role="tablist" aria-label="Detailansicht wählen">
+      <button class="overview-panel-tab active" id="overview-tab-list" role="tab" aria-selected="true" aria-controls="entry-list" onclick="setOverviewSidePanel('list')">Auflistung</button>
+      <button class="overview-panel-tab" id="overview-tab-mix" role="tab" aria-selected="false" aria-controls="category-chart-title" onclick="setOverviewSidePanel('mix')">Ausgabenmix</button>
+    </div>
+
     <!-- Category Pie Chart -->
     <section class="category-card" aria-labelledby="category-chart-title">
       <div class="category-card-head">
@@ -133,6 +142,7 @@
 
     <!-- Entry List -->
     <div class="entry-list" id="entry-list"></div>
+    </aside>
 
     <div class="spacer"></div>
 
