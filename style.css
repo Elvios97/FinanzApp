@@ -849,14 +849,18 @@ input:checked + .toggle-slider:before { transform: translateX(26px); background:
 .spacer { height: 16px; }
 
 @media (max-width: 767px) {
-  #app { padding-bottom: calc(80px + var(--safe)); }
+  #app { padding-bottom: calc(72px + var(--safe)); overflow: hidden; }
+  .screen {
+    min-height: 0;
+    padding-bottom: calc(18px + var(--safe));
+  }
   nav {
     top: auto;
     bottom: 0;
     left: 0;
     right: 0;
     width: auto;
-    height: 80px;
+    height: 72px;
     padding-bottom: var(--safe);
     border-top: 1px solid var(--border);
     border-right: none;
@@ -865,22 +869,84 @@ input:checked + .toggle-slider:before { transform: translateX(26px); background:
   .nav-btn {
     flex: 1;
     height: auto;
-    font-size: 8px;
+    font-size: 7.5px;
+    gap: 3px;
+    min-width: 0;
+    padding: 6px 2px;
+    letter-spacing: .35px;
   }
   .nav-icon { font-size: 18px; }
-  .stat { padding-left: 6px; padding-right: 6px; }
-  .stat-val { font-size: 14px; }
-  .stat-lbl { font-size: 8px; }
-  .topbar { padding: 32px 16px 0; }
-  .topbar-title { font-size: 24px; }
-  .income-bar { margin: 16px 12px 0; padding: 16px 18px; }
-  .income-val { font-size: 32px; }
-  .ring-wrap svg { width: 200px; height: 200px; }
-  .ring-remain { font-size: 28px; }
-  .hl-val { font-size: 36px; }
-  .entry-row { padding: 12px 16px; }
+  .topbar { padding: 24px 16px 0; }
+  .topbar-eyebrow { letter-spacing: 2.4px; }
+  .topbar-title { font-size: 23px; }
+  .income-bar {
+    margin: 14px 12px 0;
+    padding: 14px 16px;
+    gap: 12px;
+    border-radius: 16px;
+  }
+  .income-label { letter-spacing: 1.5px; margin-bottom: 4px; }
+  .income-val { font-size: 29px; line-height: 1.05; }
+  .income-edit-btn { padding: 9px 12px; font-size: 13px; border-radius: 9px; flex-shrink: 0; }
+  .stat-row {
+    grid-template-columns: repeat(6, minmax(0, 1fr));
+    padding: 12px 12px 0;
+    gap: 8px;
+  }
+  .stat {
+    grid-column: span 2;
+    min-height: 72px;
+    padding: 9px 6px 8px;
+    border-radius: 13px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
+  .stat-saving,
+  .stat-available { grid-column: span 3; }
+  .stat-icon { font-size: 17px; margin-bottom: 4px; }
+  .stat-val { font-size: 15px; line-height: 1.05; }
+  .stat-lbl { font-size: 7.5px; letter-spacing: .8px; line-height: 1.15; }
+  .ring-wrap { padding-top: 14px; }
+  .ring-wrap svg { width: 182px; height: 182px; }
+  .ring-center { min-width: 112px; }
+  .ring-remain { font-size: 24px; }
+  .ring-lbl { font-size: 9px; letter-spacing: 1.6px; }
+  .hl-card {
+    margin: 12px 12px 0;
+    min-height: 110px;
+    padding: 16px;
+    border-radius: 16px;
+  }
+  .hl-copy { padding: 0 20px; }
+  .hl-sub { padding: 0 20px; font-size: 11px; }
+  .hl-val { font-size: 32px; }
+  .overview-panel-tabs { margin: 12px 12px 0; }
+  .category-card { margin: 12px 12px 0; padding: 15px; border-radius: 16px; }
+  .filter-bar { padding: 12px 12px 0; }
+  .filter-chip { padding: 7px 12px; font-size: 13px; }
+  .sort-select { padding: 9px 10px; font-size: 13px; }
+  .entry-list { padding: 10px 12px 0; gap: 7px; }
+  .entry-row { padding: 11px 12px; gap: 10px; }
   .entry-name { font-size: 15px; }
-  .entry-amt { font-size: 18px; }
+  .entry-amt { font-size: 16px; }
+  .fab {
+    bottom: calc(82px + var(--safe));
+    right: 16px;
+    width: 52px;
+    height: 52px;
+  }
+}
+
+@media (max-width: 380px) {
+  .income-bar {
+    align-items: stretch;
+    flex-direction: column;
+  }
+  .income-edit-btn { width: 100%; justify-content: center; }
+  .topbar-title { font-size: 22px; }
+  .stat-lbl { font-size: 7px; letter-spacing: .55px; }
+  .nav-btn span:last-child { font-size: 7px; }
 }
 
 /* ════════════════════════════════════════════════════════════════
@@ -1151,3 +1217,35 @@ input:checked + .toggle-slider:before { transform: translateX(26px); background:
 }
 
 /* ── Mobile Styles ───────────────────────────────────────────────── */
+/* Narrow desktop/tablet: keep sidebar nav, stack overview content. */
+@media (min-width: 768px) and (max-width: 1099px) {
+  #screen-overview.active {
+    display: block;
+    max-width: 980px;
+    padding-left: 128px;
+    padding-right: 48px;
+  }
+
+  #screen-overview .overview-side-panel {
+    display: flex;
+    height: auto;
+    max-height: none;
+    margin-top: 28px;
+    overflow: visible;
+  }
+
+  #screen-overview .filter-scroll {
+    flex-wrap: nowrap;
+    overflow-x: auto;
+  }
+
+  #screen-overview .entry-list {
+    flex: none;
+    max-height: none;
+    overflow: visible;
+  }
+
+  #screen-overview .overview-side-panel .ki-export-btn {
+    margin-top: 8px;
+  }
+}
