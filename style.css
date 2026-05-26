@@ -558,12 +558,26 @@ nav {
   box-shadow: 0 4px 12px rgba(0,0,0,0.3); z-index: 101; transition: transform .15s;
 }
 .fab::before {
-  content: "+";
-  display: block;
-  font-family: 'JetBrains Mono', monospace;
-  font-size: 28px;
-  line-height: 1;
-  transform: translateY(-1px);
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 16px;
+  height: 5px;
+  background: white;
+  border-radius: 999px;
+  transform: translate(-50%, -50%);
+}
+.fab::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 5px;
+  height: 16px;
+  background: white;
+  border-radius: 999px;
+  transform: translate(-50%, -50%);
 }
 .fab:hover { transform: scale(1.05); background: var(--accent-hover); }
 
@@ -939,7 +953,7 @@ input:checked + .toggle-slider:before { transform: translateX(26px); background:
   .entry-name { font-size: 15px; }
   .entry-amt { font-size: 16px; }
   .fab {
-    bottom: calc(82px + var(--safe));
+    bottom: calc(74px + var(--safe));
     right: 16px;
     width: 52px;
     height: 52px;
@@ -1068,7 +1082,7 @@ input:checked + .toggle-slider:before { transform: translateX(26px); background:
     right: 32px;
     width: 56px;
     height: 56px;
-    font-size: 26px;
+    font-size: 0;
     font-family: 'JetBrains Mono', monospace;
     text-align: center;
   }
