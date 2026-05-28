@@ -76,7 +76,7 @@ Die Exportdaten sind so vorbereitet, dass sie direkt für eine KI-Finanzanalyse 
 
 ## localStorage-Hinweis
 
-Die App speichert Daten lokal im Browser unter einem `localStorage`-Key. Es gibt aktuell kein Backend und keine Synchronisation zwischen Geräten. Supabase ist für diese Portfolio-Version nicht eingebunden und bleibt nur eine optionale spätere Erweiterung.
+Die App speichert Daten lokal im Browser unter einem `localStorage`-Key. Es gibt aktuell kein Backend und keine Synchronisation zwischen Geräten.
 
 ## Bug Reports
 
@@ -125,7 +125,10 @@ Der Report enthält Platzhalter für:
 
 ## Screenshots
 
-TODO: Screenshot einfügen
+<img width="2560" height="1440" alt="Screenshot 2026-05-27 145104" src="https://github.com/user-attachments/assets/c68d3bc6-de55-4885-a9c3-624a786ed872" />
+<img width="2560" height="1440" alt="Screenshot 2026-05-27 145000" src="https://github.com/user-attachments/assets/f506285d-1e60-42ed-a8aa-d35919b11812" />
+<img width="2560" height="1440" alt="Screenshot 2026-05-27 144906" src="https://github.com/user-attachments/assets/331223d1-2b2f-417c-ab92-176e938ef81b" />
+
 
 ## Live-Demo
 
