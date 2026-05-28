@@ -1,0 +1,573 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <meta name="theme-color" content="#69f0ae" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <meta name="apple-mobile-web-app-title" content="MeinGeld" />
+  <title>MeinGeld</title>
+  <link rel="manifest" href="/assets/manifest-w51-Rvk8.json" />
+  <link rel="stylesheet" crossorigin href="/assets/index-CGZo1e1w.css">
+</head>
+<body>
+<div id="app">
+
+  <!-- ═══════════════════════════ OVERVIEW ═══════════════════════════ -->
+  <div id="screen-overview" class="screen active">
+    <main class="overview-main-panel">
+    <div class="topbar">
+      <div class="topbar-eyebrow">Mein Geld</div>
+      <div class="topbar-row">
+        <div class="topbar-title" data-testid="overview-title">Finanz-<em>Übersicht</em></div>
+      </div>
+    </div>
+
+    <!-- Income -->
+    <div class="income-bar">
+      <div class="income-left">
+        <div class="income-label">Einkommen / Monat</div>
+        <div class="income-val" id="overview-income">– €</div>
+        <div class="income-month" id="overview-month"></div>
+      </div>
+      <button class="income-edit-btn" data-testid="open-income-modal" onclick="openIncomeModal()">✏ Ändern</button>
+    </div>
+
+    <!-- Stats -->
+    <div class="stat-row">
+      <div class="stat stat-base-income">
+        <div class="stat-icon">💼</div>
+        <div class="stat-val" id="stat-base-income" data-testid="stat-base-income">– €</div>
+        <div class="stat-lbl">Festes Einkommen</div>
+      </div>
+      <div class="stat stat-extra-income">
+        <div class="stat-icon">📥</div>
+        <div class="stat-val" id="stat-extra-income" data-testid="stat-extra-income">– €</div>
+        <div class="stat-lbl">Extra-Einnahmen</div>
+      </div>
+      <div class="stat stat-expenses">
+        <div class="stat-icon">↗</div>
+        <div class="stat-val" id="stat-expenses" data-testid="stat-expenses">– €</div>
+        <div class="stat-lbl">Ausgaben</div>
+      </div>
+      <div class="stat stat-saving">
+        <div class="stat-icon">💰</div>
+        <div class="stat-val" id="stat-saving" data-testid="stat-saving">– €</div>
+        <div class="stat-lbl">Sparen</div>
+      </div>
+      <div class="stat stat-available">
+        <div class="stat-icon">✓</div>
+        <div class="stat-val" id="stat-available" data-testid="stat-available">– €</div>
+        <div class="stat-lbl">Verfügbar</div>
+      </div>
+    </div>
+
+    <!-- Donut Ring -->
+    <div class="ring-wrap">
+      <svg width="220" height="220" viewBox="0 0 160 160">
+        <circle class="ring-track" cx="80" cy="80" r="62" fill="none" stroke-width="16"/>
+        <circle id="arc-fixed"  cx="80" cy="80" r="62" fill="none" stroke-width="16" stroke-dasharray="0 389.6" transform="rotate(-90 80 80)"/>
+        <circle id="arc-fun"    cx="80" cy="80" r="62" fill="none" stroke-width="16" stroke-dasharray="0 389.6" transform="rotate(-90 80 80)"/>
+        <circle id="arc-saving" cx="80" cy="80" r="62" fill="none" stroke-width="16" stroke-dasharray="0 389.6" transform="rotate(-90 80 80)"/>
+        <circle id="arc-remain" cx="80" cy="80" r="62" fill="none" stroke-width="16" stroke-dasharray="0 389.6" transform="rotate(-90 80 80)"/>
+      </svg>
+      <div class="ring-center">
+        <div class="ring-remain" id="ring-remain-val" data-testid="remaining-ring">– €</div>
+        <div class="ring-lbl">Verfügbar</div>
+      </div>
+    </div>
+
+    <!-- Highlight -->
+    <div class="hl-card" id="hl-card">
+      <div class="hl-card-main">
+        <div class="hl-copy">
+          <div class="hl-eyebrow" id="hl-eyebrow" style="color:var(--hl-accent,var(--accent))">Noch verfügbar</div>
+          <div class="hl-val" id="hl-val" data-testid="remaining-highlight">– €</div>
+        </div>
+      </div>
+      <div class="hl-sub" id="hl-sub"></div>
+    </div>
+
+    </main>
+
+    <aside class="overview-side-panel" aria-label="Details zur Übersicht">
+    <div class="overview-panel-tabs" role="tablist" aria-label="Detailansicht wählen">
+      <button class="overview-panel-tab active" id="overview-tab-list" role="tab" aria-selected="true" aria-controls="entry-list" onclick="setOverviewSidePanel('list')">Auflistung</button>
+      <button class="overview-panel-tab" id="overview-tab-mix" role="tab" aria-selected="false" aria-controls="category-chart-title" onclick="setOverviewSidePanel('mix')">Ausgabenmix</button>
+    </div>
+
+    <!-- Category Pie Chart -->
+    <section class="category-card" aria-labelledby="category-chart-title">
+      <div class="category-card-head">
+        <div>
+          <div class="category-eyebrow">Ausgabenmix</div>
+          <h2 class="category-title" id="category-chart-title">Fix · Freizeit · Sparen</h2>
+        </div>
+        <div class="category-total" id="category-total" data-testid="category-total">0 EUR</div>
+      </div>
+      <div class="category-empty" id="category-empty">
+        Noch keine Ausgaben vorhanden. Sobald du Einträge importierst oder manuell hinzufügst, erscheint hier deine Verteilung.
+      </div>
+      <div class="category-content" id="category-content">
+        <div class="category-pie-wrap">
+          <div class="category-pie" id="category-pie" data-testid="category-pie" role="img" aria-label="Kreisdiagramm der Ausgaben nach Kategorien"></div>
+        </div>
+        <div class="category-legend" id="category-legend" data-testid="category-legend"></div>
+      </div>
+    </section>
+
+    <!-- KI Export Button -->
+    <button class="ki-export-btn" onclick="exportForKi()">🤖 Für KI-Analyse exportieren</button>
+
+    <!-- Filter + Sort -->
+    <div class="filter-bar">
+      <div class="filter-scroll">
+        <button class="filter-chip active" data-filter="all">Alle</button>
+        <button class="filter-chip" data-filter="fixed">🏠 Fixkosten</button>
+        <button class="filter-chip" data-filter="fun">🎉 Freizeit</button>
+        <button class="filter-chip" data-filter="saving">💰 Sparen</button>
+        <button class="filter-chip" data-filter="income">📥 Einnahmen</button>
+        <button class="filter-chip" data-filter="manual">✎ Manuell</button>
+        <button class="filter-chip" data-filter="imported">⬇ Importiert</button>
+      </div>
+      <div class="sort-row">
+        <span class="sort-label">Sortierung</span>
+        <select class="sort-select" id="sort-select">
+          <option value="amount-desc">Betrag ↓</option>
+          <option value="amount-asc">Betrag ↑</option>
+          <option value="name-asc">Name A–Z</option>
+          <option value="name-desc">Name Z–A</option>
+          <option value="date-desc">Datum ↓</option>
+          <option value="date-asc">Datum ↑</option>
+          <option value="type">Nach Typ</option>
+        </select>
+      </div>
+    </div>
+
+    <!-- Entry List -->
+    <div class="entry-list" id="entry-list"></div>
+    </aside>
+
+    <div class="spacer"></div>
+
+    <!-- FAB -->
+    <button class="fab" data-testid="open-entry-modal" onclick="openAddEntryModal()" aria-label="Eintrag hinzufügen">+</button>
+  </div>
+
+  <!-- ═══════════════════════════ IMPORT ═══════════════════════════ -->
+  <div id="screen-import" class="screen">
+    <div class="topbar">
+      <div class="topbar-eyebrow">Schritt für Schritt</div>
+      <div class="topbar-title">Kontoauszug <em>importieren</em></div>
+    </div>
+
+    <!-- Step 1 -->
+    <div class="import-step">
+      <div class="step-badge">1</div>
+      <div class="step-title">Prompt kopieren</div>
+      <div class="step-sub">Öffne ChatGPT, Claude oder Gemini. Füge dort diesen Prompt ein — zusammen mit deinem Kontoauszug als Foto oder PDF.</div>
+      <div class="prompt-box">
+        <div class="prompt-text" id="import-prompt-text"></div>
+      </div>
+      <button class="copy-btn" onclick="copyImportPrompt()">📋 Prompt kopieren</button>
+      <div class="copy-feedback" id="import-copy-feedback">✓ In Zwischenablage kopiert!</div>
+      <div class="ai-links">
+        <a class="ai-link" href="https://chat.openai.com" target="_blank" rel="noopener">🤖 ChatGPT</a>
+        <a class="ai-link" href="https://claude.ai" target="_blank" rel="noopener">✨ Claude</a>
+        <a class="ai-link" href="https://gemini.google.com" target="_blank" rel="noopener">💎 Gemini</a>
+      </div>
+    </div>
+
+    <!-- Step 2 -->
+    <div class="import-step">
+      <div class="step-badge">2</div>
+      <div class="step-title">JSON hier einfügen</div>
+      <div class="step-sub">Kopiere die JSON-Antwort der KI und füge sie unten ein.</div>
+      <textarea class="paste-area" id="json-paste" placeholder='Hier JSON einfügen…
+Beispiel:
+{
+  "income": 2500,
+  "categories": [
+    { "name": "Miete", "amount": 850, "type": "fixed" },
+    { "name": "Hobbys", "amount": 150, "type": "fun" }
+  ]
+}'></textarea>
+      <button class="import-btn" onclick="runImport()">✅ Importieren &amp; anzeigen</button>
+    </div>
+
+    <div class="error-box" id="import-error" style="display:none"><span>⚠️</span><div id="import-error-msg"></div></div>
+    <div class="success-box" id="import-success" style="display:none">✓ <span id="import-success-msg"></span></div>
+
+    <div class="spacer"></div>
+  </div>
+
+  <!-- ═══════════════════════════ HISTORY ══════════════════════════ -->
+  <div id="screen-history" class="screen">
+    <div class="topbar">
+      <div class="topbar-eyebrow">Verlauf</div>
+      <div class="topbar-title">Monats-<em>Historie</em></div>
+    </div>
+    <div class="month-selector" id="month-list"></div>
+    <button class="month-new-btn" onclick="openNewMonthModal()">+ Neuen Monat anlegen</button>
+    <div class="spacer"></div>
+  </div>
+
+  <!-- ═══════════════════════════ SPARPLAN ═════════════════════════ -->
+  <div id="screen-sparplan" class="screen">
+    <div class="topbar">
+      <div class="topbar-eyebrow">Mein Sparplan</div>
+      <div class="topbar-title">Ziele &amp; <em>Rücklagen</em></div>
+    </div>
+    <div class="sp-total-card">
+      <div class="sp-total-lbl">💰 Gesamt Sparrate</div>
+      <div class="sp-total-val" id="sp-total-val">0 € / Mo</div>
+      <div class="sp-total-sub" id="sp-total-sub">Füge Sparziele hinzu</div>
+    </div>
+    <div class="sp-goals" id="sp-goals"></div>
+    <button class="add-goal-btn" onclick="openAddGoalModal()">+ Neues Sparziel hinzufügen</button>
+    <div class="spacer"></div>
+  </div>
+
+  <!-- ═══════════════════════════ SETTINGS ═════════════════════════ -->
+  <div id="screen-settings" class="screen">
+    <div class="topbar">
+      <div class="topbar-eyebrow">Einstellungen</div>
+      <div class="topbar-title"><em>App</em> anpassen</div>
+    </div>
+
+    <div class="install-banner">
+      <div class="install-title">📲 Als App installieren (Android)</div>
+      <div class="install-steps">
+        <span>1. Seite in Chrome öffnen</span>
+        <span>2. Menü ⋮ → „Zum Startbildschirm hinzufügen"</span>
+        <span>3. „Installieren" tippen → Fertig! 🎉</span>
+      </div>
+    </div>
+
+    <div class="settings-list">
+      <div class="setting-row tappable" onclick="openIncomeModal()">
+        <div>
+          <div class="setting-lbl">✏️ Einkommen bearbeiten</div>
+          <div class="setting-sub" id="settings-income-val">– €</div>
+        </div>
+        <div class="setting-arrow">›</div>
+      </div>
+      <div class="setting-row">
+        <div>
+          <div class="setting-lbl">📅 Aktueller Monat</div>
+          <div class="setting-sub" id="settings-month-val"></div>
+        </div>
+        <div class="setting-val"></div>
+      </div>
+      <div class="setting-row tappable" onclick="switchScreen('import')">
+        <div>
+          <div class="setting-lbl">📄 Neuer Import</div>
+          <div class="setting-sub">Kontoauszug neu einlesen</div>
+        </div>
+        <div class="setting-arrow">›</div>
+      </div>
+      <div class="setting-row tappable" onclick="switchScreen('history')">
+        <div>
+          <div class="setting-lbl">📅 Monatshistorie</div>
+          <div class="setting-sub">Vergangene Monate ansehen</div>
+        </div>
+        <div class="setting-arrow">›</div>
+      </div>
+      <div class="setting-row tappable" data-testid="feedback-link" onclick="openFeedbackReport()">
+        <div>
+          <div class="setting-lbl">🐞 Bug melden / Feedback geben</div>
+          <div class="setting-sub">Einfaches Formular für Fehler oder Ideen</div>
+        </div>
+        <div class="setting-arrow">›</div>
+      </div>
+      <div class="setting-row tappable" onclick="clearAllData()">
+        <div>
+          <div class="setting-lbl">🗑️ Alle Daten löschen</div>
+          <div class="setting-sub">Zurücksetzen auf Werkseinstellungen</div>
+        </div>
+        <div class="setting-arrow" style="color:var(--red)">›</div>
+      </div>
+      <div class="setting-row tappable" id="theme-row">
+        <div>
+          <div class="setting-lbl">🌙 Design</div>
+          <div class="setting-sub" id="theme-label">Dunkles Design</div>
+        </div>
+        <label class="theme-toggle">
+          <input type="checkbox" id="theme-switch">
+          <span class="toggle-slider"></span>
+        </label>
+      </div>
+      <div class="setting-row">
+        <div><div class="setting-lbl">Version</div><div class="setting-sub">MeinGeld PWA</div></div>
+        <div class="setting-val">3.0.0</div>
+      </div>
+    </div>
+    <div class="spacer"></div>
+  </div>
+
+  <!-- ═══════════════════════════ NAV ══════════════════════════════ -->
+  <nav data-testid="main-nav">
+    <button class="nav-btn active" id="nav-overview" onclick="switchScreen('overview')">
+      <span class="nav-icon">📊</span><span>Übersicht</span>
+    </button>
+    <button class="nav-btn" id="nav-import" onclick="switchScreen('import')">
+      <span class="nav-icon">📄</span><span>Import</span>
+    </button>
+    <button class="nav-btn" id="nav-history" onclick="switchScreen('history')">
+      <span class="nav-icon">📅</span><span>Verlauf</span>
+    </button>
+    <button class="nav-btn" id="nav-sparplan" onclick="switchScreen('sparplan')">
+      <span class="nav-icon">💰</span><span>Sparplan</span>
+    </button>
+    <button class="nav-btn" id="nav-settings" onclick="switchScreen('settings')">
+      <span class="nav-icon">⚙️</span><span>Einstellungen</span>
+    </button>
+  </nav>
+</div>
+
+<!-- ═══════════════════════════ MODALS ═══════════════════════════════ -->
+
+<!-- Manual Entry Modal -->
+<div class="modal-overlay" id="modal-entry" data-testid="entry-modal" hidden>
+  <div class="modal">
+    <div class="modal-handle"></div>
+    <div class="modal-title" id="entry-modal-title">Neuer Eintrag</div>
+    <div class="field-row">
+      <div class="field" style="flex:3">
+        <label class="field-lbl" for="entry-name">Name</label>
+        <input class="field-input" type="text" id="entry-name" data-testid="entry-name" placeholder="z.B. Rewe, Netflix…" />
+      </div>
+      <div class="field">
+        <label class="field-lbl" for="entry-amount">Betrag (€)</label>
+        <input class="field-input" type="number" id="entry-amount" data-testid="entry-amount" placeholder="0.00" step="0.01" min="0" />
+      </div>
+    </div>
+    <div class="field">
+      <label class="field-lbl">Typ</label>
+      <div class="type-selector">
+        <button class="type-chip" data-type="fixed" data-testid="entry-type-fixed" onclick="setEntryType('fixed')">🏠 Fixkosten</button>
+        <button class="type-chip active-fun" data-type="fun" data-testid="entry-type-fun" onclick="setEntryType('fun')">🎉 Freizeit</button>
+        <button class="type-chip" data-type="saving" data-testid="entry-type-saving" onclick="setEntryType('saving')">💰 Sparen</button>
+        <button class="type-chip" data-type="income" data-testid="entry-type-income" onclick="setEntryType('income')">📥 Einnahme</button>
+      </div>
+      <input type="hidden" id="entry-type-hidden" value="fun" />
+    </div>
+    <div class="field-row">
+      <div class="field">
+        <label class="field-lbl" for="entry-category">Kategorie (optional)</label>
+        <input class="field-input" type="text" id="entry-category" data-testid="entry-category" placeholder="z.B. Lebensmittel" />
+      </div>
+      <div class="field">
+        <label class="field-lbl" for="entry-date">Datum</label>
+        <input class="field-input" type="date" id="entry-date" />
+      </div>
+    </div>
+    <div class="field">
+      <label class="field-lbl" for="entry-note">Notiz (optional)</label>
+      <textarea class="field-textarea" id="entry-note" placeholder="z.B. Wocheneinkauf, Barzahlung…"></textarea>
+    </div>
+    <div class="form-error" id="entry-form-error" data-testid="entry-form-error" role="alert" hidden></div>
+    <div class="modal-actions">
+      <button class="btn-danger" id="entry-delete-btn" data-testid="delete-entry" onclick="deleteCurrentEntry()" style="display:none">🗑 Löschen</button>
+      <button class="btn-secondary" onclick="closeModal('modal-entry')">Abbrechen</button>
+      <button class="btn-primary" data-testid="save-entry" onclick="saveEntry()">Speichern</button>
+    </div>
+  </div>
+</div>
+
+<!-- Income Modal -->
+<div class="modal-overlay" id="modal-income" data-testid="income-modal" hidden>
+  <div class="modal">
+    <div class="modal-handle"></div>
+    <div class="modal-title">Einkommen anpassen</div>
+    <div class="field">
+      <label class="field-lbl" for="income-modal-input">Monatliches Nettoeinkommen (€)</label>
+      <input class="field-input" type="number" id="income-modal-input" data-testid="income-input" placeholder="2200" />
+    </div>
+    <div class="form-error" id="income-form-error" data-testid="income-form-error" role="alert" hidden></div>
+    <div class="modal-actions">
+      <button class="btn-secondary" onclick="closeModal('modal-income')">Abbrechen</button>
+      <button class="btn-primary" data-testid="save-income" onclick="saveIncome()">Speichern</button>
+    </div>
+  </div>
+</div>
+
+<!-- Feedback Modal -->
+<div class="modal-overlay" id="modal-feedback" data-testid="feedback-modal" hidden>
+  <div class="modal feedback-modal">
+    <div class="modal-handle"></div>
+    <div class="modal-title">Bug melden / Feedback geben</div>
+
+    <div class="field">
+      <label class="field-lbl" for="feedback-title">Titel</label>
+      <input class="field-input" type="text" id="feedback-title" data-testid="feedback-title" placeholder="Kurzer Titel des Problems" />
+    </div>
+
+    <div class="field">
+      <label class="field-lbl" for="feedback-description">Beschreibung</label>
+      <textarea class="field-textarea" id="feedback-description" data-testid="feedback-description" placeholder="Worum geht es?"></textarea>
+    </div>
+
+    <div class="field">
+      <label class="field-lbl" for="feedback-steps">Was hast du gemacht?</label>
+      <textarea class="field-textarea" id="feedback-steps" data-testid="feedback-steps" placeholder="Beschreibe kurz die Schritte bis zum Problem."></textarea>
+    </div>
+
+    <div class="field-row">
+      <div class="field">
+        <label class="field-lbl" for="feedback-actual">Was ist passiert?</label>
+        <textarea class="field-textarea" id="feedback-actual" data-testid="feedback-actual" placeholder="Tatsächliches Verhalten"></textarea>
+      </div>
+      <div class="field">
+        <label class="field-lbl" for="feedback-expected">Was hättest du erwartet?</label>
+        <textarea class="field-textarea" id="feedback-expected" data-testid="feedback-expected" placeholder="Erwartetes Verhalten"></textarea>
+      </div>
+    </div>
+
+    <div class="field">
+      <label class="field-lbl" for="feedback-device">Gerät / Browser</label>
+      <input class="field-input" type="text" id="feedback-device" data-testid="feedback-device" />
+    </div>
+
+    <div class="field">
+      <label class="field-lbl" for="feedback-notes">Weitere Hinweise (optional)</label>
+      <textarea class="field-textarea" id="feedback-notes" data-testid="feedback-notes" placeholder="z.B. Screenshot-Hinweis, Häufigkeit, Zeitraum"></textarea>
+    </div>
+
+    <div class="feedback-honeypot" aria-hidden="true">
+      <label for="feedback-website">Website</label>
+      <input type="text" id="feedback-website" tabindex="-1" autocomplete="off" />
+    </div>
+
+    <div class="form-error" id="feedback-form-error" data-testid="feedback-form-error" role="alert" hidden></div>
+    <div class="success-box feedback-success" id="feedback-success" data-testid="feedback-success" hidden></div>
+    <div class="copy-feedback" id="feedback-copy-feedback" data-testid="feedback-copy-feedback">✓ Bug-Report kopiert!</div>
+
+    <div class="modal-actions feedback-actions">
+      <button class="btn-secondary" onclick="closeModal('modal-feedback')">Schließen</button>
+      <button class="btn-secondary" data-testid="copy-feedback-report" onclick="copyFeedbackReport()">Bug-Report kopieren</button>
+      <button class="btn-secondary" id="feedback-email-btn" data-testid="email-feedback-report" onclick="sendFeedbackEmail()" hidden>Per E-Mail senden</button>
+      <button class="btn-primary" id="feedback-submit-btn" data-testid="submit-feedback-report" onclick="submitFeedbackReport()">Bug melden</button>
+    </div>
+  </div>
+</div>
+
+<!-- Goal Modal -->
+<div class="modal-overlay" id="modal-goal" hidden>
+  <div class="modal">
+    <div class="modal-handle"></div>
+    <div class="modal-title" id="goal-modal-title">Sparziel hinzufügen</div>
+
+    <div class="field-row">
+      <div class="field" style="flex:0 0 70px">
+        <label class="field-lbl">Emoji</label>
+        <input class="field-input" type="text" id="goal-icon" placeholder="🏖️" maxlength="2" />
+      </div>
+      <div class="field" style="flex:1">
+        <label class="field-lbl">Name</label>
+        <input class="field-input" type="text" id="goal-name" placeholder="z.B. Urlaub" />
+      </div>
+    </div>
+
+    <div class="field-row">
+      <div class="field">
+        <label class="field-lbl">Ziel-Betrag (€)</label>
+        <input class="field-input" type="number" id="goal-target" placeholder="2000"
+          oninput="recalcGoalPreview()" />
+      </div>
+      <div class="field">
+        <label class="field-lbl">Bereits gespart (€)</label>
+        <input class="field-input" type="number" id="goal-saved" placeholder="0"
+          oninput="recalcGoalPreview()" />
+      </div>
+    </div>
+
+    <!-- Mode toggle: Zeitraum ODER Rate -->
+    <div class="field">
+      <label class="field-lbl">Berechnung</label>
+      <div style="display:flex;gap:6px;margin-bottom:12px">
+        <button id="mode-btn-rate"     class="type-chip active-saving" onclick="setGoalMode('rate')"    style="flex:1">💶 Rate eingeben</button>
+        <button id="mode-btn-duration" class="type-chip"               onclick="setGoalMode('duration')" style="flex:1">📅 Zeitraum eingeben</button>
+      </div>
+
+      <!-- Rate mode -->
+      <div id="goal-mode-rate">
+        <label class="field-lbl">Monatliche Rate: <span id="goal-monthly-lbl" style="color:var(--accent)">50 €</span></label>
+        <input type="range" id="goal-monthly-slider" min="10" max="500" step="10" value="50"
+          oninput="onGoalSliderChange(this.value)" />
+        <div style="display:flex;justify-content:space-between;font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--muted);margin-top:4px">
+          <span>10 €</span><span>500 €</span>
+        </div>
+      </div>
+
+      <!-- Duration mode -->
+      <div id="goal-mode-duration" style="display:none">
+        <label class="field-lbl">Zeitraum (Monate)</label>
+        <div style="display:flex;gap:8px;align-items:center">
+          <input class="field-input" type="number" id="goal-duration-months" placeholder="12" min="1" max="600"
+            style="flex:1" oninput="recalcGoalPreview()" />
+          <span style="font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--muted);flex-shrink:0">Monate</span>
+        </div>
+        <div style="display:flex;gap:6px;margin-top:8px;flex-wrap:wrap">
+          <button class="filter-chip" onclick="setDurationQuick(6)">6 Mo</button>
+          <button class="filter-chip" onclick="setDurationQuick(12)">1 Jahr</button>
+          <button class="filter-chip" onclick="setDurationQuick(24)">2 Jahre</button>
+          <button class="filter-chip" onclick="setDurationQuick(36)">3 Jahre</button>
+          <button class="filter-chip" onclick="setDurationQuick(60)">5 Jahre</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Live preview -->
+    <div id="goal-preview" style="
+      background:var(--accent-soft);border:1px solid var(--accent-border);
+      border-radius:12px;padding:14px 16px;margin-top:4px;display:none
+    ">
+      <div style="font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:2px;color:var(--accent);text-transform:uppercase;margin-bottom:8px">📊 Vorschau</div>
+      <div style="display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap">
+        <div>
+          <div style="font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--muted)">Rate / Monat</div>
+          <div id="preview-rate" style="font-family:'Plus Jakarta Sans',sans-serif;font-size:18px;font-weight:800;color:var(--accent)">–</div>
+        </div>
+        <div>
+          <div style="font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--muted)">Dauer</div>
+          <div id="preview-duration" style="font-family:'Plus Jakarta Sans',sans-serif;font-size:18px;font-weight:800;color:var(--accent)">–</div>
+        </div>
+        <div>
+          <div style="font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--muted)">Fertig im</div>
+          <div id="preview-date" style="font-family:'Plus Jakarta Sans',sans-serif;font-size:18px;font-weight:800;color:var(--accent)">–</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="modal-actions" style="margin-top:16px">
+      <button class="btn-danger" id="goal-delete-btn" onclick="deleteCurrentGoal()" style="display:none">🗑 Löschen</button>
+      <button class="btn-secondary" onclick="closeModal('modal-goal')">Abbrechen</button>
+      <button class="btn-primary" onclick="saveGoal()">Speichern</button>
+    </div>
+  </div>
+</div>
+
+<!-- New Month Modal -->
+<div class="modal-overlay" id="modal-new-month" hidden>
+  <div class="modal">
+    <div class="modal-handle"></div>
+    <div class="modal-title">Neuen Monat anlegen</div>
+    <div class="field">
+      <label class="field-lbl">Monat (Format: YYYY-MM)</label>
+      <input class="field-input" type="month" id="new-month-input" />
+    </div>
+    <div class="modal-actions">
+      <button class="btn-secondary" onclick="closeModal('modal-new-month')">Abbrechen</button>
+      <button class="btn-primary" onclick="saveNewMonth()">Anlegen</button>
+    </div>
+  </div>
+</div>
+
+<!-- Scripts -->
+<script src="db.js"></script>
+<script src="category-chart.js"></script>
+<script src="app.js"></script>
+</body>
+</html>
