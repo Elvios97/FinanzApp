@@ -130,14 +130,4 @@ Der Report enthält Platzhalter für:
 <img width="2560" height="1440" alt="Screenshot 2026-05-27 144906" src="https://github.com/user-attachments/assets/331223d1-2b2f-417c-ab92-176e938ef81b" />
 
 
-## Live-Demo
 
-TODO: Live-Demo-Link ergänzen
-
-## Geplante Verbesserungen
-
-- Echte Demo veröffentlichen
-- Screenshots ergänzen
-- Optional Supabase oder ein anderes Backend für geräteübergreifende Speicherung prüfen
-- Export-/Import-Funktionen erweitern
-- Weitere Auswertungen und Monatsvergleiche ergänzen
