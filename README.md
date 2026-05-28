@@ -161,3 +161,64 @@ Vor Änderungen an Logik, Layout oder Persistenz sollten mindestens diese Checks
 npm run build
 npm test
 ```
+
+## Screenshots
+Dekstop:
+<p align="center">
+  <img src="https://github.com/user-attachments/assets/a73efde5-b389-4d93-b2c8-aa917ad13866" width="800" />
+</p>
+
+<p align="center">
+  <em>Dashboard-Ansicht der Finanz-App mit Monatsübersicht und Kategorieverteilung.</em>
+</p>
+
+<p align="center">
+  <img src="https://github.com/user-attachments/assets/98ea3dfc-85ea-4e0b-8a49-3385f01fa4e3" width="800" />
+</p>
+
+<p align="center">
+  <em>Dashboard-Ansicht der Finanz-App hinzufügen von Ein/Ausgaben.</em>
+</p>
+<p align="center">
+  <img src="https://github.com/user-attachments/assets/342349ab-c0c5-40c3-8976-a31f020f5761" width="800" />
+</p>
+
+<p align="center">
+  <em>Dashboard-Ansicht der Finanz-App mit Monatsübersicht und Ausgabenmix.</em>
+</p>
+
+
+
+Mobile:
+
+<p align="center">
+  <img src="https://github.com/user-attachments/assets/aa555460-772e-4f9d-bd32-fad0f2df7ff4" width="800" />
+</p>
+
+<p align="center">
+  <em>Dashboard-Ansicht der Finanz-App mit Monatsübersicht und Kategorieverteilung.</em>
+</p>
+
+<p align="center">
+  <img src="https://github.com/user-attachments/assets/b4a4ac99-5869-4da6-80cb-442ced9e2c88" width="800" />
+</p>
+
+<p align="center">
+  <em>Dashboard-Ansicht der Finanz-App auflistung.</em>
+</p>
+<p align="center">
+  <img src="https://github.com/user-attachments/assets/d7cf3deb-e52f-4348-9bb0-d240e6dd01ef" width="800" />
+</p>
+
+<p align="center">
+  <em>Monatsansicht der Mobilen version.</em>
+</p>
+
+
+
+
+
+
+
+
+
