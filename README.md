@@ -125,17 +125,55 @@ Der Report enthält Platzhalter für:
 
 ## Screenshots
 Dekstop:
+<p align="center">
+  <img src="https://github.com/user-attachments/assets/342349ab-c0c5-40c3-8976-a31f020f5761" width="800" />
+</p>
 
-<img width="2560" height="1440" alt="Dekstop_ausgabenmix" src="https://github.com/user-attachments/assets/342349ab-c0c5-40c3-8976-a31f020f5761" />
-<img width="2560" height="1440" alt="Dekstop_add" src="https://github.com/user-attachments/assets/98ea3dfc-85ea-4e0b-8a49-3385f01fa4e3" />
-<img width="2560" height="1440" alt="Desktop_main" src="https://github.com/user-attachments/assets/a73efde5-b389-4d93-b2c8-aa917ad13866" />
+<p align="center">
+  <em>Dashboard-Ansicht der Finanz-App mit Monatsübersicht und Kategorieverteilung.</em>
+</p>
+
+<p align="center">
+  <img src="https://github.com/user-attachments/assets/98ea3dfc-85ea-4e0b-8a49-3385f01fa4e3" width="800" />
+</p>
+
+<p align="center">
+  <em>Dashboard-Ansicht der Finanz-App hinzufügen von Ein/Ausgaben.</em>
+</p>
+<p align="center">
+  <img src="https://github.com/user-attachments/assets/a73efde5-b389-4d93-b2c8-aa917ad13866" width="800" />
+</p>
+
+<p align="center">
+  <em>Dashboard-Ansicht der Finanz-App mit Monatsübersicht und Ausgabenmix.</em>
+</p>
+
 
 
 Mobile:
 
-<img width="996" height="1982" alt="Mobile_main2" src="https://github.com/user-attachments/assets/4196e2e3-6b04-4cb2-8a3a-9ad471023de4" />
-<img width="978" height="1982" alt="Mobile_main" src="https://github.com/user-attachments/assets/aa555460-772e-4f9d-bd32-fad0f2df7ff4" />
-<img width="996" height="1985" alt="Mobile_Monat" src="https://github.com/user-attachments/assets/2b3f1767-1956-482c-bb3a-32a51414f8c7" />
+<p align="center">
+  <img src=https://github.com/user-attachments/assets/aa555460-772e-4f9d-bd32-fad0f2df7ff4" width="800" />
+</p>
+
+<p align="center">
+  <em>Dashboard-Ansicht der Finanz-App mit Monatsübersicht und Kategorieverteilung.</em>
+</p>
+<p align="center">
+  <img src="https://github.com/user-attachments/assets/4196e2e3-6b04-4cb2-8a3a-9ad471023de" width="800" />
+</p>
+
+<p align="center">
+  <em>Dashboard-Ansicht der Finanz-App auflistung.</em>
+</p>
+<p align="center">
+  <img src="https://github.com/user-attachments/assets/a73efde5-b389-4d93-b2c8-aa917ad13866" width="800" />
+</p>
+
+<p align="center">
+  <em>Monatsansicht der Mobilen version.</em>
+</p>
+
 
 
 
