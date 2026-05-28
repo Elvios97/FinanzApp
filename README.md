@@ -124,10 +124,18 @@ Der Report enthält Platzhalter für:
 - optionalen Screenshot-Hinweis
 
 ## Screenshots
+Dekstop:
+<img width="1600" height="900 " alt="Desktop_main" src="https://github.com/user-attachments/assets/bf5a3851-4ac3-430c-9d60-aa03eb407a3e" />
+<img width="1600" height="900 " alt="Dekstop_ausgabenmix" src="https://github.com/user-attachments/assets/52bb3161-40b9-4b18-8797-75fb81cf7f0f" />
+<img width="1600" height="900 " alt="Dekstop_add" src="https://github.com/user-attachments/assets/7ac0a3bc-f4b3-439b-8e42-d7415cdde258" />
 
-<img width="2560" height="1440" alt="Screenshot 2026-05-27 145104" src="https://github.com/user-attachments/assets/c68d3bc6-de55-4885-a9c3-624a786ed872" />
-<img width="2560" height="1440" alt="Screenshot 2026-05-27 145000" src="https://github.com/user-attachments/assets/f506285d-1e60-42ed-a8aa-d35919b11812" />
-<img width="2560" height="1440" alt="Screenshot 2026-05-27 144906" src="https://github.com/user-attachments/assets/331223d1-2b2f-417c-ab92-176e938ef81b" />
+Mobile:
+<img width="430 " height="932" alt="Mobile_main" src="https://github.com/user-attachments/assets/0ac4e4ca-39da-4a4c-9fc0-1aa0680e8e26" />
+<img width="430" height="932" alt="Mobile_Monat" src="https://github.com/user-attachments/assets/238cf248-834d-4370-a2d4-8681a09be9ab" />
+<img width="430" height="932" alt="Mobile_main2" src="https://github.com/user-attachments/assets/41da5c49-7408-4e83-aeea-029dd729aa91" />
+
+
+
 
 
 
