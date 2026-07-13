@@ -114,6 +114,17 @@ function setOverviewSidePanel(panel) {
     const isActive = tab.id === (showMix ? "overview-tab-mix" : "overview-tab-list");
     tab.classList.toggle("active", isActive);
     tab.setAttribute("aria-selected", isActive ? "true" : "false");
+    const isLight = document.documentElement.getAttribute("data-theme") === "light";
+    tab.style.setProperty("background", isActive
+      ? (isLight ? "linear-gradient(135deg, #2b9b8d, #3193a8)" : "linear-gradient(135deg, #6fc5b4, #7cccd8)")
+      : (isLight ? "linear-gradient(135deg, #eef4fb, #eef4fb)" : "linear-gradient(135deg, #22304a, #22304a)"), "important");
+    tab.style.setProperty("color", isActive
+      ? (isLight ? "#ffffff" : "#06131a")
+      : (isLight ? "#22324a" : "#d7e5f0"), "important");
+    tab.style.setProperty("-webkit-text-fill-color", isActive
+      ? (isLight ? "#ffffff" : "#06131a")
+      : (isLight ? "#22324a" : "#d7e5f0"), "important");
+    tab.style.setProperty("border-color", isActive ? (isLight ? "#2b9b8d" : "#79d7c2") : "transparent", "important");
   });
 }
 
@@ -895,6 +906,7 @@ function applyTheme(theme) {
 
   if (switchEl) switchEl.checked = nextTheme === "light";
   if (labelEl) labelEl.textContent = nextTheme === "light" ? "Helles Design" : "Dunkles Design";
+  setOverviewSidePanel(activeOverviewPanel);
 }
 
 function toggleTheme() {

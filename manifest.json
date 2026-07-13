@@ -4,8 +4,8 @@
   "description": "Persönliche Finanz-Übersicht mit Filter, Sortierung & Monatshistorie",
   "start_url": "./index.html",
   "display": "standalone",
-  "background_color": "#0c0b0a",
-  "theme_color": "#69f0ae",
+  "background_color": "#0f1726",
+  "theme_color": "#79d7c2",
   "orientation": "portrait",
   "icons": [
     { "src": "icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any" },

@@ -206,10 +206,10 @@ Aktuell werden unter anderem geprüft:
 
 ## Roadmap
 
-Sinnvolle nächste Schritte:
+Was ich als Nächstes noch verbessern würde:
 
-- JSON-Export und Backup-Import ergänzen
-- Monatswechsel direkter über Vor-/Zurück-Steuerung machen
-- Budget-Limits pro Kategorie ergänzen
-- Live-Demo final veröffentlichen
-- Portfolio-Page mit aktuellen Screenshots aktualisieren
+- einen einfachen Export und Re-Import einbauen, damit die lokalen Daten nicht nur im Browser hängen
+- den Monatswechsel direkter machen, zum Beispiel mit Vor-/Zurück-Buttons statt nur über die Historie
+- Budgets pro Kategorie ergänzen, damit man schneller sieht, wo man über dem eigenen Limit liegt
+- die Live-Demo sauber veröffentlichen und gegen typische Edge Cases prüfen
+- die Portfolio-Seite mit den aktuellen Screenshots und einer kurzen Projektbeschreibung aktualisieren
