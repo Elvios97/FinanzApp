@@ -1078,8 +1078,8 @@ input:checked + .toggle-slider:before { transform: translateX(26px); background:
   /* ── FAB → fixed position desktop ──────────────────────────── */
   .fab {
     position: fixed;
-    bottom: 32px;
-    right: 32px;
+    top: 48px;
+    right: 48px;
     width: 56px;
     height: 56px;
     font-size: 0;
@@ -1269,5 +1269,433 @@ input:checked + .toggle-slider:before { transform: translateX(26px); background:
 
   #screen-overview .overview-side-panel .ki-export-btn {
     margin-top: 8px;
+  }
+}
+
+/* Portfolio polish: calmer dark fintech direction */
+:root {
+  --bg:           #080c11;
+  --bg2:          #101722;
+  --bg3:          #151f2c;
+  --border:       #253244;
+  --border2:      #344458;
+  --text:         #f4f7fb;
+  --muted:        #8a98aa;
+  --muted2:       #5f6d7e;
+  --green:        #3ddc97;
+  --green-dim:    #0b241a;
+  --green-border: #1f6b4b;
+  --yellow:       #e7b85f;
+  --warm:         #d6c6aa;
+  --red:          #f26d7d;
+  --blue:         #6da7f7;
+  --accent:       #39d596;
+  --accent-hover: #2ebf83;
+  --accent-soft:  #0d261d;
+  --accent-border:#255c45;
+  --code-bg:      #0b1119;
+  --code-border:  #273447;
+  --code-text:    #d8e2ec;
+  --placeholder:  #8290a1;
+  --col-fixed:    #f26d7d;
+  --col-fun:      #e9ad52;
+  --col-saving:   #39d596;
+  --col-income:   #6da7f7;
+  --col-manual:   #9d8cff;
+  --ring-track:   #172231;
+  --type-fixed-bg:  #2a151d;
+  --type-fun-bg:    #2a210f;
+  --type-saving-bg: #0d261d;
+  --type-income-bg: #102338;
+}
+
+[data-theme="light"] {
+  --bg:           #f6f8fb;
+  --bg2:          #ffffff;
+  --bg3:          #eef2f6;
+  --border:       #d8e0ea;
+  --border2:      #c6d0dc;
+  --text:         #18212d;
+  --muted:        #667386;
+  --muted2:       #9aa6b5;
+  --accent:       #238a61;
+  --accent-hover: #1c7350;
+  --accent-soft:  #e8f5ef;
+  --accent-border:#b8dcca;
+  --ring-track:   #e5ebf1;
+}
+
+body {
+  background: var(--bg);
+}
+
+.topbar-eyebrow,
+.income-label,
+.income-month,
+.stat-lbl,
+.ring-lbl,
+.hl-eyebrow,
+.category-eyebrow,
+.sort-label,
+.field-lbl,
+.sp-total-lbl,
+.month-card-entries,
+.month-card-income,
+.setting-val,
+.entry-type-badge,
+.entry-source-badge {
+  letter-spacing: 0;
+}
+
+.topbar-title {
+  letter-spacing: 0;
+}
+
+nav {
+  background: color-mix(in srgb, var(--bg) 92%, transparent);
+  border-color: var(--border);
+}
+
+.nav-btn {
+  color: var(--muted);
+  font-weight: 700;
+}
+
+.nav-icon {
+  width: 30px;
+  height: 30px;
+  display: grid;
+  place-items: center;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  background: var(--bg2);
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 12px;
+  font-weight: 800;
+}
+
+.nav-btn.active .nav-icon,
+.nav-btn:hover .nav-icon {
+  background: var(--accent-soft);
+  border-color: var(--accent-border);
+  color: var(--accent);
+}
+
+.income-bar,
+.stat,
+.hl-card,
+.category-card,
+.overview-panel-tabs,
+.entry-row,
+.import-step,
+.month-card,
+.sp-total-card,
+.sp-goal,
+.setting-row,
+.modal,
+.install-banner {
+  border-radius: 12px;
+  box-shadow: 0 16px 38px rgba(0, 0, 0, .18);
+}
+
+.income-bar,
+.category-card,
+.import-step,
+.month-card,
+.sp-goal,
+.setting-row,
+.modal {
+  background: var(--bg2);
+  border-color: var(--border);
+}
+
+.income-edit-btn,
+.btn-primary,
+.copy-btn,
+.import-btn,
+.ki-export-btn,
+.fab {
+  border-radius: 10px;
+  box-shadow: none;
+}
+
+.income-edit-btn,
+.btn-primary,
+.fab {
+  background: var(--accent);
+  color: #07110d;
+  font-weight: 800;
+}
+
+.income-edit-btn:hover,
+.btn-primary:hover,
+.fab:hover {
+  background: var(--accent-hover);
+  color: #07110d;
+}
+
+.stat {
+  background: color-mix(in srgb, var(--bg2) 92%, var(--bg3));
+  border-color: var(--border);
+  text-align: left;
+}
+
+.stat-icon {
+  width: fit-content;
+  min-width: 34px;
+  height: 22px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 7px;
+  border-radius: 999px;
+  border: 1px solid var(--border2);
+  background: var(--bg);
+  color: var(--muted);
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px;
+  font-weight: 800;
+  margin-bottom: 10px;
+}
+
+.stat-val {
+  font-size: 19px;
+}
+
+.stat-lbl {
+  font-size: 10px;
+}
+
+.stat-base-income,
+.stat-extra-income,
+.stat-expenses,
+.stat-saving,
+.stat-available {
+  background: var(--bg2);
+}
+
+.stat-base-income { border-color: color-mix(in srgb, var(--col-income) 34%, var(--border)); }
+.stat-extra-income { border-color: color-mix(in srgb, var(--col-income) 28%, var(--border)); }
+.stat-expenses { border-color: color-mix(in srgb, var(--red) 30%, var(--border)); }
+.stat-saving { border-color: color-mix(in srgb, var(--col-saving) 28%, var(--border)); }
+.stat-available { border-color: color-mix(in srgb, var(--accent) 34%, var(--border)); }
+
+.ring-remain {
+  text-shadow: none;
+}
+
+.hl-card,
+.hl-card.hl-positive,
+.hl-card.hl-empty,
+.hl-card.hl-negative {
+  background: var(--bg2);
+  border-color: var(--border);
+}
+
+.hl-card {
+  min-height: 118px;
+}
+
+.hl-card::before {
+  width: 4px;
+  opacity: 1;
+}
+
+.hl-val {
+  font-size: 40px;
+}
+
+.hl-sub {
+  color: var(--muted);
+}
+
+.overview-panel-tabs {
+  background: var(--bg2);
+  padding: 4px;
+}
+
+.overview-panel-tab {
+  border-radius: 8px;
+}
+
+.overview-panel-tab.active,
+.filter-chip.active,
+.type-chip.active-fixed,
+.type-chip.active-fun,
+.type-chip.active-saving,
+.type-chip.active-income {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: #07110d;
+}
+
+.filter-chip,
+.type-chip,
+.sort-select,
+.field-input,
+.field-textarea,
+.paste-area,
+.prompt-box,
+.ai-link,
+.btn-secondary {
+  border-radius: 10px;
+}
+
+.filter-chip,
+.type-chip {
+  background: var(--bg2);
+  border-color: var(--border);
+}
+
+.sort-select,
+.field-input,
+.field-textarea,
+.paste-area,
+.prompt-box,
+.ai-link,
+.btn-secondary {
+  background: var(--bg);
+  border-color: var(--border);
+}
+
+.entry-row {
+  background: var(--bg2);
+  gap: 14px;
+  border-color: var(--border);
+}
+
+.entry-row.entry-income {
+  background: var(--bg2);
+  border-color: color-mix(in srgb, var(--col-income) 30%, var(--border));
+}
+
+.entry-ico {
+  width: 30px;
+  height: 30px;
+  display: grid;
+  place-items: center;
+  border: 1px solid currentColor;
+  border-radius: 8px;
+  background: var(--bg);
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 12px;
+  font-weight: 800;
+}
+
+.entry-name {
+  font-weight: 700;
+}
+
+.entry-bar {
+  height: 3px;
+  background: var(--bg3);
+}
+
+.entry-amt {
+  font-weight: 800;
+}
+
+.category-pie {
+  box-shadow: inset 0 0 0 1px var(--border2);
+}
+
+.ki-export-btn,
+.copy-btn,
+.import-btn {
+  background: var(--accent-soft);
+  border-color: var(--accent-border);
+  color: var(--accent);
+}
+
+.install-banner,
+.sp-total-card {
+  background: var(--bg2);
+  border-color: var(--border);
+}
+
+.install-title,
+.sp-total-lbl {
+  color: var(--accent);
+}
+
+.install-steps {
+  color: var(--muted);
+}
+
+.btn-danger {
+  background: color-mix(in srgb, var(--red) 18%, var(--bg2));
+  border: 1px solid color-mix(in srgb, var(--red) 48%, var(--border));
+  color: var(--red);
+}
+
+@media (min-width: 768px) {
+  .nav-icon {
+    width: 34px;
+    height: 34px;
+  }
+
+  .nav-btn.active {
+    border-left: 3px solid var(--accent);
+    border-top: none;
+    border-right: none;
+    border-bottom: none;
+    background: color-mix(in srgb, var(--accent-soft) 68%, transparent);
+  }
+
+  #screen-overview.active {
+    grid-template-columns: minmax(500px, 620px) minmax(560px, 640px);
+    column-gap: 32px;
+  }
+
+  #screen-overview .overview-side-panel {
+    height: calc(100% - 136px);
+    max-height: calc(100% - 136px);
+    margin-top: 136px;
+  }
+
+  .ring-wrap svg {
+    width: 236px;
+    height: 236px;
+  }
+
+  .hl-val {
+    font-size: 46px;
+  }
+
+  .entry-row {
+    padding: 16px 20px;
+    border-radius: 12px;
+  }
+
+  .entry-ico {
+    width: 34px;
+    height: 34px;
+  }
+
+  .ki-export-btn {
+    font-size: 14px;
+  }
+}
+
+@media (max-width: 767px) {
+  .stat {
+    text-align: center;
+  }
+
+  .stat-icon {
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  .hl-val {
+    font-size: 34px;
+  }
+
+  .fab {
+    position: relative;
+    width: calc(100% - 24px);
+    height: 48px;
+    margin: 12px 12px 0;
+    border-radius: 12px;
   }
 }

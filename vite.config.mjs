@@ -2,9 +2,6 @@ import { copyFile, mkdir } from "node:fs/promises";
 import { defineConfig } from "vite";
 
 const staticRuntimeFiles = [
-  "db.js",
-  "category-chart.js",
-  "app.js",
   "sw.js",
   "manifest.json",
   "icon-192.png",

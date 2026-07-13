@@ -1,5 +1,8 @@
 import { defineConfig, devices } from "@playwright/test";
 
+// Playwright sets FORCE_COLOR in some runs; dropping NO_COLOR avoids noisy Node warnings.
+delete process.env.NO_COLOR;
+
 export default defineConfig({
   testDir: "./tests",
   timeout: 30_000,

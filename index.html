@@ -31,33 +31,33 @@
         <div class="income-val" id="overview-income">– €</div>
         <div class="income-month" id="overview-month"></div>
       </div>
-      <button class="income-edit-btn" data-testid="open-income-modal" onclick="openIncomeModal()">✏ Ändern</button>
+      <button class="income-edit-btn" data-testid="open-income-modal" onclick="openIncomeModal()">Ändern</button>
     </div>
 
     <!-- Stats -->
     <div class="stat-row">
       <div class="stat stat-base-income">
-        <div class="stat-icon">💼</div>
+        <div class="stat-icon">Fix</div>
         <div class="stat-val" id="stat-base-income" data-testid="stat-base-income">– €</div>
         <div class="stat-lbl">Festes Einkommen</div>
       </div>
       <div class="stat stat-extra-income">
-        <div class="stat-icon">📥</div>
+        <div class="stat-icon">Plus</div>
         <div class="stat-val" id="stat-extra-income" data-testid="stat-extra-income">– €</div>
         <div class="stat-lbl">Extra-Einnahmen</div>
       </div>
       <div class="stat stat-expenses">
-        <div class="stat-icon">↗</div>
+        <div class="stat-icon">Out</div>
         <div class="stat-val" id="stat-expenses" data-testid="stat-expenses">– €</div>
         <div class="stat-lbl">Ausgaben</div>
       </div>
       <div class="stat stat-saving">
-        <div class="stat-icon">💰</div>
+        <div class="stat-icon">Save</div>
         <div class="stat-val" id="stat-saving" data-testid="stat-saving">– €</div>
         <div class="stat-lbl">Sparen</div>
       </div>
       <div class="stat stat-available">
-        <div class="stat-icon">✓</div>
+        <div class="stat-icon">Netto</div>
         <div class="stat-val" id="stat-available" data-testid="stat-available">– €</div>
         <div class="stat-lbl">Verfügbar</div>
       </div>
@@ -118,17 +118,17 @@
     </section>
 
     <!-- KI Export Button -->
-    <button class="ki-export-btn" onclick="exportForKi()">🤖 Für KI-Analyse exportieren</button>
+    <button class="ki-export-btn" onclick="exportForKi()">Für KI-Analyse exportieren</button>
 
     <!-- Filter + Sort -->
     <div class="filter-bar">
       <div class="filter-scroll">
         <button class="filter-chip active" data-filter="all">Alle</button>
-        <button class="filter-chip" data-filter="fixed">🏠 Fixkosten</button>
-        <button class="filter-chip" data-filter="fun">🎉 Freizeit</button>
-        <button class="filter-chip" data-filter="saving">💰 Sparen</button>
-        <button class="filter-chip" data-filter="income">📥 Einnahmen</button>
-        <button class="filter-chip" data-filter="manual">✎ Manuell</button>
+        <button class="filter-chip" data-filter="fixed">Fixkosten</button>
+        <button class="filter-chip" data-filter="fun">Freizeit</button>
+        <button class="filter-chip" data-filter="saving">Sparen</button>
+        <button class="filter-chip" data-filter="income">Einnahmen</button>
+        <button class="filter-chip" data-filter="manual">Manuell</button>
         <button class="filter-chip" data-filter="imported">⬇ Importiert</button>
       </div>
       <div class="sort-row">
@@ -170,12 +170,12 @@
       <div class="prompt-box">
         <div class="prompt-text" id="import-prompt-text"></div>
       </div>
-      <button class="copy-btn" onclick="copyImportPrompt()">📋 Prompt kopieren</button>
-      <div class="copy-feedback" id="import-copy-feedback">✓ In Zwischenablage kopiert!</div>
+      <button class="copy-btn" onclick="copyImportPrompt()">Prompt kopieren</button>
+      <div class="copy-feedback" id="import-copy-feedback">In Zwischenablage kopiert.</div>
       <div class="ai-links">
-        <a class="ai-link" href="https://chat.openai.com" target="_blank" rel="noopener">🤖 ChatGPT</a>
-        <a class="ai-link" href="https://claude.ai" target="_blank" rel="noopener">✨ Claude</a>
-        <a class="ai-link" href="https://gemini.google.com" target="_blank" rel="noopener">💎 Gemini</a>
+        <a class="ai-link" href="https://chat.openai.com" target="_blank" rel="noopener">ChatGPT</a>
+        <a class="ai-link" href="https://claude.ai" target="_blank" rel="noopener">Claude</a>
+        <a class="ai-link" href="https://gemini.google.com" target="_blank" rel="noopener">Gemini</a>
       </div>
     </div>
 
@@ -193,11 +193,11 @@ Beispiel:
     { "name": "Hobbys", "amount": 150, "type": "fun" }
   ]
 }'></textarea>
-      <button class="import-btn" onclick="runImport()">✅ Importieren &amp; anzeigen</button>
+      <button class="import-btn" onclick="runImport()">Importieren &amp; anzeigen</button>
     </div>
 
-    <div class="error-box" id="import-error" style="display:none"><span>⚠️</span><div id="import-error-msg"></div></div>
-    <div class="success-box" id="import-success" style="display:none">✓ <span id="import-success-msg"></span></div>
+    <div class="error-box" id="import-error" style="display:none"><span>Hinweis</span><div id="import-error-msg"></div></div>
+    <div class="success-box" id="import-success" style="display:none"><span id="import-success-msg"></span></div>
 
     <div class="spacer"></div>
   </div>
@@ -220,7 +220,7 @@ Beispiel:
       <div class="topbar-title">Ziele &amp; <em>Rücklagen</em></div>
     </div>
     <div class="sp-total-card">
-      <div class="sp-total-lbl">💰 Gesamt Sparrate</div>
+      <div class="sp-total-lbl">Gesamt Sparrate</div>
       <div class="sp-total-val" id="sp-total-val">0 € / Mo</div>
       <div class="sp-total-sub" id="sp-total-sub">Füge Sparziele hinzu</div>
     </div>
@@ -237,60 +237,60 @@ Beispiel:
     </div>
 
     <div class="install-banner">
-      <div class="install-title">📲 Als App installieren (Android)</div>
+      <div class="install-title">Als App installieren (Android)</div>
       <div class="install-steps">
         <span>1. Seite in Chrome öffnen</span>
         <span>2. Menü ⋮ → „Zum Startbildschirm hinzufügen"</span>
-        <span>3. „Installieren" tippen → Fertig! 🎉</span>
+        <span>3. „Installieren" tippen und fertig.</span>
       </div>
     </div>
 
     <div class="settings-list">
       <div class="setting-row tappable" onclick="openIncomeModal()">
         <div>
-          <div class="setting-lbl">✏️ Einkommen bearbeiten</div>
+          <div class="setting-lbl">Einkommen bearbeiten</div>
           <div class="setting-sub" id="settings-income-val">– €</div>
         </div>
         <div class="setting-arrow">›</div>
       </div>
       <div class="setting-row">
         <div>
-          <div class="setting-lbl">📅 Aktueller Monat</div>
+          <div class="setting-lbl">Aktueller Monat</div>
           <div class="setting-sub" id="settings-month-val"></div>
         </div>
         <div class="setting-val"></div>
       </div>
       <div class="setting-row tappable" onclick="switchScreen('import')">
         <div>
-          <div class="setting-lbl">📄 Neuer Import</div>
+          <div class="setting-lbl">Neuer Import</div>
           <div class="setting-sub">Kontoauszug neu einlesen</div>
         </div>
         <div class="setting-arrow">›</div>
       </div>
       <div class="setting-row tappable" onclick="switchScreen('history')">
         <div>
-          <div class="setting-lbl">📅 Monatshistorie</div>
+          <div class="setting-lbl">Monatshistorie</div>
           <div class="setting-sub">Vergangene Monate ansehen</div>
         </div>
         <div class="setting-arrow">›</div>
       </div>
       <div class="setting-row tappable" data-testid="feedback-link" onclick="openFeedbackReport()">
         <div>
-          <div class="setting-lbl">🐞 Bug melden / Feedback geben</div>
+          <div class="setting-lbl">Bug melden / Feedback geben</div>
           <div class="setting-sub">Einfaches Formular für Fehler oder Ideen</div>
         </div>
         <div class="setting-arrow">›</div>
       </div>
       <div class="setting-row tappable" onclick="clearAllData()">
         <div>
-          <div class="setting-lbl">🗑️ Alle Daten löschen</div>
+          <div class="setting-lbl">Alle Daten löschen</div>
           <div class="setting-sub">Zurücksetzen auf Werkseinstellungen</div>
         </div>
         <div class="setting-arrow" style="color:var(--red)">›</div>
       </div>
       <div class="setting-row tappable" id="theme-row">
         <div>
-          <div class="setting-lbl">🌙 Design</div>
+          <div class="setting-lbl">Design</div>
           <div class="setting-sub" id="theme-label">Dunkles Design</div>
         </div>
         <label class="theme-toggle">
@@ -309,19 +309,19 @@ Beispiel:
   <!-- ═══════════════════════════ NAV ══════════════════════════════ -->
   <nav data-testid="main-nav">
     <button class="nav-btn active" id="nav-overview" onclick="switchScreen('overview')">
-      <span class="nav-icon">📊</span><span>Übersicht</span>
+      <span class="nav-icon">Ü</span><span>Übersicht</span>
     </button>
     <button class="nav-btn" id="nav-import" onclick="switchScreen('import')">
-      <span class="nav-icon">📄</span><span>Import</span>
+      <span class="nav-icon">I</span><span>Import</span>
     </button>
     <button class="nav-btn" id="nav-history" onclick="switchScreen('history')">
-      <span class="nav-icon">📅</span><span>Verlauf</span>
+      <span class="nav-icon">V</span><span>Verlauf</span>
     </button>
     <button class="nav-btn" id="nav-sparplan" onclick="switchScreen('sparplan')">
-      <span class="nav-icon">💰</span><span>Sparplan</span>
+      <span class="nav-icon">S</span><span>Sparplan</span>
     </button>
     <button class="nav-btn" id="nav-settings" onclick="switchScreen('settings')">
-      <span class="nav-icon">⚙️</span><span>Einstellungen</span>
+      <span class="nav-icon">E</span><span>Einstellungen</span>
     </button>
   </nav>
 </div>
@@ -346,10 +346,10 @@ Beispiel:
     <div class="field">
       <label class="field-lbl">Typ</label>
       <div class="type-selector">
-        <button class="type-chip" data-type="fixed" data-testid="entry-type-fixed" onclick="setEntryType('fixed')">🏠 Fixkosten</button>
-        <button class="type-chip active-fun" data-type="fun" data-testid="entry-type-fun" onclick="setEntryType('fun')">🎉 Freizeit</button>
-        <button class="type-chip" data-type="saving" data-testid="entry-type-saving" onclick="setEntryType('saving')">💰 Sparen</button>
-        <button class="type-chip" data-type="income" data-testid="entry-type-income" onclick="setEntryType('income')">📥 Einnahme</button>
+        <button class="type-chip" data-type="fixed" data-testid="entry-type-fixed" onclick="setEntryType('fixed')">Fixkosten</button>
+        <button class="type-chip active-fun" data-type="fun" data-testid="entry-type-fun" onclick="setEntryType('fun')">Freizeit</button>
+        <button class="type-chip" data-type="saving" data-testid="entry-type-saving" onclick="setEntryType('saving')">Sparen</button>
+        <button class="type-chip" data-type="income" data-testid="entry-type-income" onclick="setEntryType('income')">Einnahme</button>
       </div>
       <input type="hidden" id="entry-type-hidden" value="fun" />
     </div>
@@ -369,7 +369,7 @@ Beispiel:
     </div>
     <div class="form-error" id="entry-form-error" data-testid="entry-form-error" role="alert" hidden></div>
     <div class="modal-actions">
-      <button class="btn-danger" id="entry-delete-btn" data-testid="delete-entry" onclick="deleteCurrentEntry()" style="display:none">🗑 Löschen</button>
+      <button class="btn-danger" id="entry-delete-btn" data-testid="delete-entry" onclick="deleteCurrentEntry()" style="display:none">Löschen</button>
       <button class="btn-secondary" onclick="closeModal('modal-entry')">Abbrechen</button>
       <button class="btn-primary" data-testid="save-entry" onclick="saveEntry()">Speichern</button>
     </div>
@@ -442,7 +442,7 @@ Beispiel:
 
     <div class="form-error" id="feedback-form-error" data-testid="feedback-form-error" role="alert" hidden></div>
     <div class="success-box feedback-success" id="feedback-success" data-testid="feedback-success" hidden></div>
-    <div class="copy-feedback" id="feedback-copy-feedback" data-testid="feedback-copy-feedback">✓ Bug-Report kopiert!</div>
+    <div class="copy-feedback" id="feedback-copy-feedback" data-testid="feedback-copy-feedback">Bug-Report kopiert.</div>
 
     <div class="modal-actions feedback-actions">
       <button class="btn-secondary" onclick="closeModal('modal-feedback')">Schließen</button>
@@ -461,8 +461,8 @@ Beispiel:
 
     <div class="field-row">
       <div class="field" style="flex:0 0 70px">
-        <label class="field-lbl">Emoji</label>
-        <input class="field-input" type="text" id="goal-icon" placeholder="🏖️" maxlength="2" />
+        <label class="field-lbl">Kürzel</label>
+        <input class="field-input" type="text" id="goal-icon" placeholder="SP" maxlength="3" />
       </div>
       <div class="field" style="flex:1">
         <label class="field-lbl">Name</label>
@@ -487,8 +487,8 @@ Beispiel:
     <div class="field">
       <label class="field-lbl">Berechnung</label>
       <div style="display:flex;gap:6px;margin-bottom:12px">
-        <button id="mode-btn-rate"     class="type-chip active-saving" onclick="setGoalMode('rate')"    style="flex:1">💶 Rate eingeben</button>
-        <button id="mode-btn-duration" class="type-chip"               onclick="setGoalMode('duration')" style="flex:1">📅 Zeitraum eingeben</button>
+        <button id="mode-btn-rate"     class="type-chip active-saving" onclick="setGoalMode('rate')"    style="flex:1">Rate eingeben</button>
+        <button id="mode-btn-duration" class="type-chip"               onclick="setGoalMode('duration')" style="flex:1">Zeitraum eingeben</button>
       </div>
 
       <!-- Rate mode -->
@@ -524,7 +524,7 @@ Beispiel:
       background:var(--accent-soft);border:1px solid var(--accent-border);
       border-radius:12px;padding:14px 16px;margin-top:4px;display:none
     ">
-      <div style="font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:2px;color:var(--accent);text-transform:uppercase;margin-bottom:8px">📊 Vorschau</div>
+      <div style="font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:0;color:var(--accent);text-transform:uppercase;margin-bottom:8px">Vorschau</div>
       <div style="display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap">
         <div>
           <div style="font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--muted)">Rate / Monat</div>
@@ -542,7 +542,7 @@ Beispiel:
     </div>
 
     <div class="modal-actions" style="margin-top:16px">
-      <button class="btn-danger" id="goal-delete-btn" onclick="deleteCurrentGoal()" style="display:none">🗑 Löschen</button>
+      <button class="btn-danger" id="goal-delete-btn" onclick="deleteCurrentGoal()" style="display:none">Löschen</button>
       <button class="btn-secondary" onclick="closeModal('modal-goal')">Abbrechen</button>
       <button class="btn-primary" onclick="saveGoal()">Speichern</button>
     </div>
@@ -566,8 +566,6 @@ Beispiel:
 </div>
 
 <!-- Scripts -->
-<script src="db.js"></script>
-<script src="category-chart.js"></script>
-<script src="app.js"></script>
+<script type="module" src="app.js"></script>
 </body>
 </html>

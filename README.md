@@ -1,16 +1,33 @@
 # FinanzApp
 
-FinanzApp ist eine browserbasierte Anwendung zur monatlichen Verwaltung persönlicher Einnahmen, Ausgaben und Sparbeträge. Die App berechnet verfügbare Beträge, visualisiert Ausgabenkategorien und stellt strukturierte Monatsdaten für weitere Auswertungen bereit.
+FinanzApp ist eine responsive Web-App zur monatlichen Verwaltung persönlicher Finanzen. Die App trennt feste Einnahmen, zusätzliche Einnahmen, Fixkosten, Freizeit-Ausgaben und Sparbeträge sauber voneinander und zeigt daraus eine verständliche Monatsübersicht.
 
-Die Anwendung ist als schlanke Web-App aufgebaut. Sie läuft ohne verpflichtendes Backend, speichert Finanzdaten lokal im Browser und kann optional über eine Vercel Serverless Function Feedback als GitHub Issue erstellen.
+Das Projekt ist als Portfolio- und Privatnutzungs-App gebaut: schlank, lokal nutzbar, mit Dark-Fintech-Design, Playwright-Tests und optionalem Feedback-Flow über GitHub Issues.
+
+## Screenshots
+
+### Desktop
+
+![Desktop Dashboard](docs/screenshots/desktop-overview.png)
+
+![Desktop Ausgabenmix](docs/screenshots/desktop-ausgabenmix.png)
+
+### Mobile
+
+<p align="center">
+  <img src="docs/screenshots/mobile-overview.png" alt="Mobile Dashboard" width="300" />
+  <img src="docs/screenshots/mobile-entry-modal.png" alt="Mobile Eingabedialog" width="300" />
+</p>
 
 ## Funktionen
 
 - Monatsübersicht mit festem Einkommen, zusätzlichen Einnahmen, Ausgaben, Sparbeträgen und verfügbarem Betrag
 - getrennte Erfassung von Fixkosten, Freizeit-Ausgaben, Sparbeträgen und Einnahmen
 - Hinzufügen, Bearbeiten und Löschen von Transaktionen
-- Ausgaben-Diagramm für Fixkosten, Freizeit und Sparen
-- strukturierter KI-Export für Monatsanalysen
+- Ausgabenmix-Diagramm für Fixkosten, Freizeit und Sparen
+- Sparziele mit monatlicher Rate und Fortschritt
+- strukturierter KI-Export für manuelle Monatsanalysen
+- JSON-Import für KI- oder Kontoauszugs-Auswertungen
 - Dark- und Light-Theme
 - responsive Oberfläche mit Desktop-Sidebar und mobiler Bottom Navigation
 - Feedback- und Bug-Report-Formular mit Kopierfunktion
@@ -22,20 +39,48 @@ Die Anwendung ist als schlanke Web-App aufgebaut. Sie läuft ohne verpflichtende
 - Build-Tool und Dev-Server: Vite
 - Tests: Playwright
 - Persistenz: `localStorage`
-- optionale API: Vercel Serverless Function für Bug Reports
+- PWA-Basis: Manifest und Service Worker
+- Optionale API: Vercel Serverless Function für Bug-Reports
 
-## Voraussetzungen
+## Projektfokus
+
+FinanzApp ist bewusst keine Banking-App mit echter Kontoanbindung. Der Fokus liegt auf einer nachvollziehbaren lokalen Finanzübersicht:
+
+- Daten bleiben im Browser.
+- Es gibt keine Benutzerkonten.
+- Es gibt keine Cloud-Synchronisation.
+- Es wird keine externe KI-API automatisch aufgerufen.
+- Der KI-Export wird manuell kopiert und bleibt damit transparent.
+
+## Berechnungslogik
+
+Die App trennt planbare Einnahmen und unregelmäßige Einnahmen:
+
+```text
+Verfügbar = feste Einnahmen + zusätzliche Einnahmen - Fixkosten - Freizeit - Sparen
+```
+
+Wichtig:
+
+- `Einkommen / Monat` zeigt nur feste monatliche Einnahmen.
+- Zusätzliche Einnahmen erhöhen den verfügbaren Betrag.
+- Zusätzliche Einnahmen erscheinen nicht im Ausgabenmix.
+- Der Ausgabenmix zeigt nur Fixkosten, Freizeit und Sparen.
+
+## Installation
+
+Voraussetzungen:
 
 - Node.js
 - npm
 
-## Installation
+Abhängigkeiten installieren:
 
 ```bash
 npm install
 ```
 
-## Lokale Entwicklung
+Lokale Entwicklung starten:
 
 ```bash
 npm run dev
@@ -43,13 +88,13 @@ npm run dev
 
 Danach die von Vite ausgegebene lokale URL im Browser öffnen.
 
-## Produktionsbuild
+## Build
 
 ```bash
 npm run build
 ```
 
-Der Build kann lokal geprüft werden mit:
+Build lokal prüfen:
 
 ```bash
 npm run preview
@@ -69,23 +114,26 @@ npm run test:ui
 npm run test:report
 ```
 
+Der letzte dokumentierte Teststatus steht in [TEST_REPORT.md](TEST_REPORT.md).
+
 ## Nutzung
 
-1. Monat auswählen oder einen neuen Monat anlegen.
-2. Festes Einkommen in den Einstellungen eintragen.
-3. Transaktionen als Fixkosten, Freizeit, Sparen oder Einnahme erfassen.
-4. Summen, Diagramm und verfügbaren Betrag prüfen.
-5. Optional den KI-Export für eine strukturierte Monatsanalyse kopieren.
+1. Festes monatliches Einkommen eintragen.
+2. Einnahmen, Fixkosten, Freizeit-Ausgaben oder Sparbeträge erfassen.
+3. Monatswerte, Ausgabenmix und verfügbaren Betrag prüfen.
+4. Optional den KI-Export kopieren und manuell analysieren lassen.
+5. Bei Bedarf Feedback oder Bugs über das Feedback-Formular melden.
 
 ## Datenhaltung
 
-FinanzApp speichert Daten lokal im Browser per `localStorage`. Es gibt derzeit keine Benutzerkonten, keine Cloud-Synchronisation und kein externes Finanzkonto-Tracking.
+FinanzApp speichert Daten lokal im Browser per `localStorage` unter dem Key `meingeld_v3`.
 
 Das bedeutet:
 
 - Daten bleiben auf dem jeweiligen Gerät und Browserprofil.
-- Ein Browserwechsel oder gelöschter Browser-Speicher kann gespeicherte Daten entfernen.
-- Für produktive Langzeitnutzung sollte vor größeren Änderungen ein Export- oder Backup-Konzept ergänzt werden.
+- Ein Browserwechsel übernimmt die Daten nicht automatisch.
+- Gelöschte Browserdaten entfernen auch gespeicherte Finanzdaten.
+- Für langfristige Nutzung wäre ein Export- und Backup-Konzept ein sinnvoller nächster Schritt.
 
 ## KI-Export
 
@@ -120,40 +168,23 @@ GITHUB_LABELS=bug,feedback
 Für lokale Tests mit Serverless Function:
 
 ```bash
-cp .env.example .env
 npm run dev:vercel
 ```
-
-Unter Windows PowerShell:
-
-```powershell
-Copy-Item .env.example .env
-npm run dev:vercel
-```
-
-`npm run dev` startet nur die Vite-Oberfläche. Die automatische Issue-Erstellung benötigt `npm run dev:vercel`, weil nur dann `/api/report-bug` lokal verfügbar ist.
 
 Wenn die GitHub-Konfiguration fehlt oder ungültig ist, zeigt das Formular eine verständliche Fehlermeldung. Die Kopierfunktion bleibt als Fallback verfügbar.
 
-## Deployment
-
-Die App ist für ein Deployment auf Vercel vorbereitet. Für die Bug-Report-Funktion müssen die gleichen Environment Variables in den Project Settings hinterlegt werden.
-
-Ohne diese Variablen funktioniert das Frontend weiterhin, die automatische GitHub-Issue-Erstellung ist dann jedoch nicht verfügbar.
-
 ## Projektstruktur
 
-- `index.html`: Einstiegspunkt der App
-- `app.js`: zentrale UI- und Anwendungslogik
+- `index.html`: Einstiegspunkt, Screens, Navigation und Modals
 - `style.css`: Layout, Themes und responsive Darstellung
-- `category-chart.js`: Diagrammlogik für Ausgabenkategorien
-- `db.js`: lokale Datenhaltung und Persistenzlogik
-- `api/report-bug.js`: Serverless Function für GitHub-Issue-Erstellung
+- `app.js`: zentrale UI- und Anwendungslogik
+- `category-chart.js`: Diagrammlogik für den Ausgabenmix
+- `db.js`: Datenmodell, Persistenz, Monatsberechnung und KI-Export
+- `api/report-bug.js`: optionale Serverless Function für GitHub-Issues
 - `tests/`: Playwright-End-to-End-Tests
+- `docs/`: Projektdokumentation und Screenshots
 
 ## Qualitätssicherung
-
-Die wichtigsten Finanzflüsse werden über Playwright geprüft. Der aktuelle Teststatus ist in [TEST_REPORT.md](TEST_REPORT.md) dokumentiert.
 
 Vor Änderungen an Logik, Layout oder Persistenz sollten mindestens diese Checks laufen:
 
@@ -162,63 +193,23 @@ npm run build
 npm test
 ```
 
-## Screenshots
-Dekstop:
-<p align="center">
-  <img src="https://github.com/user-attachments/assets/a73efde5-b389-4d93-b2c8-aa917ad13866" width="800" />
-</p>
+Aktuell werden unter anderem geprüft:
 
-<p align="center">
-  <em>Dashboard-Ansicht der Finanz-App mit Monatsübersicht und Kategorieverteilung.</em>
-</p>
+- Desktop- und Mobile-Layout
+- Einnahmen und Ausgaben hinzufügen
+- Transaktionen bearbeiten und löschen
+- Eingabevalidierung
+- Summenberechnung
+- Ausgabenmix-Diagramm
+- Persistenz nach Reload
+- Feedback-Flow mit API-Erfolg und Fehler-Fallback
 
-<p align="center">
-  <img src="https://github.com/user-attachments/assets/98ea3dfc-85ea-4e0b-8a49-3385f01fa4e3" width="800" />
-</p>
+## Roadmap
 
-<p align="center">
-  <em>Dashboard-Ansicht der Finanz-App hinzufügen von Ein/Ausgaben.</em>
-</p>
-<p align="center">
-  <img src="https://github.com/user-attachments/assets/342349ab-c0c5-40c3-8976-a31f020f5761" width="800" />
-</p>
+Sinnvolle nächste Schritte:
 
-<p align="center">
-  <em>Dashboard-Ansicht der Finanz-App mit Monatsübersicht und Ausgabenmix.</em>
-</p>
-
-
-
-Mobile:
-
-<p align="center">
-  <img src="https://github.com/user-attachments/assets/aa555460-772e-4f9d-bd32-fad0f2df7ff4" width="800" />
-</p>
-
-<p align="center">
-  <em>Dashboard-Ansicht der Finanz-App mit Monatsübersicht und Kategorieverteilung.</em>
-</p>
-
-<p align="center">
-  <img src="https://github.com/user-attachments/assets/b4a4ac99-5869-4da6-80cb-442ced9e2c88" width="800" />
-</p>
-
-<p align="center">
-  <em>Dashboard-Ansicht der Finanz-App auflistung.</em>
-</p>
-<p align="center">
-  <img src="https://github.com/user-attachments/assets/d7cf3deb-e52f-4348-9bb0-d240e6dd01ef" width="800" />
-</p>
-
-<p align="center">
-  <em>Monatsansicht der Mobilen version.</em>
-</p>
-
-
-
-
-
-
-
-
-
+- JSON-Export und Backup-Import ergänzen
+- Monatswechsel direkter über Vor-/Zurück-Steuerung machen
+- Budget-Limits pro Kategorie ergänzen
+- Live-Demo final veröffentlichen
+- Portfolio-Page mit aktuellen Screenshots aktualisieren

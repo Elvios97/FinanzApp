@@ -103,3 +103,5 @@ function renderCategoryPieChart(entries) {
     legend.appendChild(row);
   });
 }
+
+export { renderCategoryPieChart };

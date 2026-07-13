@@ -2,36 +2,31 @@
 // app.js — MeinGeld v3 · Application Logic
 // ═══════════════════════════════════════════════════════════════
 
-// ── Icon Map ─────────────────────────────────────────────────────
-const ICONS = {
-  miete:"🏠", wohnen:"🏠", nebenkosten:"💡", strom:"💡", internet:"📡",
-  lebensmittel:"🛒", supermarkt:"🛒", rewe:"🛒", aldi:"🛒", lidl:"🛒", edeka:"🛒",
-  transport:"🚇", öpnv:"🚇", db:"🚂", bahn:"🚂", auto:"🚗", tanken:"⛽", parken:"🅿️",
-  versicherung:"🛡️", kranken:"💊", gesundheit:"💊", arzt:"🏥", apotheke:"💊",
-  hobbys:"🎸", sport:"🏃", fitness:"🏋️", freizeit:"🎉", unterhaltung:"🎬", kino:"🎬",
-  essen:"🍜", restaurant:"🍜", lieferservice:"🛵", lieferando:"🛵", uber:"🛵",
-  kleidung:"👗", shopping:"🛍️", amazon:"📦", online:"📦",
-  sparen:"💰", rücklagen:"🏦", invest:"📈",
-  gehalt:"💼", lohn:"💼", einkommen:"💼",
-  streaming:"📺", netflix:"📺", spotify:"🎵", musik:"🎵",
-  telefon:"📱", handy:"📱", mobilfunk:"📱",
-  steuern:"🏛️", kredit:"💳", darlehen:"💳",
-  urlaub:"✈️", reise:"✈️", hotel:"🏨",
-  sonstiges:"📌", bar:"💵", paypal:"💳",
-};
-
-function iconFor(name) {
-  if (!name) return "📌";
-  const low = name.toLowerCase();
-  for (const [k, v] of Object.entries(ICONS)) if (low.includes(k)) return v;
-  return "📌";
-}
+import {
+  IMPORT_PROMPT,
+  addEntry,
+  addGoal,
+  buildKiExport,
+  defaultState,
+  deleteEntry,
+  deleteGoal,
+  ensureMonth,
+  getAvailableMonths,
+  getMonthData,
+  importEntries,
+  loadState,
+  monthLabel,
+  saveState,
+  updateEntry,
+  updateGoal,
+} from "./db.js";
+import { renderCategoryPieChart } from "./category-chart.js";
 
 const TYPE_CFG = {
-  fixed:  { color: "var(--col-fixed)",  label: "Fixkosten",  bg: "var(--type-fixed-bg)" },
-  fun:    { color: "var(--col-fun)",    label: "Freizeit",   bg: "var(--type-fun-bg)" },
-  saving: { color: "var(--col-saving)", label: "Sparen",     bg: "var(--type-saving-bg)" },
-  income: { color: "var(--col-income)", label: "Einnahme",    bg: "var(--type-income-bg)" },
+  fixed:  { color: "var(--col-fixed)",  label: "Fixkosten",  bg: "var(--type-fixed-bg)", code: "F" },
+  fun:    { color: "var(--col-fun)",    label: "Freizeit",   bg: "var(--type-fun-bg)", code: "A" },
+  saving: { color: "var(--col-saving)", label: "Sparen",     bg: "var(--type-saving-bg)", code: "S" },
+  income: { color: "var(--col-income)", label: "Einnahme",    bg: "var(--type-income-bg)", code: "E" },
 };
 
 const BUG_REPORT_ENDPOINT = "/api/report-bug";
@@ -199,7 +194,7 @@ function renderRemainingHighlight({ income, remaining }) {
     value.style.color = "var(--red)";
     value.textContent = formatSignedWholeEuro(remaining);
     subline.style.color = "var(--red)";
-    subline.textContent = "⚠️ Ausgaben übersteigen Einnahmen!";
+    subline.textContent = "Ausgaben übersteigen Einnahmen.";
     return;
   }
 
@@ -252,13 +247,13 @@ function createEntryRow(entry, income) {
   row.dataset.testid = "entry-row";
   row.innerHTML = `
     <div class="entry-dot" style="background:${cfg.color}"></div>
-    <div class="entry-ico">${entry.type === "income" ? "📥" : iconFor(entry.name)}</div>
+    <div class="entry-ico" style="color:${cfg.color};border-color:${cfg.color}">${cfg.code}</div>
     <div class="entry-info">
       <div class="entry-name">${safeName}</div>
       <div class="entry-meta">
         <span class="entry-type-badge" style="background:${cfg.bg};color:${cfg.color}">${cfg.label}</span>
         ${dateStr ? `<span class="entry-date">${dateStr}</span>` : ""}
-        <span class="entry-source-badge">${entry.source === "manual" ? "✎ manuell" : "⬇ import"}</span>
+        <span class="entry-source-badge">${entry.source === "manual" ? "manuell" : "import"}</span>
       </div>
       ${entry.note ? `<div class="entry-note">${safeNote}</div>` : ""}
       <div class="entry-bar"><div class="entry-bar-fill" style="width:${percentOfIncome}%;background:${cfg.color}"></div></div>
@@ -505,7 +500,7 @@ function renderSparplanSummary() {
 function createGoalCard(goal) {
   const projection = getGoalProjection(goal);
   const card = document.createElement("div");
-  const safeIcon = escapeHtml(goal.icon || "💰");
+  const safeIcon = escapeHtml(goal.icon || "SP");
   const safeName = escapeHtml(goal.name);
 
   card.className = "sp-goal";
@@ -526,8 +521,8 @@ function createGoalCard(goal) {
       <input type="range" min="10" max="500" step="10" value="${projection.monthly}" style="flex:1"
         oninput="updateGoalMonthly('${goal.id}', this.value, this.nextElementSibling)" />
       <span class="sp-slider-side right" id="sp-side-${goal.id}">${projection.monthly}€</span>
-      <button onclick="openEditGoalModal('${goal.id}')" style="color:var(--muted);font-size:14px;padding:4px 6px;margin-left:4px">✎</button>
-      <button onclick="removeGoal('${goal.id}')" style="color:var(--muted2);font-size:16px;padding:4px 4px">✕</button>
+      <button onclick="openEditGoalModal('${goal.id}')" style="color:var(--muted);font-size:12px;padding:4px 6px;margin-left:4px">Bearbeiten</button>
+      <button onclick="removeGoal('${goal.id}')" style="color:var(--muted2);font-size:12px;padding:4px 4px">Entfernen</button>
     </div>
     <div class="sp-progress-bar"><div class="sp-progress-fill" style="width:${projection.percent}%"></div></div>
     <div class="sp-progress-lbl"><span>${projection.saved.toLocaleString("de-DE")} € gespart</span><span>${projection.percent}%</span></div>
@@ -685,7 +680,7 @@ function openEditGoalModal(id) {
 
 function saveGoal() {
   const name    = document.getElementById("goal-name").value.trim();
-  const icon    = document.getElementById("goal-icon").value.trim() || "💰";
+  const icon    = document.getElementById("goal-icon").value.trim() || "SP";
   const target  = parseFloat(document.getElementById("goal-target").value) || 0;
   const saved   = parseFloat(document.getElementById("goal-saved").value)  || 0;
   const monthly = parseInt(document.getElementById("goal-monthly-slider").value) || 50;
@@ -718,7 +713,7 @@ function deleteCurrentGoal() {
 function exportForKi() {
   const prompt = buildKiExport(state, state.currentMonth);
   copyToClipboard(prompt, null);
-  alert("✅ KI-Analyse Prompt wurde in die Zwischenablage kopiert!\n\nJetzt in ChatGPT, Claude oder Gemini einfügen.");
+  alert("KI-Analyse Prompt wurde in die Zwischenablage kopiert.\n\nJetzt in ChatGPT, Claude oder Gemini einfügen.");
 }
 
 // ── Settings ──────────────────────────────────────────────────────
@@ -965,6 +960,39 @@ function fallbackCopy(text, cb) {
   document.body.appendChild(ta); ta.select(); document.execCommand("copy");
   document.body.removeChild(ta); if (cb) cb();
 }
+
+Object.assign(window, {
+  switchScreen,
+  setOverviewSidePanel,
+  copyImportPrompt,
+  runImport,
+  openAddEntryModal,
+  openEditEntryModal,
+  setEntryType,
+  saveEntry,
+  deleteCurrentEntry,
+  openIncomeModal,
+  saveIncome,
+  openNewMonthModal,
+  saveNewMonth,
+  openAddGoalModal,
+  openEditGoalModal,
+  setGoalMode,
+  setDurationQuick,
+  onGoalSliderChange,
+  recalcGoalPreview,
+  updateGoalMonthly,
+  removeGoal,
+  saveGoal,
+  deleteCurrentGoal,
+  exportForKi,
+  clearAllData,
+  openFeedbackReport,
+  submitFeedbackReport,
+  copyFeedbackReport,
+  sendFeedbackEmail,
+  closeModal,
+});
 
 // ── Init ──────────────────────────────────────────────────────────
 (function init() {

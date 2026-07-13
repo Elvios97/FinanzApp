@@ -186,7 +186,7 @@ function addGoal(state, { name, icon, target, saved, monthly, durationMonths }) 
   const goal = {
     id: generateId(),
     name,
-    icon: icon || "💰",
+    icon: icon || "SP",
     target: parseFloat(target) || 0,
     saved: parseFloat(saved) || 0,
     monthly: parseInt(monthly) || 50,
@@ -277,3 +277,22 @@ Regeln:
 - Regelmäßiges Gehalt NUR in "income"; einzelne zusätzliche Einnahmen dürfen als category mit "type": "income" erscheinen
 - Maximal 12 Kategorien, Kleinbeträge unter "Sonstiges"
 - Antworte ausschließlich mit dem JSON-Objekt`;
+
+export {
+  IMPORT_PROMPT,
+  addEntry,
+  addGoal,
+  buildKiExport,
+  defaultState,
+  deleteEntry,
+  deleteGoal,
+  ensureMonth,
+  getAvailableMonths,
+  getMonthData,
+  importEntries,
+  loadState,
+  monthLabel,
+  saveState,
+  updateEntry,
+  updateGoal,
+};
